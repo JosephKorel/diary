@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { getServerSideProps } from ".";
+import MyModal from "./components/modal";
 
 interface User {
   name: string;
@@ -20,6 +20,9 @@ function Today() {
   const [task, setTask] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
+  const [showTasks, setShowTasks] = useState(false);
+  const [show, setShow] = useState(false);
+  const [element, setElement] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -70,8 +73,66 @@ function Today() {
     }
   };
 
+  const MyTasksComponent = (): JSX.Element => {
+    return (
+      <div className="p-20 bg-red-300 rounded-lg">
+        <h2>Tarefas de hoje</h2>
+        {myTasks.length > 0 ? (
+          <>
+            <h3>{myTasks.length}</h3>
+          </>
+        ) : (
+          <>
+            <p>Não há nenhuma tarefa ainda</p>
+          </>
+        )}
+        <input
+          value={task}
+          onChange={(e) => setTask(e.currentTarget.value)}
+          placeholder="Tarefa"
+        />
+        <button
+          onClick={() => {
+            setElement(AddNewTask);
+            setShow(true);
+          }}
+        >
+          Adicionar
+        </button>
+        <button onClick={() => setShowTasks(!showTasks)}>Ver Tarefas</button>
+        {showTasks && (
+          <div>
+            <ul>
+              {myTasks.map((item) => (
+                <li>{item.task}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const AddNewTask = (): JSX.Element => {
+    return (
+      <div
+        className="bg-green-400 p-20 rounded-md"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <input
+          value={task}
+          onChange={(e) => setTask(e.currentTarget.value)}
+          placeholder="Tarefa"
+        />
+        <button onClick={addTask}>Adicionar</button>
+        <button onClick={() => setShow(false)}>Cancelar</button>
+      </div>
+    );
+  };
+
   return (
     <div>
+      {show && <MyModal children={element} setShow={setShow} />}
       <h1>Dia {moment().format("DD/MM")}</h1>
       {user && (
         <div>
@@ -80,25 +141,7 @@ function Today() {
             <h2>Olá, {user.name}</h2>
           </div>
           <div className="flex justify-around items-center">
-            <div className="p-20 bg-red-300 rounded-lg">
-              <h2>Tarefas de hoje</h2>
-              {myTasks.length > 0 ? (
-                <>
-                  <h3>{myTasks.length}</h3>
-                </>
-              ) : (
-                <>
-                  <p>Não há nenhuma tarefa ainda</p>
-                </>
-              )}
-              <input
-                value={task}
-                onChange={(e) => setTask(e.currentTarget.value)}
-                placeholder="Tarefa"
-              />
-              <button onClick={addTask}>Adicionar</button>
-              <button onClick={currentTasks}>Atualizar</button>
-            </div>
+            {MyTasksComponent()}
             <div className="p-20 bg-red-300 rounded-lg">
               <h2>Anotações</h2>
             </div>
