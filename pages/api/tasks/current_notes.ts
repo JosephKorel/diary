@@ -8,12 +8,12 @@ export default async function AddTask (req:NextApiRequest, res:NextApiResponse) 
     const client = await clientPromise;
     const db = client.db("diary");
     const today = moment().format('DD/MM/YY')
-    const myCollection: Collection = db.collection('tasks');
-    const currentTasks = await myCollection.find({date:today}).toArray()
+    const myCollection: Collection = db.collection('notes');
+    const currentNotes = await myCollection.find({date:today}).toArray()
 
 
     try {
-       res.status(200).json({tasks:currentTasks})
+       res.status(200).json({notes:currentNotes})
     } catch (error) {
         res.status(400).json({error})
         console.log(error)
