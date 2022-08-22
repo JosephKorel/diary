@@ -3,28 +3,7 @@ import moment from "moment";
 import MyModal from "./components/modal";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase.config";
-
-interface User {
-  name: string;
-  email?: string;
-  avatar?: string;
-}
-
-interface MyTasks {
-  _id: string;
-  author: string;
-  email: string;
-  task: string;
-  date: string;
-}
-
-interface MyNotes {
-  _id: string;
-  author: string;
-  email: string;
-  note: string;
-  date: string;
-}
+import { MyNotes, MyTasks, User } from "../models/interfaces";
 
 function Today() {
   const [user, setUser] = useState<User | null>(null);
@@ -37,7 +16,7 @@ function Today() {
 
   const retrieveInfo = async () => {
     const currentUser: User = await JSON.parse(localStorage.getItem("user"));
-    await currentTasks(currentUser.email);
+    await currentTasks(currentUser);
     await currentNotes(currentUser.email);
     setUser(currentUser);
   };
@@ -46,19 +25,21 @@ function Today() {
     retrieveInfo();
   }, []);
 
-  const currentTasks = async (email: string) => {
+  const currentTasks = async (currentUser: User) => {
+    const today = moment().format("DD/MM/YY");
     //Pega as tasks do dia de hoje
     const getTasks = await fetch("/api/tasks/current_tasks", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(currentUser),
     });
 
     try {
       const tasks = (await getTasks.json()) as { tasks: MyTasks[] };
       const todayTasks = tasks.tasks;
-      const taskFilter = todayTasks.filter((item) => item.email === email);
+      const taskFilter = todayTasks.filter((item) => item.date === today);
       setMyTasks(taskFilter);
     } catch (error) {
       console.log(error);
@@ -86,6 +67,25 @@ function Today() {
 
   //Componente que lida com tarefas
   const MyTasksComponent = (): JSX.Element => {
+    const completeTask = async (id: string) => {
+      //Manda a req pra atualizar
+      const updateTask = await fetch("/api/tasks/update_task", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      try {
+        if (updateTask.ok) {
+          currentTasks(user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return (
       <div className="p-20 bg-red-300 rounded-lg">
         <h2>Tarefas de hoje</h2>
@@ -110,8 +110,16 @@ function Today() {
         {showTasks && (
           <div>
             <ul>
-              {myTasks.map((item) => (
-                <li>{item.task}</li>
+              {myTasks.map((item, index) => (
+                <li className="p-1 bg-slate-100" key={index}>
+                  <p className={`${item.done ? "line-through" : ""}`}>
+                    {item.task}
+                  </p>
+                  <button onClick={() => completeTask(item._id)}>
+                    Concluída
+                  </button>
+                  <button>Excluir</button>
+                </li>
               ))}
             </ul>
           </div>
@@ -130,6 +138,7 @@ function Today() {
         author: user.name,
         email: user.email,
         task: content,
+        done: false,
         date: today,
       };
 
@@ -144,7 +153,7 @@ function Today() {
 
       try {
         if (insert.status === 200) {
-          currentTasks(user.email);
+          currentTasks(user);
           setContent("");
           setShow(false);
         }

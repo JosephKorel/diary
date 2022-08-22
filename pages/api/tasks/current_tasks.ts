@@ -1,15 +1,16 @@
-import moment from 'moment';
+
 import { Collection } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
+import { User } from '../../../models/interfaces';
 
 
-export default async function AddTask (req:NextApiRequest, res:NextApiResponse) {
+export default async function getTasks (req:NextApiRequest, res:NextApiResponse) {
+    const user = req.body as User
     const client = await clientPromise;
     const db = client.db("diary");
-    const today = moment().format('DD/MM/YY')
     const myCollection: Collection = db.collection('tasks');
-    const currentTasks = await myCollection.find({date:today}).toArray()
+    const currentTasks = await myCollection.find({email:user.email}).toArray()
 
 
     try {
