@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import MyModal from "./components/modal";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase.config";
 
 interface User {
   name: string;
@@ -201,10 +203,25 @@ function Today() {
 
   const AddNewNote = (): JSX.Element => {
     const [text, setText] = useState("");
+    const [file, setFile] = useState<null | any>(null);
+
+    const addPhoto = async () => {
+      const imgref = ref(storage, "images");
+
+      try {
+        await uploadBytes(imgref, file);
+        console.log("Success");
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
     //Adiciona a nota
     const addNote = async () => {
       const today = moment().format("DD/MM/YY");
+
+      if (file) await addPhoto();
+
       const newNote = {
         author: user.name,
         email: user.email,
@@ -243,6 +260,7 @@ function Today() {
           placeholder="Nova nota"
         />
         <button onClick={addNote}>Adicionar</button>
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
         <button onClick={() => setShow(false)}>Cancelar</button>
       </div>
     );
