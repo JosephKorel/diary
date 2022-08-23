@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import MyModal from "./components/modal";
-import { ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { storage } from "../firebase.config";
 import { MyNotes, MyTasks, User } from "../models/interfaces";
+import Image from "next/image";
 
-function Today() {
+function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const [user, setUser] = useState<User | null>(null);
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
@@ -17,16 +23,36 @@ function Today() {
   const retrieveInfo = async () => {
     const currentUser: User = await JSON.parse(localStorage.getItem("user"));
     await currentTasks(currentUser);
-    await currentNotes(currentUser.email);
+    /*  await currentNotes(currentUser); */
     setUser(currentUser);
   };
 
+  const getUserData = async () => {
+    const today = moment().format("DD/MM/YY");
+    const currentUser: User = await JSON.parse(localStorage.getItem("user"));
+
+    const todayNotes = notes.filter((note) => note.date === today);
+    const todayTasks = tasks.filter((task) => task.date === today);
+
+    const userTasks = todayTasks.filter(
+      (task) => task.email === currentUser.email
+    );
+    const userNotes = todayNotes.filter(
+      (note) => note.email === currentUser.email
+    );
+
+    setMyTasks(userTasks);
+    setMyNotes(userNotes);
+  };
+
   useEffect(() => {
+    getUserData();
     retrieveInfo();
   }, []);
 
   const currentTasks = async (currentUser: User) => {
     const today = moment().format("DD/MM/YY");
+
     //Pega as tasks do dia de hoje
     const getTasks = await fetch("/api/tasks/current_tasks", {
       method: "POST",
@@ -46,20 +72,21 @@ function Today() {
     }
   };
 
-  const currentNotes = async (email: string) => {
-    //Pega as tasks do dia de hoje
-    const getNotes = await fetch("/api/tasks/current_notes", {
-      method: "GET",
+  const currentNotes = async (currentUser: User) => {
+    const today = moment().format("DD/MM/YY");
+    //Pega as anotações do usuário
+    const getNotes = await fetch("/api/notes/current_notes", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(currentUser),
     });
 
     try {
       const notes = (await getNotes.json()) as { notes: MyNotes[] };
-      const todayNotes = notes.notes;
-      const noteFilter = todayNotes.filter((item) => item.email === email);
-      setMyNotes(noteFilter);
+      const todayNotes = notes.notes.filter((note) => note.date === today);
+      setMyNotes(todayNotes);
     } catch (error) {
       console.log(error);
     }
@@ -70,6 +97,25 @@ function Today() {
     const completeTask = async (id: string) => {
       //Manda a req pra atualizar
       const updateTask = await fetch("/api/tasks/update_task", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      try {
+        if (updateTask.ok) {
+          currentTasks(user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const deleteTask = async (id: string) => {
+      //Manda a req pra deletar
+      const updateTask = await fetch("/api/tasks/delete_task", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +164,7 @@ function Today() {
                   <button onClick={() => completeTask(item._id)}>
                     Concluída
                   </button>
-                  <button>Excluir</button>
+                  <button onClick={() => deleteTask(item._id)}>Excluir</button>
                 </li>
               ))}
             </ul>
@@ -132,7 +178,8 @@ function Today() {
   const AddNewTask = (): JSX.Element => {
     const [content, setContent] = useState("");
 
-    const addTask = async () => {
+    const addTask = async (): Promise<void | null> => {
+      if (!content) return null;
       const today = moment().format("DD/MM/YY");
       const newTask = {
         author: user.name,
@@ -184,7 +231,34 @@ function Today() {
     );
   };
 
+  //Componente de anotações
   const NotesComponent = (): JSX.Element => {
+    const deleteNote = async (note: MyNotes) => {
+      //Se houver imagens, deleta as imagens no storage
+      if (note.media.length > 0) {
+        note.media.forEach((item) => {
+          const imgRef = ref(storage, `${note.email}/${item.name}`);
+          deleteObject(imgRef);
+        });
+      }
+
+      const handleDelete = await fetch("/api/notes/delete_note", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: note._id }),
+      });
+
+      try {
+        if (handleDelete.ok) {
+          currentNotes(user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return (
       <div className="p-20 bg-red-300 rounded-lg">
         <h2>Anotações: {myNotes.length}</h2>
@@ -200,8 +274,18 @@ function Today() {
         {showNotes && (
           <div>
             <ul>
-              {myNotes.map((item) => (
-                <li>{item.note}</li>
+              {myNotes.map((item, index) => (
+                <li key={index}>
+                  <p>{item.note}</p>
+                  {item.media.length > 0 && (
+                    <>
+                      {item.media.map((image) => (
+                        <Image src={image.url} width={100} height={100} />
+                      ))}
+                    </>
+                  )}
+                  <button onClick={() => deleteNote(item)}>Excluir</button>
+                </li>
               ))}
             </ul>
           </div>
@@ -214,47 +298,94 @@ function Today() {
     const [text, setText] = useState("");
     const [file, setFile] = useState<null | any>(null);
 
-    const addPhoto = async () => {
-      const imgref = ref(storage, "images");
+    const addPhoto = async (): Promise<
+      { name: string; url: string }[] | null
+    > => {
+      let uploadedFiles: { name: string; url: string }[] = [];
+      let files: any[] = [];
+      Object.entries(file).forEach(([key, value]) => files.push(value));
 
       try {
-        await uploadBytes(imgref, file);
-        console.log("Success");
+        for (let item of files) {
+          const imgref = ref(storage, `${user.email}/${item.name}`);
+          await uploadBytes(imgref, item);
+          const url = await getDownloadURL(imgref);
+          uploadedFiles.push({ name: item.name, url });
+        }
+
+        return uploadedFiles;
       } catch (error) {
         console.log(error);
+        return null;
       }
     };
 
     //Adiciona a nota
-    const addNote = async () => {
+    const addNote = async (): Promise<void | null> => {
+      if (!text) return null;
+
       const today = moment().format("DD/MM/YY");
 
-      if (file) await addPhoto();
+      //Houve upload de imagem
+      if (file !== null) {
+        const uploadedFiles = await addPhoto();
 
-      const newNote = {
-        author: user.name,
-        email: user.email,
-        note: text,
-        date: today,
-      };
+        const newNote = {
+          author: user.name,
+          email: user.email,
+          note: text,
+          media: uploadedFiles,
+          date: today,
+        };
 
-      //Adiciona uma nova tarefa
-      const insert = await fetch("/api/tasks/new_note", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newNote),
-      });
+        //Adiciona uma nova nota
+        const insert = await fetch("/api/notes/new_note", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newNote),
+        });
 
-      try {
-        if (insert.ok) {
-          currentNotes(user.email);
-          setText("");
-          setShow(false);
+        try {
+          if (insert.ok) {
+            currentNotes(user);
+            setText("");
+            setShow(false);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      }
+
+      //Sem upload de imagem
+      else {
+        const newNote = {
+          author: user.name,
+          email: user.email,
+          note: text,
+          media: [],
+          date: today,
+        };
+
+        //Adiciona uma nova nota
+        const insert = await fetch("/api/tasks/new_note", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newNote),
+        });
+
+        try {
+          if (insert.ok) {
+            currentNotes(user);
+            setText("");
+            setShow(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
 
@@ -269,7 +400,7 @@ function Today() {
           placeholder="Nova nota"
         />
         <button onClick={addNote}>Adicionar</button>
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
         <button onClick={() => setShow(false)}>Cancelar</button>
       </div>
     );
@@ -299,3 +430,23 @@ function Today() {
 }
 
 export default Today;
+
+export async function getServerSideProps() {
+  const getData = await fetch("http://localhost:3000/api/tasks/get_data", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  try {
+    const data = (await getData.json()) as {
+      notes: MyNotes[];
+      tasks: MyTasks[];
+    };
+
+    return { props: { notes: data.notes, tasks: data.tasks } };
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -1,25 +1,21 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
 
-interface Task {
-        author: string;
-        email:string;
-        task: string;
-        done:boolean;
-        date: string;
-}
 
-export default async function AddTask (req:NextApiRequest, res:NextApiResponse) {
-    const task:Task = req.body
+export default async function deleteTask (req:NextApiRequest, res:NextApiResponse) {
+    const taskId = req.body as {id:string}
     const client = await clientPromise;
     const db = client.db("diary");
     const myCollection: Collection = db.collection('tasks');
-
+    const targetId = new ObjectId(taskId.id)
+    const target = {_id:targetId}
 
     try {
-       await myCollection.insertOne(task)
-       res.send('Success')
+    await myCollection.deleteOne(target)
+
+
+   res.status(200).json('Success')
     } catch (error) {
         res.status(400).json({error})
         console.log(error)

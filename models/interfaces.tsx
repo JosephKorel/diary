@@ -18,5 +18,12 @@ export interface MyNotes {
   author: string;
   email: string;
   note: string;
+  media: { name: string; url: string }[];
   date: string;
+}
+
+export interface FileInt {
+  name: string;
+  url: string;
+  type: string;
 }

@@ -9,7 +9,7 @@ interface Note {
         date: string;
 }
 
-export default async function AddTask (req:NextApiRequest, res:NextApiResponse) {
+export default async function addNote (req:NextApiRequest, res:NextApiResponse) {
     const note:Note = req.body
     const client = await clientPromise;
     const db = client.db("diary");

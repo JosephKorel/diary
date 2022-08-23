@@ -1,19 +1,19 @@
-import moment from 'moment';
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
 
-
-export default async function AddTask (req:NextApiRequest, res:NextApiResponse) {
+export default async function deleteNote (req:NextApiRequest, res:NextApiResponse) {
+    const noteId = req.body as {id:string}
+    const targetId = new ObjectId(noteId.id)
+    const target = {_id:targetId}
     const client = await clientPromise;
     const db = client.db("diary");
-    const today = moment().format('DD/MM/YY')
     const myCollection: Collection = db.collection('notes');
-    const currentNotes = await myCollection.find({date:today}).toArray()
 
 
     try {
-       res.status(200).json({notes:currentNotes})
+       await myCollection.deleteOne(target)
+       res.status(200).json('Success')
     } catch (error) {
         res.status(400).json({error})
         console.log(error)
