@@ -10,6 +10,9 @@ import {
 import { storage } from "../firebase.config";
 import { MyNotes, MyTasks, User } from "../models/interfaces";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { GetServerSideProps } from "next";
+import useSWR from "swr";
 
 function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const [user, setUser] = useState<User | null>(null);
@@ -431,7 +434,13 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
 
 export default Today;
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const email = context.query.email;
+
+  const fetchData = await fetch(`http://localhost:3000/api/tasks/${email}`);
+
+  const fetchResult = await fetchData.json();
+
   const getData = await fetch("http://localhost:3000/api/tasks/get_data", {
     method: "GET",
     headers: {
@@ -440,13 +449,13 @@ export async function getServerSideProps() {
   });
 
   try {
-    const data = (await getData.json()) as {
+    const userData = fetchResult as {
       notes: MyNotes[];
       tasks: MyTasks[];
     };
 
-    return { props: { notes: data.notes, tasks: data.tasks } };
+    return { props: { notes: userData.notes, tasks: userData.tasks } };
   } catch (error) {
     console.log(error);
   }
-}
+};

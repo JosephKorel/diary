@@ -1,8 +1,6 @@
-import { Collection } from "mongodb";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import axios from "axios";
-import clientPromise from "../lib/mongodb";
 import Head from "../node_modules/next/head";
 import { useRouter } from "next/router";
 import useLocalStorage from "./components/useLocalStorage";
@@ -28,7 +26,10 @@ export default function Home({ categories }) {
         avatar: session.user.image,
       });
       addUser();
-      router.push("/today");
+      router.push({
+        pathname: "[email]",
+        query: { email: session.user.email },
+      });
     }
   }, [status]);
 
