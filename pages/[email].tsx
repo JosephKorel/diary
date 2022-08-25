@@ -48,7 +48,7 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
     const today = moment().format("DD/MM/YY");
 
     //Pega as tasks do dia de hoje
-    const getTasks = await fetch(`/api/${currentUser.email}`, {
+    const getTasks = await fetch(`/api/tasks/${currentUser.email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -89,8 +89,8 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const MyTasksComponent = (): JSX.Element => {
     const completeTask = async (id: string) => {
       //Manda a req pra atualizar
-      const updateTask = await fetch("/api/tasks/update_task", {
-        method: "POST",
+      const updateTask = await fetch(`/api/tasks/[tasks]/${id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -108,12 +108,11 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
 
     const deleteTask = async (id: string) => {
       //Manda a req pra deletar
-      const updateTask = await fetch("/api/tasks/delete_task", {
-        method: "POST",
+      const updateTask = await fetch(`/api/tasks/[tasks]/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
       });
 
       try {
@@ -182,10 +181,8 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
         date: today,
       };
 
-      console.log("Inserting new task");
-
       //Adiciona uma nova tarefa
-      const insert = await fetch(`/api/${user.email}`, {
+      const insert = await fetch(`/api/tasks/${user.email}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

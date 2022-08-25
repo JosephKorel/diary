@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from '../../../../lib/mongodb';
+
 
 interface Task {
     author: string;
