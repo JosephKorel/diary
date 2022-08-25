@@ -9,6 +9,7 @@ export interface MyTasks {
   author: string;
   email: string;
   task: string;
+  degree: number;
   done: boolean;
   date: string;
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import moment from "moment";
 import MyModal from "./modal";
 import { MyTasks, User } from "../../models/interfaces";
+import { BsFlagFill } from "react-icons/bs";
 
 //Componente que lida com tarefas
 export default function MyTasksComp({
@@ -16,6 +17,8 @@ export default function MyTasksComp({
   const [showTasks, setShowTasks] = useState(false);
   const [show, setShow] = useState(false);
   const [element, setElement] = useState<JSX.Element | null>(null);
+  const [taskEdit, setTaskEdit] = useState("");
+  const [edit, setEdit] = useState<boolean | number>(false);
 
   const completeTask = async (id: string) => {
     //Manda a req pra atualizar
@@ -24,12 +27,35 @@ export default function MyTasksComp({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, action: "done" }),
     });
 
     try {
       if (updateTask.ok) {
         currentTasks(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editTask = async (id: string): Promise<void | null> => {
+    if (taskEdit === "") return null;
+
+    //Manda a req pra atualizar a tarefa
+    const handleEdit = await fetch(`/api/tasks/[tasks]/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, action: "edit", edit: taskEdit }),
+    });
+
+    try {
+      if (handleEdit.ok) {
+        currentTasks(user);
+        setTaskEdit("");
+        setEdit(false);
       }
     } catch (error) {
       console.log(error);
@@ -57,6 +83,7 @@ export default function MyTasksComp({
   //Componente task do modal
   const AddNewTask = (): JSX.Element => {
     const [content, setContent] = useState("");
+    const [degree, setDegree] = useState(1);
 
     const addTask = async (): Promise<void | null> => {
       if (!content) return null;
@@ -66,6 +93,7 @@ export default function MyTasksComp({
         email: user.email,
         task: content,
         done: false,
+        degree,
         date: today,
       };
 
@@ -104,6 +132,20 @@ export default function MyTasksComp({
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
           />
+          <div className="flex gap-5">
+            <div className="flex gap-1">
+              <BsFlagFill onClick={() => setDegree(1)} />
+              <p>Normal</p>
+            </div>
+            <div className="flex gap-1">
+              <BsFlagFill onClick={() => setDegree(2)} />
+              <p>Importante</p>
+            </div>
+            <div className="flex gap-1">
+              <BsFlagFill onClick={() => setDegree(3)} />
+              <p>Urgente</p>
+            </div>
+          </div>
         </form>
         <button onClick={addTask}>Adicionar</button>
         <button onClick={() => setShow(false)}>Cancelar</button>
@@ -139,13 +181,44 @@ export default function MyTasksComp({
             <ul>
               {myTasks.map((item, index) => (
                 <li className="p-1 bg-slate-100" key={index}>
-                  <p className={`${item.done ? "line-through" : ""}`}>
-                    {item.task}
-                  </p>
-                  <button onClick={() => completeTask(item._id)}>
-                    Concluída
-                  </button>
-                  <button onClick={() => deleteTask(item._id)}>Excluir</button>
+                  {edit === index ? (
+                    <>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          editTask(item._id);
+                        }}
+                      >
+                        <input
+                          value={taskEdit}
+                          onChange={(e) => setTaskEdit(e.currentTarget.value)}
+                        />
+                      </form>
+                    </>
+                  ) : (
+                    <p className={`${item.done ? "line-through" : ""}`}>
+                      {item.task}
+                    </p>
+                  )}
+
+                  {edit === index ? (
+                    <>
+                      <button onClick={() => editTask(item._id)}>
+                        Confirmar
+                      </button>
+                      <button onClick={() => setEdit(false)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => completeTask(item._id)}>
+                        Concluída
+                      </button>
+                      <button onClick={() => deleteTask(item._id)}>
+                        Excluir
+                      </button>
+                      <button onClick={() => setEdit(index)}>Editar</button>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>

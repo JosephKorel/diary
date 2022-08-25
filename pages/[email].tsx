@@ -4,6 +4,7 @@ import { MyComments, MyNotes, MyTasks, User } from "../models/interfaces";
 import { GetServerSideProps } from "next";
 import MyTasksComp from "./components/tasks";
 import MyNotesComponent from "./components/notes";
+import CommentComponent from "./components/comments";
 
 function Today({
   notes,
@@ -18,8 +19,6 @@ function Today({
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
-  const [text, setText] = useState("");
-  const [moodValue, setMoodValue] = useState(0);
 
   const getUserData = async () => {
     const today = moment().format("DD/MM/YY");
@@ -100,38 +99,6 @@ function Today({
     }
   };
 
-  const addComment = async () => {
-    const today = moment().format("DD/MM/YY");
-    const time = moment().format("HH:mm");
-
-    const newComment = {
-      author: user.name,
-      email: user.email,
-      comment: text,
-      mood: moodValue,
-      time,
-      date: today,
-    };
-
-    const insert = await fetch(`/api/comments/${user.email}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newComment),
-    });
-
-    try {
-      if (insert.ok) {
-        currentComments(user);
-        setText("");
-        setMoodValue(0);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div>
       <h1>Dia {moment().format("DD/MM")}</h1>
@@ -152,27 +119,11 @@ function Today({
               myNotes={myNotes}
               currentNotes={currentNotes}
             />
-            <div className="p-20 bg-red-300 rounded-lg">
-              <h2>Como você está neste momento?</h2>
-              <input
-                placeholder="Escreva aqui"
-                value={text}
-                onChange={(e) => setText(e.currentTarget.value)}
-              />
-              <p>Humor</p>
-              <input
-                placeholder="0 - Muito triste, 10 - Muito feliz"
-                value={moodValue}
-                onChange={(e) => setMoodValue(Number(e.currentTarget.value))}
-              />
-              <button onClick={addComment}>Confirmar</button>
-              <p>Comentários: {myComments.length}</p>
-              {myComments.map((item) => (
-                <p>
-                  {item.comment} as {item.time}
-                </p>
-              ))}
-            </div>
+            <CommentComponent
+              user={user}
+              myComments={myComments}
+              currentComments={currentComments}
+            />
           </div>
         </div>
       )}
