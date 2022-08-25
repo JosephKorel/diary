@@ -68,12 +68,11 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const currentNotes = async (currentUser: User) => {
     const today = moment().format("DD/MM/YY");
     //Pega as anotações do usuário
-    const getNotes = await fetch("/api/notes/current_notes", {
-      method: "POST",
+    const getNotes = await fetch(`/api/notes/${currentUser.email}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(currentUser),
     });
 
     try {
@@ -234,12 +233,11 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
         });
       }
 
-      const handleDelete = await fetch("/api/notes/delete_note", {
-        method: "POST",
+      const handleDelete = await fetch(`/api/notes/[notes]/${note._id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: note._id }),
       });
 
       try {
@@ -331,7 +329,7 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
         };
 
         //Adiciona uma nova nota
-        const insert = await fetch("/api/notes/new_note", {
+        const insert = await fetch(`/api/notes/${user.email}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -361,7 +359,7 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
         };
 
         //Adiciona uma nova nota
-        const insert = await fetch("/api/tasks/new_note", {
+        const insert = await fetch(`/api/notes/${user.email}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

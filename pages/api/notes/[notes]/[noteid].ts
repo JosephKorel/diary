@@ -1,10 +1,11 @@
 import { Collection, ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from '../../../../lib/mongodb';
+
 
 export default async function deleteNote (req:NextApiRequest, res:NextApiResponse) {
-    const noteId = req.body as {id:string}
-    const targetId = new ObjectId(noteId.id)
+    const {noteid} = req.query as {noteid:string}
+    const targetId = new ObjectId(noteid)
     const target = {_id:targetId}
     const client = await clientPromise;
     const db = client.db("diary");
