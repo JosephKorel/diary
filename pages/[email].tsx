@@ -10,9 +10,7 @@ import {
 import { storage } from "../firebase.config";
 import { MyNotes, MyTasks, User } from "../models/interfaces";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { GetServerSideProps } from "next";
-import useSWR from "swr";
 
 function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const [user, setUser] = useState<User | null>(null);
@@ -22,13 +20,6 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
   const [showNotes, setShowNotes] = useState(false);
   const [show, setShow] = useState(false);
   const [element, setElement] = useState<JSX.Element | null>(null);
-
-  const retrieveInfo = async () => {
-    const currentUser: User = await JSON.parse(localStorage.getItem("user"));
-    await currentTasks(currentUser);
-    /*  await currentNotes(currentUser); */
-    setUser(currentUser);
-  };
 
   const getUserData = async () => {
     const today = moment().format("DD/MM/YY");
@@ -44,25 +35,24 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
       (note) => note.email === currentUser.email
     );
 
+    setUser(currentUser);
     setMyTasks(userTasks);
     setMyNotes(userNotes);
   };
 
   useEffect(() => {
     getUserData();
-    retrieveInfo();
   }, []);
 
   const currentTasks = async (currentUser: User) => {
     const today = moment().format("DD/MM/YY");
 
     //Pega as tasks do dia de hoje
-    const getTasks = await fetch("/api/tasks/current_tasks", {
-      method: "POST",
+    const getTasks = await fetch(`/api/${currentUser.email}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(currentUser),
     });
 
     try {
@@ -192,8 +182,10 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
         date: today,
       };
 
+      console.log("Inserting new task");
+
       //Adiciona uma nova tarefa
-      const insert = await fetch("/api/tasks/new_task", {
+      const insert = await fetch(`/api/${user.email}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -437,16 +429,9 @@ export default Today;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const email = context.query.email;
 
-  const fetchData = await fetch(`http://localhost:3000/api/tasks/${email}`);
+  const fetchData = await fetch(`http://localhost:3000/api/user/${email}`);
 
   const fetchResult = await fetchData.json();
-
-  const getData = await fetch("http://localhost:3000/api/tasks/get_data", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   try {
     const userData = fetchResult as {
