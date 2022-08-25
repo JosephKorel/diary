@@ -7,7 +7,7 @@ interface Comment {
     author: string;
     email:string;
     comment: string;
-    mood:string;
+    mood:number;
     time:string;
     date: string;
 }
@@ -27,7 +27,7 @@ export default async function TaskHandler (req:NextApiRequest, res:NextApiRespon
         case 'GET':
             const currentComments = await comCollection.find({email}).toArray()
             try {
-            res.status(200).json({tasks:currentComments})
+            res.status(200).json({comments:currentComments})
             } catch (error) {
                 res.status(400).json({error})
                 console.log(error)

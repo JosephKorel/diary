@@ -27,7 +27,7 @@ export interface MyComments {
   author: string;
   email: string;
   comment: string;
-  mood: string;
+  mood: number;
   time: string;
   date: string;
 }

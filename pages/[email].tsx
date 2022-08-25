@@ -5,10 +5,21 @@ import { GetServerSideProps } from "next";
 import MyTasksComp from "./components/tasks";
 import MyNotesComponent from "./components/notes";
 
-function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
+function Today({
+  notes,
+  tasks,
+  comments,
+}: {
+  notes: MyNotes[];
+  tasks: MyTasks[];
+  comments: MyComments[];
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
+  const [myComments, setMyComments] = useState<MyComments[]>([]);
+  const [text, setText] = useState("");
+  const [moodValue, setMoodValue] = useState(0);
 
   const getUserData = async () => {
     const today = moment().format("DD/MM/YY");
@@ -16,17 +27,12 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
 
     const todayNotes = notes.filter((note) => note.date === today);
     const todayTasks = tasks.filter((task) => task.date === today);
-
-    const userTasks = todayTasks.filter(
-      (task) => task.email === currentUser.email
-    );
-    const userNotes = todayNotes.filter(
-      (note) => note.email === currentUser.email
-    );
+    const todayComments = comments.filter((com) => com.date === today);
 
     setUser(currentUser);
-    setMyTasks(userTasks);
-    setMyNotes(userNotes);
+    setMyTasks(todayTasks);
+    setMyNotes(todayNotes);
+    setMyComments(todayComments);
   };
 
   useEffect(() => {
@@ -73,6 +79,59 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
     }
   };
 
+  const currentComments = async (currentUser: User): Promise<void> => {
+    const today = moment().format("DD/MM/YY");
+    //Pega as anotações do usuário
+    const getComments = await fetch(`/api/comments/${currentUser.email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    try {
+      const comments = (await getComments.json()) as { comments: MyComments[] };
+      const todayComments = comments.comments.filter(
+        (com) => com.date === today
+      );
+      setMyComments(todayComments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addComment = async () => {
+    const today = moment().format("DD/MM/YY");
+    const time = moment().format("HH:mm");
+
+    const newComment = {
+      author: user.name,
+      email: user.email,
+      comment: text,
+      mood: moodValue,
+      time,
+      date: today,
+    };
+
+    const insert = await fetch(`/api/comments/${user.email}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newComment),
+    });
+
+    try {
+      if (insert.ok) {
+        currentComments(user);
+        setText("");
+        setMoodValue(0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <h1>Dia {moment().format("DD/MM")}</h1>
@@ -94,7 +153,25 @@ function Today({ notes, tasks }: { notes: MyNotes[]; tasks: MyTasks[] }) {
               currentNotes={currentNotes}
             />
             <div className="p-20 bg-red-300 rounded-lg">
-              <h2>Avaliação geral do dia</h2>
+              <h2>Como você está neste momento?</h2>
+              <input
+                placeholder="Escreva aqui"
+                value={text}
+                onChange={(e) => setText(e.currentTarget.value)}
+              />
+              <p>Humor</p>
+              <input
+                placeholder="0 - Muito triste, 10 - Muito feliz"
+                value={moodValue}
+                onChange={(e) => setMoodValue(Number(e.currentTarget.value))}
+              />
+              <button onClick={addComment}>Confirmar</button>
+              <p>Comentários: {myComments.length}</p>
+              {myComments.map((item) => (
+                <p>
+                  {item.comment} as {item.time}
+                </p>
+              ))}
             </div>
           </div>
         </div>
