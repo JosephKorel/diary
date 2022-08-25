@@ -1,0 +1,202 @@
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import MyModal from "./modal";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../../firebase.config";
+import { MyNotes, User } from "../../models/interfaces";
+import Image from "next/image";
+
+//Componente de anotações
+export default function MyNotesComponent({
+  currentNotes,
+  user,
+  myNotes,
+}: {
+  currentNotes: (data: User) => void;
+  user: User;
+  myNotes: MyNotes[];
+}): JSX.Element {
+  const [showNotes, setShowNotes] = useState(false);
+  const [show, setShow] = useState(false);
+  const [element, setElement] = useState<JSX.Element | null>(null);
+
+  const AddNewNote = (): JSX.Element => {
+    const [text, setText] = useState("");
+    const [file, setFile] = useState<null | any>(null);
+
+    const addPhoto = async (): Promise<
+      { name: string; url: string }[] | null
+    > => {
+      let uploadedFiles: { name: string; url: string }[] = [];
+      let files: any[] = [];
+      Object.entries(file).forEach(([key, value]) => files.push(value));
+
+      try {
+        for (let item of files) {
+          const imgref = ref(storage, `${user.email}/${item.name}`);
+          await uploadBytes(imgref, item);
+          const url = await getDownloadURL(imgref);
+          uploadedFiles.push({ name: item.name, url });
+        }
+
+        return uploadedFiles;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    };
+
+    //Adiciona a nota
+    const addNote = async (): Promise<void | null> => {
+      if (!text) return null;
+
+      const today = moment().format("DD/MM/YY");
+
+      //Houve upload de imagem
+      if (file !== null) {
+        const uploadedFiles = await addPhoto();
+
+        const newNote = {
+          author: user.name,
+          email: user.email,
+          note: text,
+          media: uploadedFiles,
+          date: today,
+        };
+
+        //Adiciona uma nova nota
+        const insert = await fetch(`/api/notes/${user.email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newNote),
+        });
+
+        try {
+          if (insert.ok) {
+            currentNotes(user);
+            setText("");
+            setShow(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      //Sem upload de imagem
+      else {
+        const newNote = {
+          author: user.name,
+          email: user.email,
+          note: text,
+          media: [],
+          date: today,
+        };
+
+        //Adiciona uma nova nota
+        const insert = await fetch(`/api/notes/${user.email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newNote),
+        });
+
+        try {
+          if (insert.ok) {
+            currentNotes(user);
+            setText("");
+            setShow(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    return (
+      <div
+        className="bg-green-400 p-20 rounded-md"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.currentTarget.value)}
+          placeholder="Nova nota"
+        />
+        <button onClick={addNote}>Adicionar</button>
+        <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
+        <button onClick={() => setShow(false)}>Cancelar</button>
+      </div>
+    );
+  };
+
+  const deleteNote = async (note: MyNotes) => {
+    //Se houver imagens, deleta as imagens no storage
+    if (note.media.length > 0) {
+      note.media.forEach((item) => {
+        const imgRef = ref(storage, `${note.email}/${item.name}`);
+        deleteObject(imgRef);
+      });
+    }
+
+    const handleDelete = await fetch(`/api/notes/[notes]/${note._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    try {
+      if (handleDelete.ok) {
+        currentNotes(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      {" "}
+      {show && <MyModal children={element} setShow={setShow} />}
+      <div className="p-20 bg-red-300 rounded-lg">
+        <h2>Anotações: {myNotes.length}</h2>
+        <button
+          onClick={() => {
+            setElement(<AddNewNote />);
+            setShow(true);
+          }}
+        >
+          Adicionar
+        </button>
+        <button onClick={() => setShowNotes(!showNotes)}>Ver anotações</button>
+        {showNotes && (
+          <div>
+            <ul>
+              {myNotes.map((item, index) => (
+                <li key={index}>
+                  <p>{item.note}</p>
+                  {item.media.length > 0 && (
+                    <>
+                      {item.media.map((image) => (
+                        <Image src={image.url} width={100} height={100} />
+                      ))}
+                    </>
+                  )}
+                  <button onClick={() => deleteNote(item)}>Excluir</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}

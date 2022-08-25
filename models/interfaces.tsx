@@ -22,6 +22,16 @@ export interface MyNotes {
   date: string;
 }
 
+export interface MyComments {
+  _id: string;
+  author: string;
+  email: string;
+  comment: string;
+  mood: string;
+  time: string;
+  date: string;
+}
+
 export interface FileInt {
   name: string;
   url: string;

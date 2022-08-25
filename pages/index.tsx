@@ -50,7 +50,7 @@ export default function Home({ categories }) {
       };
 
       try {
-        await fetch("/api/new_user", {
+        await fetch("/api/user/new_user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
