@@ -20,17 +20,18 @@ function Today({
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
 
+  const currentTime = moment().format("HH:mm");
+
   const getUserData = async () => {
     const today = moment().format("DD/MM/YY");
     const currentUser: User = await JSON.parse(localStorage.getItem("user"));
 
-    const todayNotes = notes.filter((note) => note.date === today);
     const todayTasks = tasks.filter((task) => task.date === today);
     const todayComments = comments.filter((com) => com.date === today);
 
     setUser(currentUser);
     setMyTasks(todayTasks);
-    setMyNotes(todayNotes);
+    setMyNotes(notes);
     setMyComments(todayComments);
   };
 
@@ -107,6 +108,11 @@ function Today({
           <div>
             <img src={user.avatar}></img>
             <h2>Olá, {user.name}</h2>
+            <MyNotesComponent
+              user={user}
+              myNotes={myNotes}
+              currentNotes={currentNotes}
+            />
           </div>
           <div className="flex justify-around items-center">
             <MyTasksComp
@@ -114,16 +120,20 @@ function Today({
               myTasks={myTasks}
               currentTasks={currentTasks}
             />
-            <MyNotesComponent
-              user={user}
-              myNotes={myNotes}
-              currentNotes={currentNotes}
-            />
             <CommentComponent
               user={user}
               myComments={myComments}
               currentComments={currentComments}
             />
+          </div>
+          <div>
+            {currentTime >= "20:00" && (
+              <>
+                <p>Avalie o dia de hoje</p>
+                <input />
+                <button>Confirmar</button>
+              </>
+            )}
           </div>
         </div>
       )}

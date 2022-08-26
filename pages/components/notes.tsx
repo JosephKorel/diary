@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import MyModal from "./modal";
 import {
@@ -24,6 +24,8 @@ export default function MyNotesComponent({
   const [showNotes, setShowNotes] = useState(false);
   const [show, setShow] = useState(false);
   const [element, setElement] = useState<JSX.Element | null>(null);
+  const [edit, setEdit] = useState<boolean | number>(false);
+  const [noteEdit, setNoteEdit] = useState("");
 
   const AddNewNote = (): JSX.Element => {
     const [text, setText] = useState("");
@@ -125,11 +127,14 @@ export default function MyNotesComponent({
         className="bg-green-400 p-20 rounded-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.currentTarget.value)}
-          placeholder="Nova nota"
-        />
+        <div>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.currentTarget.value)}
+            placeholder="Nova nota"
+            className="w-1/3 h-44 p-1"
+          />
+        </div>
         <button onClick={addNote}>Adicionar</button>
         <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
         <button onClick={() => setShow(false)}>Cancelar</button>
@@ -162,9 +167,28 @@ export default function MyNotesComponent({
     }
   };
 
+  const editNote = async (note: MyNotes): Promise<void | null> => {
+    if (noteEdit === "") return null;
+    const handleEdit = await fetch(`/api/notes/[notes]/${note._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ edit: noteEdit }),
+    });
+
+    try {
+      if (handleEdit.ok) {
+        currentNotes(user);
+        setEdit(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      {" "}
       {show && <MyModal children={element} setShow={setShow} />}
       <div className="p-20 bg-red-300 rounded-lg">
         <h2>Anotações: {myNotes.length}</h2>
@@ -182,15 +206,43 @@ export default function MyNotesComponent({
             <ul>
               {myNotes.map((item, index) => (
                 <li key={index}>
-                  <p>{item.note}</p>
-                  {item.media.length > 0 && (
+                  {edit === index ? (
                     <>
-                      {item.media.map((image) => (
-                        <Image src={image.url} width={100} height={100} />
-                      ))}
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          editNote(item);
+                        }}
+                      >
+                        <input
+                          value={noteEdit}
+                          onChange={(e) => setNoteEdit(e.currentTarget.value)}
+                        />
+                      </form>
+                      <button onClick={() => editNote(item)}>Confirmar</button>
+                      <button onClick={() => setEdit(false)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <p>{item.note}</p>
+                      {item.media.length > 0 && (
+                        <>
+                          {item.media.map((image) => (
+                            <Image src={image.url} width={100} height={100} />
+                          ))}
+                        </>
+                      )}
+                      <button onClick={() => deleteNote(item)}>Excluir</button>
+                      <button
+                        onClick={() => {
+                          setEdit(index);
+                          setNoteEdit(item.note);
+                        }}
+                      >
+                        Editar
+                      </button>
                     </>
                   )}
-                  <button onClick={() => deleteNote(item)}>Excluir</button>
                 </li>
               ))}
             </ul>
