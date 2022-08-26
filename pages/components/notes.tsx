@@ -10,8 +10,8 @@ import {
 import { storage } from "../../firebase.config";
 import { MyNotes, User } from "../../models/interfaces";
 import Image from "next/image";
+import TextEditor from "./TextEditor/text_editor";
 
-//Componente de anotações
 export default function MyNotesComponent({
   currentNotes,
   user,
@@ -26,9 +26,10 @@ export default function MyNotesComponent({
   const [element, setElement] = useState<JSX.Element | null>(null);
   const [edit, setEdit] = useState<boolean | number>(false);
   const [noteEdit, setNoteEdit] = useState("");
+  const [html, setHtml] = useState("");
 
   const AddNewNote = (): JSX.Element => {
-    const [text, setText] = useState("");
+    const [text, setText] = useState("We should eat chocolate");
     const [file, setFile] = useState<null | any>(null);
 
     const addPhoto = async (): Promise<
@@ -128,12 +129,9 @@ export default function MyNotesComponent({
         onClick={(e) => e.stopPropagation()}
       >
         <div>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.currentTarget.value)}
-            placeholder="Nova nota"
-            className="w-1/3 h-44 p-1"
-          />
+          <div className="p-2 bg-slate-100">
+            <TextEditor text={text} setHtml={setHtml} />
+          </div>
         </div>
         <button onClick={addNote}>Adicionar</button>
         <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
