@@ -2,6 +2,7 @@ export interface User {
   name: string;
   email?: string;
   avatar?: string;
+  dayEvaluation: { date: string; value: number }[];
 }
 
 export interface MyTasks {

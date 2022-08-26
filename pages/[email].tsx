@@ -5,32 +5,29 @@ import { GetServerSideProps } from "next";
 import MyTasksComp from "./components/tasks";
 import MyNotesComponent from "./components/notes";
 import CommentComponent from "./components/comments";
+import DayEvaluation from "./components/dayEval";
 
 function Today({
+  user,
   notes,
   tasks,
   comments,
 }: {
+  user: User;
   notes: MyNotes[];
   tasks: MyTasks[];
   comments: MyComments[];
 }) {
-  const [user, setUser] = useState<User | null>(null);
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
-  const [dayVal, setDayVal] = useState(0);
 
   const today = moment().format("DD/MM/YY");
-  const currentTime = moment().format("HH:mm");
 
-  const getUserData = async () => {
-    const currentUser: User = await JSON.parse(localStorage.getItem("user"));
-
+  const getUserData = () => {
     const todayTasks = tasks.filter((task) => task.date === today);
     const todayComments = comments.filter((com) => com.date === today);
 
-    setUser(currentUser);
     setMyTasks(todayTasks);
     setMyNotes(notes);
     setMyComments(todayComments);
@@ -97,24 +94,6 @@ function Today({
     }
   };
 
-  const evaluateDay = async () => {
-    const handleEvaluation = await fetch(`/api/user/${user.email}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ value: dayVal, date: today }),
-    });
-    try {
-      if (handleEvaluation.ok) {
-        setDayVal(0);
-        console.log("Success");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div>
       <h1>Dia {moment().format("DD/MM")}</h1>
@@ -142,16 +121,7 @@ function Today({
             />
           </div>
           <div>
-            {currentTime <= "20:00" && (
-              <>
-                <p>Avalie o dia de hoje</p>
-                <input
-                  value={dayVal}
-                  onChange={(e) => setDayVal(Number(e.currentTarget.value))}
-                />
-                <button onClick={evaluateDay}>Confirmar</button>
-              </>
-            )}
+            <DayEvaluation user={user} />
           </div>
         </div>
       )}
@@ -170,6 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   try {
     const userData = fetchResult as {
+      currUser: User;
       notes: MyNotes[];
       tasks: MyTasks[];
       comments: MyComments[];
@@ -177,6 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: {
+        user: userData.currUser,
         notes: userData.notes,
         tasks: userData.tasks,
         comments: userData.comments,
