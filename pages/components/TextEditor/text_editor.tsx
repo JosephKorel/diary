@@ -3,6 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import React from "react";
 import { FaBold, FaItalic, FaStrikethrough, FaHeading } from "react-icons/fa";
 import { AiOutlineLine } from "react-icons/ai";
+import Head from "next/head";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -69,14 +70,27 @@ export default function TextEditor({
 }) {
   const editor = useEditor({
     extensions: [StarterKit],
-    content: text,
+    content: `${text}`,
     onUpdate: ({ editor }) => {
       setHtml(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
+      },
     },
   });
 
   return (
     <div>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography/dist/typography.min.css"
+        />
+        ;
+      </Head>
       <div className="p-1 rounded-md border border-stone-800">
         <MenuBar editor={editor} />
       </div>

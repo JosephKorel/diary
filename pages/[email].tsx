@@ -19,11 +19,12 @@ function Today({
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
+  const [dayVal, setDayVal] = useState(0);
 
+  const today = moment().format("DD/MM/YY");
   const currentTime = moment().format("HH:mm");
 
   const getUserData = async () => {
-    const today = moment().format("DD/MM/YY");
     const currentUser: User = await JSON.parse(localStorage.getItem("user"));
 
     const todayTasks = tasks.filter((task) => task.date === today);
@@ -40,8 +41,6 @@ function Today({
   }, []);
 
   const currentTasks = async (currentUser: User): Promise<void> => {
-    const today = moment().format("DD/MM/YY");
-
     //Pega as tasks do dia de hoje
     const getTasks = await fetch(`/api/tasks/${currentUser.email}`, {
       method: "GET",
@@ -61,7 +60,6 @@ function Today({
   };
 
   const currentNotes = async (currentUser: User): Promise<void> => {
-    const today = moment().format("DD/MM/YY");
     //Pega as anotações do usuário
     const getNotes = await fetch(`/api/notes/${currentUser.email}`, {
       method: "GET",
@@ -80,7 +78,6 @@ function Today({
   };
 
   const currentComments = async (currentUser: User): Promise<void> => {
-    const today = moment().format("DD/MM/YY");
     //Pega as anotações do usuário
     const getComments = await fetch(`/api/comments/${currentUser.email}`, {
       method: "GET",
@@ -95,6 +92,24 @@ function Today({
         (com) => com.date === today
       );
       setMyComments(todayComments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const evaluateDay = async () => {
+    const handleEvaluation = await fetch(`/api/user/${user.email}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ value: dayVal, date: today }),
+    });
+    try {
+      if (handleEvaluation.ok) {
+        setDayVal(0);
+        console.log("Success");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -127,11 +142,14 @@ function Today({
             />
           </div>
           <div>
-            {currentTime >= "20:00" && (
+            {currentTime <= "20:00" && (
               <>
                 <p>Avalie o dia de hoje</p>
-                <input />
-                <button>Confirmar</button>
+                <input
+                  value={dayVal}
+                  onChange={(e) => setDayVal(Number(e.currentTarget.value))}
+                />
+                <button onClick={evaluateDay}>Confirmar</button>
               </>
             )}
           </div>
