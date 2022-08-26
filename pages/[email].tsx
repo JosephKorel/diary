@@ -6,6 +6,7 @@ import MyTasksComp from "./components/tasks";
 import MyNotesComponent from "./components/notes";
 import CommentComponent from "./components/comments";
 import DayEvaluation from "./components/dayEval";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 function Today({
   user,
@@ -24,9 +25,14 @@ function Today({
 
   const today = moment().format("DD/MM/YY");
 
-  const getUserData = () => {
-    const todayTasks = tasks.filter((task) => task.date === today);
-    const todayComments = comments.filter((com) => com.date === today);
+  const [currentDate, setCurrentDate] = useState<{
+    when: string;
+    date: string;
+  }>({ when: "Hoje", date: today });
+
+  const getUserData = (date: string) => {
+    const todayTasks = tasks.filter((task) => task.date === date);
+    const todayComments = comments.filter((com) => com.date === date);
 
     setMyTasks(todayTasks);
     setMyNotes(notes);
@@ -34,7 +40,7 @@ function Today({
   };
 
   useEffect(() => {
-    getUserData();
+    getUserData(today);
   }, []);
 
   const currentTasks = async (currentUser: User): Promise<void> => {
@@ -94,9 +100,50 @@ function Today({
     }
   };
 
+  const DateDisplay = (): JSX.Element => {
+    const [show, setShow] = useState(false);
+
+    const days = [
+      { when: "Hoje", daysAgo: 0 },
+      { when: "Ontem", daysAgo: 1 },
+      { when: "3 dias atrás", daysAgo: 3 },
+    ];
+
+    const onDayChange = (day: { when: string; daysAgo: number }) => {
+      const now = moment();
+      const selectedDay = now.subtract(day.daysAgo, "days").format("DD/MM/YY");
+      setCurrentDate({ when: day.when, date: selectedDay });
+      getUserData(selectedDay);
+      setShow(false);
+    };
+
+    return (
+      <div className="flex">
+        <div className="flex flex-col">
+          <p>
+            {currentDate.when} ({currentDate.date})
+          </p>
+          <div className={show ? "" : "hidden"}>
+            {days.map((day) => (
+              <p
+                className="p-1 hover:bg-green-400 duration-200 cursor-pointer"
+                onClick={() => onDayChange(day)}
+              >
+                {day.when}
+              </p>
+            ))}
+          </div>
+        </div>
+        <button onClick={() => setShow(!show)}>
+          <IoMdArrowDropdown />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div>
-      <h1>Dia {moment().format("DD/MM")}</h1>
+      <DateDisplay />
       {user && (
         <div>
           <div>
