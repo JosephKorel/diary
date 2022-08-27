@@ -39,3 +39,13 @@ export interface FileInt {
   url: string;
   type: string;
 }
+
+export interface Date {
+  when: string;
+  date: string;
+}
+
+export interface Evaluation {
+  value: number;
+  date: string;
+}

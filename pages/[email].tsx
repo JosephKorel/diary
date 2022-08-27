@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { MyComments, MyNotes, MyTasks, User } from "../models/interfaces";
+import {
+  Date,
+  Evaluation,
+  MyComments,
+  MyNotes,
+  MyTasks,
+  User,
+} from "../models/interfaces";
 import { GetServerSideProps } from "next";
 import MyTasksComp from "./components/tasks";
 import MyNotesComponent from "./components/notes";
@@ -22,18 +29,21 @@ function Today({
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
+  const [dayVal, setDayVal] = useState<Evaluation[]>([]);
 
   const today = moment().format("DD/MM/YY");
 
-  const [currentDate, setCurrentDate] = useState<{
-    when: string;
-    date: string;
-  }>({ when: "Hoje", date: today });
+  const [currentDate, setCurrentDate] = useState<Date>({
+    when: "Hoje",
+    date: today,
+  });
 
   const getUserData = (date: string) => {
     const todayTasks = tasks.filter((task) => task.date === date);
     const todayComments = comments.filter((com) => com.date === date);
+    const todayVal = user.dayEvaluation.filter((item) => item.date === date);
 
+    setDayVal(todayVal);
     setMyTasks(todayTasks);
     setMyNotes(notes);
     setMyComments(todayComments);
@@ -168,7 +178,12 @@ function Today({
             />
           </div>
           <div>
-            <DayEvaluation user={user} />
+            <DayEvaluation
+              user={user}
+              dayVal={dayVal}
+              setDayVal={setDayVal}
+              currentDate={currentDate}
+            />
           </div>
         </div>
       )}

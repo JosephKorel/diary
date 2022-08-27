@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { User } from "../../models/interfaces";
+import { Date, Evaluation, User } from "../../models/interfaces";
 
-interface Evaluation {
-  value: number;
-  date: string;
-}
-
-export default function DayEvaluation({ user }: { user: User }): JSX.Element {
-  const [dayVal, setDayVal] = useState(0);
+export default function DayEvaluation({
+  user,
+  dayVal,
+  setDayVal,
+  currentDate,
+}: {
+  user: User;
+  dayVal: Evaluation[];
+  setDayVal: (data: Evaluation[]) => void;
+  currentDate: Date;
+}): JSX.Element {
+  const [evaluate, setEvaluate] = useState(0);
   const [edit, setEdit] = useState(false);
-  const [todayEvaluation, setTodayEvaluation] = useState<Evaluation[]>([]);
 
   const today = moment().format("DD/MM/YY");
   const currentTime = moment().format("HH:mm");
@@ -18,7 +22,7 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
   const todayVal = user.dayEvaluation.filter((item) => item.date === today);
 
   useEffect(() => {
-    setTodayEvaluation(todayVal);
+    setDayVal(todayVal);
   }, []);
 
   const getTodayVal = async () => {
@@ -34,7 +38,7 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
       (item) => item.date === today
     );
 
-    setTodayEvaluation(todayFilter);
+    setDayVal(todayFilter);
   };
 
   const evaluateDay = async (): Promise<void | null> => {
@@ -47,7 +51,7 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
     });
     try {
       if (handleEvaluation.ok) {
-        setDayVal(0);
+        setEvaluate(0);
         console.log("Success");
       }
     } catch (error) {
@@ -59,7 +63,7 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
     const userEvaluation = user.dayEvaluation.slice();
     userEvaluation.forEach((item) => {
       if (item.date === today) {
-        item.value = dayVal;
+        item.value = evaluate;
       }
     });
 
@@ -72,7 +76,7 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
     });
     try {
       if (handleEdit.ok) {
-        setDayVal(0);
+        setEvaluate(0);
         setEdit(false);
         getTodayVal();
       }
@@ -83,23 +87,23 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
 
   return (
     <div>
-      {currentTime >= "20:00" && (
+      {currentTime <= "20:00" && currentDate.date === today ? (
         <>
-          {todayEvaluation.length > 0 ? (
+          {dayVal.length > 0 ? (
             <>
               {edit ? (
                 <>
                   <p>Avalie o dia de hoje</p>
                   <input
-                    value={dayVal}
-                    onChange={(e) => setDayVal(Number(e.currentTarget.value))}
+                    value={evaluate}
+                    onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
                   />
                   <button onClick={editEvaluation}>Confirmar</button>
                   <button onClick={() => setEdit(false)}>Cancelar</button>
                 </>
               ) : (
                 <>
-                  <p>Seu dia foi um {todayEvaluation[0].value}</p>
+                  <p>Seu dia foi um {dayVal[0].value}</p>
                   <button onClick={() => setEdit(true)}>Editar</button>
                 </>
               )}
@@ -108,10 +112,22 @@ export default function DayEvaluation({ user }: { user: User }): JSX.Element {
             <>
               <p>Avalie o dia de hoje</p>
               <input
-                value={dayVal}
-                onChange={(e) => setDayVal(Number(e.currentTarget.value))}
+                value={evaluate}
+                onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
               />
               <button onClick={evaluateDay}>Confirmar</button>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          {dayVal[0] ? (
+            <>
+              <p>Seu dia foi um {dayVal[0].value}</p>
+            </>
+          ) : (
+            <>
+              <p>Não há registros para este dia</p>
             </>
           )}
         </>
