@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import {
-  Date,
+  DateInt,
   Evaluation,
   MyComments,
   MyNotes,
@@ -14,6 +14,8 @@ import MyNotesComponent from "./components/notes";
 import CommentComponent from "./components/comments";
 import DayEvaluation from "./components/dayEval";
 import { IoMdArrowDropdown } from "react-icons/io";
+import Calendar, { Detail } from "react-calendar";
+import { BsHeartFill } from "react-icons/bs";
 
 function Today({
   user,
@@ -30,10 +32,11 @@ function Today({
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
+  const [value, onChange] = useState(new Date());
 
   const today = moment().format("DD/MM/YY");
 
-  const [currentDate, setCurrentDate] = useState<Date>({
+  const [currentDate, setCurrentDate] = useState<DateInt>({
     when: "Hoje",
     date: today,
   });
@@ -127,6 +130,34 @@ function Today({
       setShow(false);
     };
 
+    const TileDiv = ({
+      activeStartDate,
+      date,
+      view,
+    }: {
+      activeStartDate: Date;
+      date: Date;
+      view: Detail;
+    }) => {
+      return (
+        <div>
+          {/* <div className="flex items-center">
+            {2 === 2 ? (
+              <>
+                <p>Emy Day</p>
+                <BsHeartFill color="red" />
+              </>
+            ) : null}
+          </div> */}
+          {user.dayEvaluation.map((item) => {
+            if (item.date === moment(date).format("DD/MM/YY")) {
+              return <p>Nota: {item.value}</p>;
+            }
+          })}
+        </div>
+      );
+    };
+
     return (
       <div className="flex">
         <div className="flex flex-col">
@@ -147,6 +178,17 @@ function Today({
         <button onClick={() => setShow(!show)}>
           <IoMdArrowDropdown />
         </button>
+        <Calendar
+          value={value}
+          onChange={onChange}
+          tileContent={({ activeStartDate, date, view }) => (
+            <TileDiv
+              activeStartDate={activeStartDate}
+              date={date}
+              view={view}
+            />
+          )}
+        />
       </div>
     );
   };

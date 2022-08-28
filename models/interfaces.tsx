@@ -40,7 +40,7 @@ export interface FileInt {
   type: string;
 }
 
-export interface Date {
+export interface DateInt {
   when: string;
   date: string;
 }

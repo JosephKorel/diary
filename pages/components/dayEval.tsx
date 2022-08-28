@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { Date, Evaluation, User } from "../../models/interfaces";
+import { DateInt, Evaluation, User } from "../../models/interfaces";
 
 export default function DayEvaluation({
   user,
@@ -11,7 +11,7 @@ export default function DayEvaluation({
   user: User;
   dayVal: Evaluation[];
   setDayVal: (data: Evaluation[]) => void;
-  currentDate: Date;
+  currentDate: DateInt;
 }): JSX.Element {
   const [evaluate, setEvaluate] = useState(0);
   const [edit, setEdit] = useState(false);
@@ -47,11 +47,12 @@ export default function DayEvaluation({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ value: dayVal, date: today }),
+      body: JSON.stringify({ value: evaluate, date: today }),
     });
     try {
       if (handleEvaluation.ok) {
         setEvaluate(0);
+        getTodayVal();
         console.log("Success");
       }
     } catch (error) {
@@ -87,7 +88,7 @@ export default function DayEvaluation({
 
   return (
     <div>
-      {currentTime <= "20:00" && currentDate.date === today ? (
+      {currentTime >= "20:00" && currentDate.date === today ? (
         <>
           {dayVal.length > 0 ? (
             <>
