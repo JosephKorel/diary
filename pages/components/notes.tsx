@@ -27,32 +27,32 @@ export default function MyNotesComponent({
   const [noteEdit, setNoteEdit] = useState("");
   const [showNote, setShowNote] = useState<boolean | number>(false);
 
+  const addPhoto = async (
+    file: any
+  ): Promise<{ name: string; url: string }[] | null> => {
+    let uploadedFiles: { name: string; url: string }[] = [];
+    let files: any[] = [];
+    Object.entries(file).forEach(([key, value]) => files.push(value));
+
+    try {
+      for (let item of files) {
+        const imgref = ref(storage, `${user.email}/${item.name}`);
+        await uploadBytes(imgref, item);
+        const url = await getDownloadURL(imgref);
+        uploadedFiles.push({ name: item.name, url });
+      }
+
+      return uploadedFiles;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   const AddNewNote = (): JSX.Element => {
     const [file, setFile] = useState<null | any>(null);
-    const [html, setHtml] = useState("We should eat chocolate");
+    const [html, setHtml] = useState("<p>We should eat chocolate</p>");
     const [title, setTitle] = useState("");
-
-    const addPhoto = async (): Promise<
-      { name: string; url: string }[] | null
-    > => {
-      let uploadedFiles: { name: string; url: string }[] = [];
-      let files: any[] = [];
-      Object.entries(file).forEach(([key, value]) => files.push(value));
-
-      try {
-        for (let item of files) {
-          const imgref = ref(storage, `${user.email}/${item.name}`);
-          await uploadBytes(imgref, item);
-          const url = await getDownloadURL(imgref);
-          uploadedFiles.push({ name: item.name, url });
-        }
-
-        return uploadedFiles;
-      } catch (error) {
-        console.log(error);
-        return null;
-      }
-    };
 
     //Adiciona a nota
     const addNote = async (
@@ -65,7 +65,7 @@ export default function MyNotesComponent({
 
       //Houve upload de imagem
       if (file !== null) {
-        const uploadedFiles = await addPhoto();
+        const uploadedFiles = await addPhoto(file);
 
         const newNote = {
           author: user.name,
@@ -176,37 +176,57 @@ export default function MyNotesComponent({
     }
   };
 
-  const editNote = async (note: MyNotes): Promise<void | null> => {
-    if (noteEdit === "") return null;
-    const handleEdit = await fetch(`/api/notes/[notes]/${note._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ edit: noteEdit }),
-    });
+  const NoteEditComponent = ({
+    targetNote,
+  }: {
+    targetNote: MyNotes;
+  }): JSX.Element => {
+    const [photo, setPhoto] = useState<any | null>(null);
+    const [content, setContent] = useState(targetNote.note);
+    const [title, setTitle] = useState(targetNote.title);
 
-    try {
-      if (handleEdit.ok) {
-        currentNotes(user);
+    const editNote = async (note: MyNotes): Promise<void | null> => {
+      if (content === targetNote.note) {
+        setShow(false);
         setEdit(false);
+        return null;
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const handleEdit = await fetch(`/api/notes/[notes]/${note._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ edit: content, title }),
+      });
 
-  const NoteEditComponent = ({ text, setText }): JSX.Element => {
-    const [file, setFile] = useState<any | null>(null);
+      try {
+        if (handleEdit.ok) {
+          currentNotes(user);
+          setEdit(false);
+          setShow(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return (
-      <div className="p-2 bg-slate-100">
-        {/* <TextEditor
-          html={text}
-          setHtml={setText}
-          file={file}
-          setFile={setFile}
-          addPhoto={addPhoto}
-        /> */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <div className="p-2 bg-slate-100">
+          <TextEditor
+            html={content}
+            setHtml={setContent}
+            title={title}
+            setTitle={setTitle}
+            file={photo}
+            setFile={setPhoto}
+            addPhoto={addPhoto}
+          />
+        </div>
+        <div>
+          <button onClick={() => editNote(targetNote)}>Salvar</button>
+          <button onClick={() => setEdit(false)}>Cancelar</button>
+        </div>
       </div>
     );
   };
@@ -238,22 +258,6 @@ export default function MyNotesComponent({
                     <li key={index}>
                       {edit === index ? (
                         <>
-                          <form
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              editNote(item);
-                            }}
-                          >
-                            <input
-                              value={noteEdit}
-                              onChange={(e) =>
-                                setNoteEdit(e.currentTarget.value)
-                              }
-                            />
-                          </form>
-                          <button onClick={() => editNote(item)}>
-                            Confirmar
-                          </button>
                           <button onClick={() => setEdit(false)}>
                             Cancelar
                           </button>
@@ -268,8 +272,12 @@ export default function MyNotesComponent({
                           </button>
                           <button
                             onClick={() => {
-                              setEdit(index);
-                              setNoteEdit(item.note);
+                              /* setEdit(index);
+                              setNoteEdit(item.note); */
+                              setShow(true);
+                              setElement(
+                                <NoteEditComponent targetNote={item} />
+                              );
                             }}
                           >
                             Editar

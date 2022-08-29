@@ -16,7 +16,7 @@ const MenuBar = ({
   editor: Editor;
   file: any | null;
   setFile: (data: any) => void;
-  addPhoto: () => Promise<{ name: string; url: string }[] | null>;
+  addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
 }) => {
   const [newImg, setNewImg] = useState(false);
   const [url, setUrl] = useState("");
@@ -27,7 +27,7 @@ const MenuBar = ({
   const handleImage = async () => {
     if (file !== null) {
       try {
-        const files = await addPhoto();
+        const files = await addPhoto(file);
         files.forEach((item) => addImage(item.url));
         setFile(null);
       } catch (error) {
@@ -142,7 +142,7 @@ export default function TextEditor({
   title: string;
   setTitle: (data: string) => void;
   setFile: (data: any) => void;
-  addPhoto: () => Promise<{ name: string; url: string }[] | null>;
+  addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
 }) {
   const editor = useEditor({
     extensions: [
@@ -153,7 +153,7 @@ export default function TextEditor({
         },
       }),
     ],
-    content: `<p>${html}</p>`,
+    content: html,
     onUpdate: ({ editor }) => {
       setHtml(editor.getHTML());
     },

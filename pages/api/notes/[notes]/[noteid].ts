@@ -3,9 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../../lib/mongodb';
 
 
-export default async function deleteNote (req:NextApiRequest, res:NextApiResponse) {
+export default async function updateNote (req:NextApiRequest, res:NextApiResponse) {
     const method = req.method
-    const {edit} = req.body as {edit:string}
+    const {edit, title} = req.body as {edit:string, title:string}
     const {noteid} = req.query as {noteid:string}
     const targetId = new ObjectId(noteid)
     const target = {_id:targetId}
@@ -27,6 +27,7 @@ export default async function deleteNote (req:NextApiRequest, res:NextApiRespons
         case 'PATCH':
             
             const updateNote = {$set:{
+                title,
                 note:edit
             }}
 
