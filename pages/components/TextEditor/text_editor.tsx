@@ -6,17 +6,20 @@ import { FaBold, FaItalic, FaStrikethrough, FaHeading } from "react-icons/fa";
 import { AiOutlineLine } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
 import Head from "next/head";
+import { FileInt } from "../../../models/interfaces";
 
 const MenuBar = ({
   editor,
   file,
   setFile,
   addPhoto,
+  setUserUpload,
 }: {
   editor: Editor;
   file: any | null;
   setFile: (data: any) => void;
   addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
+  setUserUpload: (data: FileInt[]) => void;
 }) => {
   const [newImg, setNewImg] = useState(false);
   const [url, setUrl] = useState("");
@@ -28,11 +31,16 @@ const MenuBar = ({
     if (file !== null) {
       try {
         const files = await addPhoto(file);
+        setUserUpload(files);
         files.forEach((item) => addImage(item.url));
-        setFile(null);
       } catch (error) {
         console.log(error);
       }
+
+      /*  const newUrl = URL.createObjectURL(file[0]);
+      addImage(newUrl)
+      console.log(newUrl);
+      return () => URL.revokeObjectURL(newUrl); */
     } else addImage(url);
   };
 
@@ -135,6 +143,7 @@ export default function TextEditor({
   setTitle,
   setFile,
   addPhoto,
+  setUserUpload,
 }: {
   file: any | null;
   html: string;
@@ -143,6 +152,7 @@ export default function TextEditor({
   setTitle: (data: string) => void;
   setFile: (data: any) => void;
   addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
+  setUserUpload: (data: FileInt[]) => void;
 }) {
   const editor = useEditor({
     extensions: [
@@ -185,6 +195,7 @@ export default function TextEditor({
           file={file}
           setFile={setFile}
           addPhoto={addPhoto}
+          setUserUpload={setUserUpload}
         />
       </div>
       <div className="p-1 rounded-md border border-stone-800">

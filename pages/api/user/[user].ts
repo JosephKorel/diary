@@ -2,8 +2,6 @@ import { Collection } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
 
-
-
 export default async function getUserData (req:NextApiRequest, res:NextApiResponse) {
     const client = await clientPromise;
     const db = client.db("diary");
@@ -16,6 +14,7 @@ export default async function getUserData (req:NextApiRequest, res:NextApiRespon
     const noteCollection: Collection = db.collection('notes');
     const taskCollection:Collection = db.collection('tasks')
     const comCollection:Collection = db.collection('comments')
+    const rmdCollection:Collection = db.collection('reminders')
 
 
     switch (method) {
@@ -23,9 +22,10 @@ export default async function getUserData (req:NextApiRequest, res:NextApiRespon
             const currentTasks = await taskCollection.find({email}).toArray()
             const currentNotes = await noteCollection.find({email}).toArray()
             const currentCom = await comCollection.find({email}).toArray()
+            const currentRmd = await rmdCollection.find({email}).toArray()
             const currentUser = await userCollection.findOne({email})
             try {
-                res.status(200).json({currUser:currentUser, notes:currentNotes, tasks:currentTasks, comments:currentCom})
+                res.status(200).json({currUser:currentUser, notes:currentNotes, tasks:currentTasks, comments:currentCom, reminders:currentRmd})
              } catch (error) {
                  res.status(400).json({error})
                  console.log(error)

@@ -8,7 +8,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { storage } from "../../firebase.config";
-import { MyNotes, User } from "../../models/interfaces";
+import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
 
 export default function MyNotesComponent({
@@ -53,6 +53,7 @@ export default function MyNotesComponent({
     const [file, setFile] = useState<null | any>(null);
     const [html, setHtml] = useState("<p>We should eat chocolate</p>");
     const [title, setTitle] = useState("");
+    const [userUpload, setUserUpload] = useState<FileInt[]>([]);
 
     //Adiciona a nota
     const addNote = async (
@@ -64,66 +65,33 @@ export default function MyNotesComponent({
       const today = moment().format("DD/MM/YY");
 
       //Houve upload de imagem
-      if (file !== null) {
-        const uploadedFiles = await addPhoto(file);
 
-        const newNote = {
-          author: user.name,
-          email: user.email,
-          title,
-          note: html,
-          media: uploadedFiles,
-          date: today,
-        };
+      const newNote = {
+        author: user.name,
+        email: user.email,
+        title,
+        note: html,
+        media: userUpload,
+        date: today,
+      };
 
-        //Adiciona uma nova nota
-        const insert = await fetch(`/api/notes/${user.email}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newNote),
-        });
+      //Adiciona uma nova nota
+      const insert = await fetch(`/api/notes/${user.email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newNote),
+      });
 
-        try {
-          if (insert.ok) {
-            currentNotes(user);
-            setShow(false);
-          }
-        } catch (error) {
-          console.log(error);
+      try {
+        if (insert.ok) {
+          currentNotes(user);
+          setShow(false);
+          setFile(null);
         }
-      }
-
-      //Sem upload de imagem
-      else {
-        const newNote = {
-          author: user.name,
-          email: user.email,
-          title,
-          note: html,
-          media: [],
-          date: today,
-        };
-
-        //Adiciona uma nova nota
-        const insert = await fetch(`/api/notes/${user.email}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newNote),
-        });
-
-        try {
-          if (insert.ok) {
-            currentNotes(user);
-            setHtml("");
-            setShow(false);
-          }
-        } catch (error) {
-          console.log(error);
-        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
@@ -142,6 +110,7 @@ export default function MyNotesComponent({
               file={file}
               setFile={setFile}
               addPhoto={addPhoto}
+              setUserUpload={setUserUpload}
             />
           </div>
         </div>
@@ -184,6 +153,7 @@ export default function MyNotesComponent({
     const [photo, setPhoto] = useState<any | null>(null);
     const [content, setContent] = useState(targetNote.note);
     const [title, setTitle] = useState(targetNote.title);
+    const [userUpload, setUserUpload] = useState<FileInt[]>(targetNote.media);
 
     const editNote = async (note: MyNotes): Promise<void | null> => {
       if (content === targetNote.note) {
@@ -221,6 +191,7 @@ export default function MyNotesComponent({
             file={photo}
             setFile={setPhoto}
             addPhoto={addPhoto}
+            setUserUpload={setUserUpload}
           />
         </div>
         <div>

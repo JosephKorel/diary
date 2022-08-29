@@ -35,10 +35,20 @@ export interface MyComments {
   date: string;
 }
 
+export interface MyReminder {
+  author: string;
+  email: string;
+  title: string;
+  content: string;
+  addedOn: string;
+  when: string;
+  time: string;
+  degree: number;
+}
+
 export interface FileInt {
   name: string;
   url: string;
-  type: string;
 }
 
 export interface DateInt {
