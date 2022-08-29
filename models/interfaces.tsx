@@ -36,6 +36,7 @@ export interface MyComments {
 }
 
 export interface MyReminder {
+  _id: string;
   author: string;
   email: string;
   title: string;

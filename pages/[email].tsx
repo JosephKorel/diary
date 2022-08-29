@@ -34,6 +34,7 @@ function Today({
   const [myTasks, setMyTasks] = useState<MyTasks[]>([]);
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
+  const [myReminders, setMyReminders] = useState<MyReminder[]>([]);
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
   const [value, onChange] = useState(new Date());
 
@@ -53,6 +54,7 @@ function Today({
     setMyTasks(todayTasks);
     setMyNotes(notes);
     setMyComments(todayComments);
+    setMyReminders(reminders);
   };
 
   useEffect(() => {
@@ -115,6 +117,22 @@ function Today({
     }
   };
 
+  const currentReminders = async () => {
+    const getReminders = await fetch(`/api/reminder/${user.email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    try {
+      const result = (await getReminders.json()) as { remind: MyReminder[] };
+      setMyReminders(result.remind);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <DateViewComponent dateProps={{ user, value, getUserData, onChange }} />
@@ -141,7 +159,11 @@ function Today({
               currentComments={currentComments}
             />
           </div>
-          <RemindComponent user={user} />
+          <RemindComponent
+            user={user}
+            myReminders={myReminders}
+            currentReminders={currentReminders}
+          />
           <div>
             <DayEvaluation
               user={user}

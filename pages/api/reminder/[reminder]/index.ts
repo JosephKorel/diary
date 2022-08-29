@@ -17,7 +17,8 @@ export default async function RemindHandler (req:NextApiRequest, res:NextApiResp
     const db = client.db("diary");
     const rmdCollection:Collection = db.collection('reminders')
     const method = req.method
-    const {email} = req.query as {email:string}
+    const {reminder} = req.query as {reminder:string}
+    const email = reminder
 
 
     switch (method) {
