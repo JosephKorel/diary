@@ -9,7 +9,6 @@ import {
 } from "firebase/storage";
 import { storage } from "../../firebase.config";
 import { MyNotes, User } from "../../models/interfaces";
-import Image from "next/image";
 import TextEditor from "./TextEditor/text_editor";
 
 export default function MyNotesComponent({
@@ -26,10 +25,12 @@ export default function MyNotesComponent({
   const [element, setElement] = useState<JSX.Element | null>(null);
   const [edit, setEdit] = useState<boolean | number>(false);
   const [noteEdit, setNoteEdit] = useState("");
+  const [showNote, setShowNote] = useState<boolean | number>(false);
 
   const AddNewNote = (): JSX.Element => {
-    const [text, setText] = useState("We should eat chocolate");
     const [file, setFile] = useState<null | any>(null);
+    const [html, setHtml] = useState("We should eat chocolate");
+    const [title, setTitle] = useState("");
 
     const addPhoto = async (): Promise<
       { name: string; url: string }[] | null
@@ -54,8 +55,11 @@ export default function MyNotesComponent({
     };
 
     //Adiciona a nota
-    const addNote = async (html: string): Promise<void | null> => {
-      if (html === "") return null;
+    const addNote = async (
+      html: string,
+      title: string
+    ): Promise<void | null> => {
+      if (html === "" || title === "") return null;
 
       const today = moment().format("DD/MM/YY");
 
@@ -66,6 +70,7 @@ export default function MyNotesComponent({
         const newNote = {
           author: user.name,
           email: user.email,
+          title,
           note: html,
           media: uploadedFiles,
           date: today,
@@ -95,6 +100,7 @@ export default function MyNotesComponent({
         const newNote = {
           author: user.name,
           email: user.email,
+          title,
           note: html,
           media: [],
           date: today,
@@ -112,7 +118,7 @@ export default function MyNotesComponent({
         try {
           if (insert.ok) {
             currentNotes(user);
-            setText("");
+            setHtml("");
             setShow(false);
           }
         } catch (error) {
@@ -129,15 +135,17 @@ export default function MyNotesComponent({
         <div>
           <div className="p-2 bg-slate-100">
             <TextEditor
-              text={text}
-              addNote={addNote}
+              html={html}
+              setHtml={setHtml}
+              title={title}
+              setTitle={setTitle}
               file={file}
               setFile={setFile}
               addPhoto={addPhoto}
             />
           </div>
         </div>
-
+        <button onClick={() => addNote(html, title)}>Adicionar</button>
         <button onClick={() => setShow(false)}>Cancelar</button>
       </div>
     );
@@ -188,6 +196,21 @@ export default function MyNotesComponent({
     }
   };
 
+  const NoteEditComponent = ({ text, setText }): JSX.Element => {
+    const [file, setFile] = useState<any | null>(null);
+    return (
+      <div className="p-2 bg-slate-100">
+        {/* <TextEditor
+          html={text}
+          setHtml={setText}
+          file={file}
+          setFile={setFile}
+          addPhoto={addPhoto}
+        /> */}
+      </div>
+    );
+  };
+
   return (
     <>
       {show && <MyModal children={element} setShow={setShow} />}
@@ -206,40 +229,59 @@ export default function MyNotesComponent({
           <div>
             <ul>
               {myNotes.map((item, index) => (
-                <li key={index}>
-                  {edit === index ? (
-                    <>
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          editNote(item);
-                        }}
-                      >
-                        <input
-                          value={noteEdit}
-                          onChange={(e) => setNoteEdit(e.currentTarget.value)}
-                        />
-                      </form>
-                      <button onClick={() => editNote(item)}>Confirmar</button>
-                      <button onClick={() => setEdit(false)}>Cancelar</button>
-                    </>
+                <>
+                  {showNote !== index ? (
+                    <li key={index} onClick={() => setShowNote(index)}>
+                      {item.title}
+                    </li>
                   ) : (
-                    <>
-                      <div
-                        dangerouslySetInnerHTML={{ __html: item.note }}
-                      ></div>
-                      <button onClick={() => deleteNote(item)}>Excluir</button>
-                      <button
-                        onClick={() => {
-                          setEdit(index);
-                          setNoteEdit(item.note);
-                        }}
-                      >
-                        Editar
-                      </button>
-                    </>
+                    <li key={index}>
+                      {edit === index ? (
+                        <>
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              editNote(item);
+                            }}
+                          >
+                            <input
+                              value={noteEdit}
+                              onChange={(e) =>
+                                setNoteEdit(e.currentTarget.value)
+                              }
+                            />
+                          </form>
+                          <button onClick={() => editNote(item)}>
+                            Confirmar
+                          </button>
+                          <button onClick={() => setEdit(false)}>
+                            Cancelar
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <div
+                            dangerouslySetInnerHTML={{ __html: item.note }}
+                          ></div>
+                          <button onClick={() => deleteNote(item)}>
+                            Excluir
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEdit(index);
+                              setNoteEdit(item.note);
+                            }}
+                          >
+                            Editar
+                          </button>
+                          <button onClick={() => setShowNote(false)}>
+                            Minimizar
+                          </button>
+                        </>
+                      )}
+                    </li>
                   )}
-                </li>
+                </>
               ))}
             </ul>
           </div>

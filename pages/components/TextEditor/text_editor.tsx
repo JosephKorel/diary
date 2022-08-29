@@ -128,19 +128,22 @@ const MenuBar = ({
 };
 
 export default function TextEditor({
-  text,
   file,
+  html,
+  setHtml,
+  title,
+  setTitle,
   setFile,
   addPhoto,
-  addNote,
 }: {
-  text: string;
   file: any | null;
+  html: string;
+  setHtml: (data: string) => void;
+  title: string;
+  setTitle: (data: string) => void;
   setFile: (data: any) => void;
   addPhoto: () => Promise<{ name: string; url: string }[] | null>;
-  addNote: (data: string) => Promise<void | null>;
 }) {
-  const [html, setHtml] = useState("");
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -150,7 +153,7 @@ export default function TextEditor({
         },
       }),
     ],
-    content: `<p>${text}</p>`,
+    content: `<p>${html}</p>`,
     onUpdate: ({ editor }) => {
       setHtml(editor.getHTML());
     },
@@ -171,6 +174,11 @@ export default function TextEditor({
         />
         ;
       </Head>
+      <input
+        placeholder="Título"
+        value={title}
+        onChange={(e) => setTitle(e.currentTarget.value)}
+      />
       <div className="p-1 rounded-md border border-stone-800">
         <MenuBar
           editor={editor}
@@ -182,7 +190,6 @@ export default function TextEditor({
       <div className="p-1 rounded-md border border-stone-800">
         <EditorContent editor={editor} />
       </div>
-      <button onClick={() => addNote(html)}>Adicionar</button>
     </div>
   );
 }

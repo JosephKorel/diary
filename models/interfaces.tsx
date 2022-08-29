@@ -19,6 +19,7 @@ export interface MyNotes {
   _id: string;
   author: string;
   email: string;
+  title: string;
   note: string;
   media: { name: string; url: string }[];
   date: string;
