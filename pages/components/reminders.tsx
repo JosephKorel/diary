@@ -135,7 +135,6 @@ export default function RemindComponent({
             >
               Novo lembrete
             </button>
-            <button onClick={currentReminders}>Teste</button>
           </div>
         ) : (
           <div>
@@ -148,7 +147,6 @@ export default function RemindComponent({
             >
               Novo lembrete
             </button>
-            <button onClick={currentReminders}>Teste</button>
           </div>
         )}
       </div>

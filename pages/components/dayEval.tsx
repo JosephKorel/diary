@@ -6,12 +6,12 @@ export default function DayEvaluation({
   user,
   dayVal,
   setDayVal,
-  currentDate,
+  value,
 }: {
   user: User;
   dayVal: Evaluation[];
   setDayVal: (data: Evaluation[]) => void;
-  currentDate: DateInt;
+  value: Date;
 }): JSX.Element {
   const [evaluate, setEvaluate] = useState(0);
   const [edit, setEdit] = useState(false);
@@ -88,7 +88,7 @@ export default function DayEvaluation({
 
   return (
     <div>
-      {currentTime >= "20:00" && currentDate.date === today ? (
+      {currentTime >= "20:00" && moment(value).format("DD/MM/YY") === today ? (
         <>
           {dayVal.length > 0 ? (
             <>

@@ -3,7 +3,7 @@ import moment from "moment";
 import Calendar, { Detail } from "react-calendar";
 import { BsFillCalendarDateFill } from "react-icons/bs";
 import "react-calendar/dist/Calendar.css";
-import { User } from "../../models/interfaces";
+import { MyReminder, User } from "../../models/interfaces";
 
 interface DateView {
   dateProps: {
@@ -11,6 +11,7 @@ interface DateView {
     value: Date;
     getUserData: (data: string) => void;
     onChange: (data: Date) => void;
+    reminders: MyReminder[];
   };
 }
 
@@ -19,7 +20,7 @@ export default function DateViewComponent({
 }: DateView): JSX.Element {
   const [show, setShow] = useState(false);
 
-  const { user, value, getUserData, onChange } = dateProps;
+  const { user, value, getUserData, onChange, reminders } = dateProps;
 
   const days = [
     { when: "Hoje", daysAgo: 0 },
@@ -52,11 +53,20 @@ export default function DateViewComponent({
   }) => {
     return (
       <div>
-        {user.dayEvaluation.map((item) => {
-          if (item.date === moment(date).format("DD/MM/YY")) {
-            return <p>Nota: {item.value}</p>;
-          }
-        })}
+        <div>
+          {user.dayEvaluation.map((item) => {
+            if (item.date === moment(date).format("DD/MM/YY")) {
+              return <p>Nota: {item.value}</p>;
+            }
+          })}
+        </div>
+        <div>
+          {reminders.map((rmd) => {
+            if (rmd.when === moment(date).format("DD/MM/YY")) {
+              return <div className="rounded-full p-1 bg-green-500"></div>;
+            }
+          })}
+        </div>
       </div>
     );
   };

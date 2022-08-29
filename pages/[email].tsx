@@ -40,10 +40,11 @@ function Today({
 
   const today = moment().format("DD/MM/YY");
 
-  const [currentDate, setCurrentDate] = useState<DateInt>({
-    when: "Hoje",
-    date: today,
-  });
+  const now = moment().startOf("day");
+  const dayDiff = now.diff(moment(value).startOf("day"), "days");
+
+  //Checa se é o dia de hoje ou dias anteriores
+  const presentOrPast = dayDiff >= 0 ? true : false;
 
   const getUserData = (date: string) => {
     const todayTasks = tasks.filter((task) => task.date === date);
@@ -135,7 +136,9 @@ function Today({
 
   return (
     <div>
-      <DateViewComponent dateProps={{ user, value, getUserData, onChange }} />
+      <DateViewComponent
+        dateProps={{ user, value, getUserData, onChange, reminders }}
+      />
       {user && (
         <div>
           <div>
@@ -153,11 +156,14 @@ function Today({
               myTasks={myTasks}
               currentTasks={currentTasks}
             />
-            <CommentComponent
-              user={user}
-              myComments={myComments}
-              currentComments={currentComments}
-            />
+            {presentOrPast && (
+              <CommentComponent
+                user={user}
+                myComments={myComments}
+                currentComments={currentComments}
+                value={value}
+              />
+            )}
           </div>
           <RemindComponent
             user={user}
@@ -169,7 +175,7 @@ function Today({
               user={user}
               dayVal={dayVal}
               setDayVal={setDayVal}
-              currentDate={currentDate}
+              value={value}
             />
           </div>
         </div>

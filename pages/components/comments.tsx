@@ -7,13 +7,21 @@ export default function CommentComponent({
   user,
   myComments,
   currentComments,
+  value,
 }: {
-  currentComments: (data: User) => void;
   user: User;
   myComments: MyComments[];
+  currentComments: (data: User) => void;
+  value: Date;
 }): JSX.Element {
   const [text, setText] = useState("");
   const [moodValue, setMoodValue] = useState("");
+
+  const now = moment().startOf("day");
+  const dayDiff = now.diff(moment(value).startOf("day"), "days");
+
+  const seingToday = dayDiff === 0 ? true : false;
+
   const addComment = async () => {
     const today = moment().format("DD/MM/YY");
     const time = moment().format("HH:mm");
@@ -48,39 +56,52 @@ export default function CommentComponent({
   return (
     <>
       <div className="p-20 bg-red-300 rounded-lg">
-        <h2>Como você está neste momento?</h2>
-        <input
-          placeholder="Escreva aqui"
-          value={text}
-          onChange={(e) => setText(e.currentTarget.value)}
-        />
-        <p>Humor</p>
-        <div className="flex justify-between">
-          <div className="flex flex-col">
-            <BiSad />
-            <p>0~3 - Triste</p>
+        {seingToday ? (
+          <div>
+            <h2>Como você está neste momento?</h2>
+            <input
+              placeholder="Escreva aqui"
+              value={text}
+              onChange={(e) => setText(e.currentTarget.value)}
+            />
+            <p>Humor</p>
+            <div className="flex justify-between">
+              <div className="flex flex-col">
+                <BiSad />
+                <p>0~3 - Triste</p>
+              </div>
+              <div className="flex flex-col">
+                <BiMeh />
+                <p>4~6 - Normal</p>
+              </div>
+              <div className="flex flex-col">
+                <BiHappyAlt />
+                <p>7~10 - Feliz</p>
+              </div>
+            </div>
+            <input
+              placeholder="Digite aqui"
+              value={moodValue}
+              onChange={(e) => setMoodValue(e.currentTarget.value)}
+            />
+            <button onClick={addComment}>Confirmar</button>
+            <p>Comentários: {myComments.length}</p>
+            {myComments.map((item) => (
+              <p className="italic">
+                {item.comment} as <span className="font-bold">{item.time}</span>
+              </p>
+            ))}
           </div>
-          <div className="flex flex-col">
-            <BiMeh />
-            <p>4~6 - Normal</p>
+        ) : (
+          <div>
+            <p>Comentários: {myComments.length}</p>
+            {myComments.map((item) => (
+              <p className="italic">
+                {item.comment} as <span className="font-bold">{item.time}</span>
+              </p>
+            ))}
           </div>
-          <div className="flex flex-col">
-            <BiHappyAlt />
-            <p>7~10 - Feliz</p>
-          </div>
-        </div>
-        <input
-          placeholder="Digite aqui"
-          value={moodValue}
-          onChange={(e) => setMoodValue(e.currentTarget.value)}
-        />
-        <button onClick={addComment}>Confirmar</button>
-        <p>Comentários: {myComments.length}</p>
-        {myComments.map((item) => (
-          <p className="italic">
-            {item.comment} as <span className="font-bold">{item.time}</span>
-          </p>
-        ))}
+        )}
       </div>
     </>
   );
