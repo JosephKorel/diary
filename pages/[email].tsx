@@ -15,7 +15,8 @@ import CommentComponent from "./components/comments";
 import DayEvaluation from "./components/dayEval";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Calendar, { Detail } from "react-calendar";
-import { BsHeartFill } from "react-icons/bs";
+import { BsFillCalendarDateFill } from "react-icons/bs";
+import "react-calendar/dist/Calendar.css";
 
 function Today({
   user,
@@ -122,12 +123,19 @@ function Today({
       { when: "3 dias atrás", daysAgo: 3 },
     ];
 
-    const onDayChange = (day: { when: string; daysAgo: number }) => {
-      const now = moment();
-      const selectedDay = now.subtract(day.daysAgo, "days").format("DD/MM/YY");
-      setCurrentDate({ when: day.when, date: selectedDay });
-      getUserData(selectedDay);
-      setShow(false);
+    const dayView = (value: Date): string => {
+      const now = moment().startOf("day");
+      const viewDay = moment(value).format("DD/MM/YY");
+      const dayDiff = now.diff(moment(value).startOf("day"), "days");
+      console.log(dayDiff);
+
+      if (dayDiff === 0) {
+        return "Hoje" + viewDay;
+      } else if (dayDiff === 1) {
+        return "Ontem" + viewDay;
+      } else if (dayDiff === -1) {
+        return "Amanhã" + viewDay;
+      } else return viewDay;
     };
 
     const TileDiv = ({
@@ -141,14 +149,6 @@ function Today({
     }) => {
       return (
         <div>
-          {/* <div className="flex items-center">
-            {2 === 2 ? (
-              <>
-                <p>Emy Day</p>
-                <BsHeartFill color="red" />
-              </>
-            ) : null}
-          </div> */}
           {user.dayEvaluation.map((item) => {
             if (item.date === moment(date).format("DD/MM/YY")) {
               return <p>Nota: {item.value}</p>;
@@ -161,34 +161,27 @@ function Today({
     return (
       <div className="flex">
         <div className="flex flex-col">
-          <p>
-            {currentDate.when} ({currentDate.date})
-          </p>
-          <div className={show ? "" : "hidden"}>
-            {days.map((day) => (
-              <p
-                className="p-1 hover:bg-green-400 duration-200 cursor-pointer"
-                onClick={() => onDayChange(day)}
-              >
-                {day.when}
-              </p>
-            ))}
-          </div>
+          <p>{dayView(value)}</p>
         </div>
         <button onClick={() => setShow(!show)}>
-          <IoMdArrowDropdown />
+          <BsFillCalendarDateFill />
         </button>
-        <Calendar
-          value={value}
-          onChange={onChange}
-          tileContent={({ activeStartDate, date, view }) => (
-            <TileDiv
-              activeStartDate={activeStartDate}
-              date={date}
-              view={view}
-            />
-          )}
-        />
+        <div className={show ? "" : "hidden"}>
+          <Calendar
+            value={value}
+            onChange={(value: Date) => {
+              getUserData(moment(value).format("DD/MM/YY"));
+              onChange(value);
+            }}
+            tileContent={({ activeStartDate, date, view }) => (
+              <TileDiv
+                activeStartDate={activeStartDate}
+                date={date}
+                view={view}
+              />
+            )}
+          />
+        </div>
       </div>
     );
   };
