@@ -1,14 +1,47 @@
-import { EditorContent, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import React from "react";
+import Image from "@tiptap/extension-image";
+import React, { useState } from "react";
 import { FaBold, FaItalic, FaStrikethrough, FaHeading } from "react-icons/fa";
 import { AiOutlineLine } from "react-icons/ai";
+import { BsFillImageFill } from "react-icons/bs";
 import Head from "next/head";
 
-const MenuBar = ({ editor }) => {
+const MenuBar = ({
+  editor,
+  file,
+  setFile,
+  addPhoto,
+}: {
+  editor: Editor;
+  file: any | null;
+  setFile: (data: any) => void;
+  addPhoto: () => Promise<{ name: string; url: string }[] | null>;
+}) => {
+  const [newImg, setNewImg] = useState(false);
+  const [url, setUrl] = useState("");
   if (!editor) {
     return null;
   }
+
+  const handleImage = async () => {
+    if (file !== null) {
+      try {
+        const files = await addPhoto();
+        files.forEach((item) => addImage(item.url));
+        setFile(null);
+      } catch (error) {
+        console.log(error);
+      }
+    } else addImage(url);
+  };
+
+  const addImage = (imgurl: string) => {
+    if (imgurl) {
+      editor.chain().focus().setImage({ src: imgurl }).run();
+      setNewImg(false);
+    }
+  };
 
   return (
     <div className="flex items-center">
@@ -54,30 +87,77 @@ const MenuBar = ({ editor }) => {
       >
         <FaHeading className={editor.isActive("heading") && "text-slate-100"} />
       </button>
-      <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-        <AiOutlineLine className="p-1 hover:bg-stone-800 hover:text-slate-100 duration-200" />
-      </button>
+      {newImg ? (
+        <div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addImage(url);
+            }}
+          >
+            <input
+              placeholder="URL da imagem"
+              value={url}
+              onChange={(e) => setUrl(e.currentTarget.value)}
+            />
+          </form>
+          <p>OU</p>
+          <input
+            type="file"
+            multiple
+            onChange={(e) => setFile(e.currentTarget.files)}
+            className="hidden"
+            id="file_upload"
+          />
+          <button
+            onClick={() => {
+              document.getElementById("file_upload").click();
+            }}
+          >
+            Fazer Upload
+          </button>
+          <button onClick={handleImage}>Confirmar</button>
+        </div>
+      ) : (
+        <button onClick={() => setNewImg(true)}>
+          <BsFillImageFill />
+        </button>
+      )}
     </div>
   );
 };
 
 export default function TextEditor({
   text,
-  setHtml,
+  file,
+  setFile,
+  addPhoto,
+  addNote,
 }: {
   text: string;
-  setHtml: (data: string) => void;
+  file: any | null;
+  setFile: (data: any) => void;
+  addPhoto: () => Promise<{ name: string; url: string }[] | null>;
+  addNote: (data: string) => Promise<void | null>;
 }) {
+  const [html, setHtml] = useState("");
   const editor = useEditor({
-    extensions: [StarterKit],
-    content: `${text}`,
+    extensions: [
+      StarterKit,
+      Image.configure({
+        HTMLAttributes: {
+          class: "w-1/3",
+        },
+      }),
+    ],
+    content: `<p>${text}</p>`,
     onUpdate: ({ editor }) => {
       setHtml(editor.getHTML());
     },
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none bg-red-300",
       },
     },
   });
@@ -92,9 +172,17 @@ export default function TextEditor({
         ;
       </Head>
       <div className="p-1 rounded-md border border-stone-800">
-        <MenuBar editor={editor} />
+        <MenuBar
+          editor={editor}
+          file={file}
+          setFile={setFile}
+          addPhoto={addPhoto}
+        />
       </div>
-      <EditorContent editor={editor} />
+      <div className="p-1 rounded-md border border-stone-800">
+        <EditorContent editor={editor} />
+      </div>
+      <button onClick={() => addNote(html)}>Adicionar</button>
     </div>
   );
 }

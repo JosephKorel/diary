@@ -87,8 +87,7 @@ function Today({
 
     try {
       const notes = (await getNotes.json()) as { notes: MyNotes[] };
-      const todayNotes = notes.notes.filter((note) => note.date === today);
-      setMyNotes(todayNotes);
+      setMyNotes(notes.notes);
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +126,6 @@ function Today({
       const now = moment().startOf("day");
       const viewDay = moment(value).format("DD/MM/YY");
       const dayDiff = now.diff(moment(value).startOf("day"), "days");
-      console.log(dayDiff);
 
       if (dayDiff === 0) {
         return "Hoje" + viewDay;

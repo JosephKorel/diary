@@ -157,7 +157,7 @@ export default function MyTasksComp({
     <>
       {show && <MyModal children={element} setShow={setShow} />}
       <div className="p-20 bg-red-300 rounded-lg">
-        <h2>Tarefas de hoje</h2>
+        <h2>Tarefas</h2>
         {myTasks.length > 0 ? (
           <>
             <h3>{myTasks.length}</h3>

@@ -26,7 +26,6 @@ export default function MyNotesComponent({
   const [element, setElement] = useState<JSX.Element | null>(null);
   const [edit, setEdit] = useState<boolean | number>(false);
   const [noteEdit, setNoteEdit] = useState("");
-  const [html, setHtml] = useState("");
 
   const AddNewNote = (): JSX.Element => {
     const [text, setText] = useState("We should eat chocolate");
@@ -55,8 +54,8 @@ export default function MyNotesComponent({
     };
 
     //Adiciona a nota
-    const addNote = async (): Promise<void | null> => {
-      if (!text) return null;
+    const addNote = async (html: string): Promise<void | null> => {
+      if (html === "") return null;
 
       const today = moment().format("DD/MM/YY");
 
@@ -67,7 +66,7 @@ export default function MyNotesComponent({
         const newNote = {
           author: user.name,
           email: user.email,
-          note: text,
+          note: html,
           media: uploadedFiles,
           date: today,
         };
@@ -84,7 +83,6 @@ export default function MyNotesComponent({
         try {
           if (insert.ok) {
             currentNotes(user);
-            setText("");
             setShow(false);
           }
         } catch (error) {
@@ -97,7 +95,7 @@ export default function MyNotesComponent({
         const newNote = {
           author: user.name,
           email: user.email,
-          note: text,
+          note: html,
           media: [],
           date: today,
         };
@@ -130,11 +128,16 @@ export default function MyNotesComponent({
       >
         <div>
           <div className="p-2 bg-slate-100">
-            <TextEditor text={text} setHtml={setHtml} />
+            <TextEditor
+              text={text}
+              addNote={addNote}
+              file={file}
+              setFile={setFile}
+              addPhoto={addPhoto}
+            />
           </div>
         </div>
-        <button onClick={addNote}>Adicionar</button>
-        <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
+
         <button onClick={() => setShow(false)}>Cancelar</button>
       </div>
     );
@@ -222,14 +225,9 @@ export default function MyNotesComponent({
                     </>
                   ) : (
                     <>
-                      <p>{item.note}</p>
-                      {item.media.length > 0 && (
-                        <>
-                          {item.media.map((image) => (
-                            <Image src={image.url} width={100} height={100} />
-                          ))}
-                        </>
-                      )}
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.note }}
+                      ></div>
                       <button onClick={() => deleteNote(item)}>Excluir</button>
                       <button
                         onClick={() => {
