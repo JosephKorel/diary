@@ -47,6 +47,12 @@ export interface MyReminder {
   degree: number;
 }
 
+export interface TimeSpanInt {
+  when: string;
+  date: string;
+  difference: number;
+}
+
 export interface FileInt {
   name: string;
   url: string;

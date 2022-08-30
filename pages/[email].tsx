@@ -61,6 +61,10 @@ function Today({
   };
 
   useEffect(() => {
+    getUserData(moment(value).format("DD/MM/YY"));
+  }, [value]);
+
+  useEffect(() => {
     getUserData(today);
   }, []);
 
@@ -138,9 +142,7 @@ function Today({
 
   return (
     <div>
-      <DateViewComponent
-        dateProps={{ user, value, getUserData, onChange, reminders }}
-      />
+      <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
       {user && (
         <div>
           <div>

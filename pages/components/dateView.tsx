@@ -9,7 +9,6 @@ interface DateView {
   dateProps: {
     user: User;
     value: Date;
-    getUserData: (data: string) => void;
     onChange: (data: Date) => void;
     reminders: MyReminder[];
   };
@@ -20,13 +19,7 @@ export default function DateViewComponent({
 }: DateView): JSX.Element {
   const [show, setShow] = useState(false);
 
-  const { user, value, getUserData, onChange, reminders } = dateProps;
-
-  const days = [
-    { when: "Hoje", daysAgo: 0 },
-    { when: "Ontem", daysAgo: 1 },
-    { when: "3 dias atrás", daysAgo: 3 },
-  ];
+  const { user, value, onChange, reminders } = dateProps;
 
   const dayView = (value: Date): string => {
     const now = moment().startOf("day");
@@ -83,7 +76,6 @@ export default function DateViewComponent({
         <Calendar
           value={value}
           onChange={(value: Date) => {
-            getUserData(moment(value).format("DD/MM/YY"));
             onChange(value);
           }}
           tileContent={({ activeStartDate, date, view }) => (
