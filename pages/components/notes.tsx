@@ -156,7 +156,6 @@ export default function MyNotesComponent({
     const [userUpload, setUserUpload] = useState<FileInt[]>(targetNote.media);
 
     const editNote = async (note: MyNotes): Promise<void | null> => {
-      console.log(userUpload);
       if (content === targetNote.note) {
         setShow(false);
         setEdit(false);

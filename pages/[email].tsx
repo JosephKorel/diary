@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import {
-  DateInt,
   Evaluation,
   MyComments,
   MyNotes,
@@ -195,7 +194,7 @@ function Today({
 export default Today;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const email = context.query.email;
+  const { email } = context.query as { email: string };
 
   const fetchData = await fetch(`http://localhost:3000/api/user/${email}`);
 
