@@ -13,12 +13,14 @@ const MenuBar = ({
   file,
   setFile,
   addPhoto,
+  userUpload,
   setUserUpload,
 }: {
   editor: Editor;
   file: any | null;
   setFile: (data: any) => void;
   addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
+  userUpload: FileInt[] | null;
   setUserUpload: (data: FileInt[]) => void;
 }) => {
   const [newImg, setNewImg] = useState(false);
@@ -31,16 +33,19 @@ const MenuBar = ({
     if (file !== null) {
       try {
         const files = await addPhoto(file);
-        setUserUpload(files);
-        files.forEach((item) => addImage(item.url));
+        if (userUpload) {
+          console.log(userUpload);
+          const allFiles = userUpload.concat(files);
+          setUserUpload(allFiles);
+          files.forEach((item) => addImage(item.url));
+          console.log(allFiles);
+        } else {
+          setUserUpload(files);
+          files.forEach((item) => addImage(item.url));
+        }
       } catch (error) {
         console.log(error);
       }
-
-      /*  const newUrl = URL.createObjectURL(file[0]);
-      addImage(newUrl)
-      console.log(newUrl);
-      return () => URL.revokeObjectURL(newUrl); */
     } else addImage(url);
   };
 
@@ -143,6 +148,7 @@ export default function TextEditor({
   setTitle,
   setFile,
   addPhoto,
+  userUpload,
   setUserUpload,
 }: {
   file: any | null;
@@ -152,6 +158,7 @@ export default function TextEditor({
   setTitle: (data: string) => void;
   setFile: (data: any) => void;
   addPhoto: (data: any) => Promise<{ name: string; url: string }[] | null>;
+  userUpload: FileInt[] | null;
   setUserUpload: (data: FileInt[]) => void;
 }) {
   const editor = useEditor({
@@ -195,6 +202,7 @@ export default function TextEditor({
           file={file}
           setFile={setFile}
           addPhoto={addPhoto}
+          userUpload={userUpload}
           setUserUpload={setUserUpload}
         />
       </div>

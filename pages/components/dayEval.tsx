@@ -26,8 +26,6 @@ export default function DayEvaluation({
 
   const presentOrPast = dayDiff === 0 || dayDiff === 1 ? true : false;
 
-  const todayVal = user.dayEvaluation.filter((item) => item.date === today);
-
   const currentDayVal = dayVal.filter(
     (item) => item.date === moment(value).format("DD/MM/YY")
   );
@@ -43,14 +41,8 @@ export default function DayEvaluation({
 
     const userEvaluation = fetchResult as { currUser: User };
 
-    const todayFilter = userEvaluation.currUser.dayEvaluation.filter(
-      (item) => item.date === today
-    );
-
     setDayVal(userEvaluation.currUser.dayEvaluation);
   };
-
-  console.log(dayVal);
 
   const evaluateDay = async (date: string): Promise<void | null> => {
     const handleEvaluation = await fetch(`/api/user/${user.email}`, {

@@ -1,11 +1,12 @@
 import { Collection, ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../../lib/mongodb';
+import { FileInt } from '../../../../models/interfaces';
 
 
 export default async function updateNote (req:NextApiRequest, res:NextApiResponse) {
     const method = req.method
-    const {edit, title} = req.body as {edit:string, title:string}
+    const {edit, title, media} = req.body as {edit:string, title:string, media:FileInt[]}
     const {noteid} = req.query as {noteid:string}
     const targetId = new ObjectId(noteid)
     const target = {_id:targetId}
@@ -25,10 +26,11 @@ export default async function updateNote (req:NextApiRequest, res:NextApiRespons
             break;
              
         case 'PATCH':
-            
+            console.log(media)
             const updateNote = {$set:{
                 title,
-                note:edit
+                note:edit,
+                media,
             }}
 
             try {

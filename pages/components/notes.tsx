@@ -24,7 +24,6 @@ export default function MyNotesComponent({
   const [show, setShow] = useState(false);
   const [element, setElement] = useState<JSX.Element | null>(null);
   const [edit, setEdit] = useState<boolean | number>(false);
-  const [noteEdit, setNoteEdit] = useState("");
   const [showNote, setShowNote] = useState<boolean | number>(false);
 
   const addPhoto = async (
@@ -110,6 +109,7 @@ export default function MyNotesComponent({
               file={file}
               setFile={setFile}
               addPhoto={addPhoto}
+              userUpload={null}
               setUserUpload={setUserUpload}
             />
           </div>
@@ -156,6 +156,7 @@ export default function MyNotesComponent({
     const [userUpload, setUserUpload] = useState<FileInt[]>(targetNote.media);
 
     const editNote = async (note: MyNotes): Promise<void | null> => {
+      console.log(userUpload);
       if (content === targetNote.note) {
         setShow(false);
         setEdit(false);
@@ -166,7 +167,7 @@ export default function MyNotesComponent({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ edit: content, title }),
+        body: JSON.stringify({ edit: content, title, media: userUpload }),
       });
 
       try {
@@ -191,6 +192,7 @@ export default function MyNotesComponent({
             file={photo}
             setFile={setPhoto}
             addPhoto={addPhoto}
+            userUpload={userUpload}
             setUserUpload={setUserUpload}
           />
         </div>

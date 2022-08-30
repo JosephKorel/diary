@@ -49,7 +49,6 @@ function Today({
   const getUserData = (date: string) => {
     const todayTasks = tasks.filter((task) => task.date === date);
     const todayComments = comments.filter((com) => com.date === date);
-    const todayVal = user.dayEvaluation.filter((item) => item.date === date);
 
     if (dayVal.length === 0) {
       setDayVal(user.dayEvaluation);
