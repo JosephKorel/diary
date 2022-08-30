@@ -17,6 +17,7 @@ import DayEvaluation from "./components/dayEval";
 import "react-calendar/dist/Calendar.css";
 import DateViewComponent from "./components/dateView";
 import RemindComponent from "./components/reminders";
+import Link from "next/link";
 
 function Today({
   user,
@@ -180,6 +181,11 @@ function Today({
               value={value}
             />
           </div>
+          <Link
+            href={{ pathname: "/user_stats", query: { email: user.email } }}
+          >
+            <a>Estatísticas</a>
+          </Link>
         </div>
       )}
     </div>
