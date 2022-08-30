@@ -17,13 +17,22 @@ export default function DayEvaluation({
   const [edit, setEdit] = useState(false);
 
   const today = moment().format("DD/MM/YY");
+
   const currentTime = moment().format("HH:mm");
+
+  const now = moment().startOf("day");
+  const dayDiff = now.diff(moment(value).startOf("day"), "days");
+  const yesterday = moment().subtract(1, "day").format("DD/MM/YY");
+
+  const presentOrPast = dayDiff === 0 || dayDiff === 1 ? true : false;
 
   const todayVal = user.dayEvaluation.filter((item) => item.date === today);
 
-  useEffect(() => {
-    setDayVal(todayVal);
-  }, []);
+  const currentDayVal = dayVal.filter(
+    (item) => item.date === moment(value).format("DD/MM/YY")
+  );
+
+  const yesterdayVal = dayVal.filter((item) => item.date === yesterday);
 
   const getTodayVal = async () => {
     const fetchData = await fetch(
@@ -38,16 +47,18 @@ export default function DayEvaluation({
       (item) => item.date === today
     );
 
-    setDayVal(todayFilter);
+    setDayVal(userEvaluation.currUser.dayEvaluation);
   };
 
-  const evaluateDay = async (): Promise<void | null> => {
+  console.log(dayVal);
+
+  const evaluateDay = async (date: string): Promise<void | null> => {
     const handleEvaluation = await fetch(`/api/user/${user.email}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ value: evaluate, date: today }),
+      body: JSON.stringify({ value: evaluate, date }),
     });
     try {
       if (handleEvaluation.ok) {
@@ -60,10 +71,10 @@ export default function DayEvaluation({
     }
   };
 
-  const editEvaluation = async (): Promise<void | null> => {
+  const editEvaluation = async (date: string): Promise<void | null> => {
     const userEvaluation = user.dayEvaluation.slice();
     userEvaluation.forEach((item) => {
-      if (item.date === today) {
+      if (item.date === date) {
         item.value = evaluate;
       }
     });
@@ -86,45 +97,105 @@ export default function DayEvaluation({
     }
   };
 
-  return (
-    <div>
-      {currentTime >= "20:00" && moment(value).format("DD/MM/YY") === today ? (
+  const yesterDayEvaluation = (
+    <>
+      {yesterdayVal.length > 0 ? (
         <>
-          {dayVal.length > 0 ? (
+          {edit ? (
             <>
-              {edit ? (
-                <>
-                  <p>Avalie o dia de hoje</p>
-                  <input
-                    value={evaluate}
-                    onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
-                  />
-                  <button onClick={editEvaluation}>Confirmar</button>
-                  <button onClick={() => setEdit(false)}>Cancelar</button>
-                </>
-              ) : (
-                <>
-                  <p>Seu dia foi um {dayVal[0].value}</p>
-                  <button onClick={() => setEdit(true)}>Editar</button>
-                </>
-              )}
+              <p>Avalie o dia de ontem</p>
+              <input
+                value={evaluate}
+                onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
+              />
+              <button onClick={() => editEvaluation(yesterday)}>
+                Confirmar
+              </button>
+              <button onClick={() => setEdit(false)}>Cancelar</button>
             </>
           ) : (
+            <>
+              <p>Seu dia de ontem foi um {yesterdayVal[0].value}</p>
+              <button onClick={() => setEdit(true)}>Editar</button>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <p>Avalie o dia de ontem</p>
+          <input
+            value={evaluate}
+            onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
+          />
+          <button onClick={() => evaluateDay(yesterday)}>Confirmar</button>
+        </>
+      )}
+    </>
+  );
+
+  const todayEvaluation = (
+    <>
+      {currentDayVal.length > 0 ? (
+        <>
+          {edit ? (
             <>
               <p>Avalie o dia de hoje</p>
               <input
                 value={evaluate}
                 onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
               />
-              <button onClick={evaluateDay}>Confirmar</button>
+              <button onClick={() => editEvaluation(today)}>Confirmar</button>
+              <button onClick={() => setEdit(false)}>Cancelar</button>
+            </>
+          ) : (
+            <>
+              <p>Seu dia foi um {currentDayVal[0].value}</p>
+              <button onClick={() => setEdit(true)}>Editar</button>
             </>
           )}
         </>
       ) : (
         <>
-          {dayVal[0] ? (
+          <p>Avalie o dia de hoje</p>
+          <input
+            value={evaluate}
+            onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
+          />
+          <button onClick={() => evaluateDay(today)}>Confirmar</button>
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <div>
+      {presentOrPast ? (
+        <>
+          {dayDiff === 0 ? (
             <>
-              <p>Seu dia foi um {dayVal[0].value}</p>
+              {currentTime >= "20:00" ? (
+                <>{todayEvaluation}</>
+              ) : (
+                <>{yesterDayEvaluation}</>
+              )}
+            </>
+          ) : (
+            <>
+              {yesterdayVal[0] ? (
+                <>
+                  <p>Seu dia foi um {yesterdayVal[0].value}</p>
+                </>
+              ) : (
+                <>{yesterDayEvaluation}</>
+              )}
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          {currentDayVal[0] ? (
+            <>
+              <p>Seu dia foi um {currentDayVal[0].value}</p>
             </>
           ) : (
             <>

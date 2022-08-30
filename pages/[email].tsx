@@ -51,7 +51,10 @@ function Today({
     const todayComments = comments.filter((com) => com.date === date);
     const todayVal = user.dayEvaluation.filter((item) => item.date === date);
 
-    setDayVal(todayVal);
+    if (dayVal.length === 0) {
+      setDayVal(user.dayEvaluation);
+    }
+
     setMyTasks(todayTasks);
     setMyNotes(notes);
     setMyComments(todayComments);
