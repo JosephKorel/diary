@@ -50,7 +50,7 @@ export interface MyReminder {
 export interface TimeSpanInt {
   when: string;
   date: string;
-  difference: number;
+  difference: number | null;
 }
 
 export interface MoodSpan {

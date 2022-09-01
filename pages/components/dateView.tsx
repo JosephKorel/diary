@@ -3,13 +3,14 @@ import moment from "moment";
 import Calendar, { Detail } from "react-calendar";
 import { BsFillCalendarDateFill } from "react-icons/bs";
 import "react-calendar/dist/Calendar.css";
-import { MyReminder, User } from "../../models/interfaces";
+import { MyReminder, TimeSpanInt, User } from "../../models/interfaces";
 
 interface DateView {
   dateProps: {
     user: User;
     value: Date;
     onChange: (data: Date) => void;
+    setTime?: (data: TimeSpanInt) => void;
     reminders: MyReminder[];
   };
 }
@@ -19,7 +20,7 @@ export default function DateViewComponent({
 }: DateView): JSX.Element {
   const [show, setShow] = useState(false);
 
-  const { user, value, onChange, reminders } = dateProps;
+  const { user, value, onChange, setTime, reminders } = dateProps;
 
   const dayView = (value: Date): string => {
     const now = moment().startOf("day");
@@ -73,7 +74,11 @@ export default function DateViewComponent({
         <Calendar
           value={value}
           onChange={(value: Date) => {
-            onChange(value);
+            let date = moment(value).format("DD/MM/YY");
+            if (setTime) {
+              onChange(value);
+              setTime({ when: "Dia", date, difference: null });
+            } else onChange(value);
           }}
           tileContent={({ activeStartDate, date, view }) => (
             <TileDiv

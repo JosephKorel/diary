@@ -43,17 +43,38 @@ function UserStats({
     (item) => item.date === time.date
   );
 
+  const handleSubtract = (time: number): void => {
+    const today = new Date();
+    const from = today.setDate(today.getDate() - time);
+    onChange(new Date(from));
+  };
+
   useEffect(() => {
     handleDayChange();
   }, [value]);
 
   const UserComments = (): JSX.Element => {
-    const average = (index: number): number | null => {
+    const dayAverage = (index: number): number | null => {
       let humorValue: number = 0;
       if (!mySpan[index].values.length) return null;
       mySpan[index].values.forEach((value) => (humorValue += value));
       const humorAvg = (humorValue / mySpan[index].values.length).toFixed(1);
       return Number(humorAvg);
+    };
+
+    const spanAverage = (): number => {
+      let allValues: number[] = [];
+      let valueSum = 0;
+
+      mySpan.forEach((item) => {
+        allValues = allValues.concat(item.values);
+      });
+
+      allValues.forEach((val) => (valueSum += val));
+
+      const finalAverage = (valueSum / allValues.length).toFixed(1);
+
+      return Number(finalAverage);
     };
 
     return (
@@ -63,12 +84,12 @@ function UserStats({
             {mySpan.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md "
+                className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md text-gray-200"
               >
                 <p>Dia: {item.date}</p>
                 <p>Comentários: {item.values.length}</p>
-                {average(index) ? (
-                  <p>Humor médio: {average(index)}</p>
+                {dayAverage(index) ? (
+                  <p>Humor médio: {dayAverage(index)}</p>
                 ) : (
                   <p>Sem registros para este dia</p>
                 )}
@@ -78,7 +99,7 @@ function UserStats({
         ) : (
           <div></div>
         )}
-        <div></div>
+        <div>Média de humor deste período: {spanAverage()}</div>
       </div>
     );
   };
@@ -106,6 +127,9 @@ function UserStats({
     const now = moment().startOf("day");
     const difference = now.diff(moment(value).startOf("day"), "days");
     const date = currentDay;
+
+    if (time.difference === null) return;
+
     const timeSpan = timeSpanStatistics(difference);
     averageHumor(timeSpan);
 
@@ -175,12 +199,6 @@ function UserStats({
     }
   };
 
-  const handleSubtract = (time: number) => {
-    const today = new Date();
-    const from = today.setDate(today.getDate() - time);
-    onChange(new Date(from));
-  };
-
   const averageHumor = (span: string[]) => {
     let humorValues: { date: string; values: number[] }[] = [];
 
@@ -210,7 +228,9 @@ function UserStats({
       <div>
         <div className="flex gap-10">
           <TimeSpan />
-          <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
+          <DateViewComponent
+            dateProps={{ user, value, onChange, setTime, reminders }}
+          />
         </div>
         <p>
           {time.when} <span>({time.date})</span>
