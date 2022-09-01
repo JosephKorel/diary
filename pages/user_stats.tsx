@@ -35,14 +35,14 @@ function UserStats({
 
   const currentDay = moment(value).format("DD/MM/YY");
 
-  const currentDayComments = comments.filter(
-    (item) => item.date === currentDay
+  const currentDayComments = comments.filter((item) => item.date === time.date);
+
+  const dayEvaluation = user.dayEvaluation.filter(
+    (item) => item.date === time.date
   );
 
   useEffect(() => {
-    const now = moment().startOf("day");
-    const difference = now.diff(moment(value).startOf("day"), "days");
-    setTime({ when: "Dia", date: currentDay, difference });
+    handleDayChange();
   }, [value]);
 
   const UserComments = (): JSX.Element => {
@@ -92,53 +92,72 @@ function UserStats({
     );
   };
 
-  const handleSubtract = (time: number): void => {
-    const timeSpan = now.subtract(time, "days");
-    const selectedDay = timeSpan.format("DD/MM/YY");
+  const handleDayChange = (): void => {
+    const now = moment().startOf("day");
+    const difference = now.diff(moment(value).startOf("day"), "days");
+    const date = currentDay;
 
-    switch (time) {
+    switch (difference) {
       case 0:
         setTime({
           when: "Hoje",
-          date: today,
-          difference: time,
+          date,
+          difference,
         });
         break;
 
       case 1:
         setTime({
           when: "Ontem",
-          date: selectedDay,
-          difference: time,
+          date,
+          difference,
         });
         break;
 
       case 3:
         setTime({
           when: "3 dias atrás",
-          date: selectedDay,
-          difference: time,
+          date,
+          difference,
         });
         break;
 
       case 7:
         setTime({
           when: "1 semana atrás",
-          date: selectedDay,
-          difference: time,
+          date,
+          difference,
         });
         break;
 
       case 30:
         setTime({
           when: "1 mês atrás",
-          date: selectedDay,
-          difference: time,
+          date,
+          difference,
         });
         break;
       default:
+        setTime({ when: "Dia", date: currentDay, difference });
         break;
     }
+  };
+
+  const timeSpanStatistics = () => {
+    let span: string[] = [];
+    for (let i = 0; i <= time.difference; i++) {
+      const currDay = moment(time.date).startOf("day");
+      const nextDay = currDay.add(1, "day").format("DD/MM/YY");
+      span.push(nextDay);
+    }
+
+    console.log(span);
+  };
+
+  const handleSubtract = (time: number) => {
+    const today = new Date();
+    const from = today.setDate(today.getDate() - time);
+    onChange(new Date(from));
   };
 
   return (
@@ -159,6 +178,11 @@ function UserStats({
         </p>
       </div>
       <UserComments />
+      {dayEvaluation[0] ? (
+        <p>Avaliação do dia: {dayEvaluation[0].value}</p>
+      ) : (
+        <p>Não há avaliações para este dia</p>
+      )}
     </div>
   );
 }

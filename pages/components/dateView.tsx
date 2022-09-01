@@ -66,9 +66,6 @@ export default function DateViewComponent({
 
   return (
     <div className="flex">
-      <div className="flex flex-col">
-        <p>{dayView(value)}</p>
-      </div>
       <button onClick={() => setShow(!show)}>
         <BsFillCalendarDateFill />
       </button>
