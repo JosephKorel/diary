@@ -32,6 +32,7 @@ function UserStats({
     date: today,
     difference: 0,
   });
+  const [mySpan, setMySpan] = useState<string[]>([]);
 
   const currentDay = moment(value).format("DD/MM/YY");
 
@@ -96,6 +97,7 @@ function UserStats({
     const now = moment().startOf("day");
     const difference = now.diff(moment(value).startOf("day"), "days");
     const date = currentDay;
+    timeSpanStatistics(difference);
 
     switch (difference) {
       case 0:
@@ -143,15 +145,22 @@ function UserStats({
     }
   };
 
-  const timeSpanStatistics = () => {
+  const timeSpanStatistics = (dif: number) => {
     let span: string[] = [];
-    for (let i = 0; i <= time.difference; i++) {
-      const currDay = moment(time.date).startOf("day");
-      const nextDay = currDay.add(1, "day").format("DD/MM/YY");
-      span.push(nextDay);
-    }
 
-    console.log(span);
+    if (dif === 0 || dif === 1) {
+      for (let i = 0; i <= dif; i++) {
+        const currDay = moment(value).startOf("day");
+        const nextDay = currDay.add(i, "day").format("DD/MM/YY");
+        span.push(nextDay);
+      }
+    } else {
+      for (let i = 0; i < dif; i++) {
+        const currDay = moment(value).startOf("day");
+        const nextDay = currDay.add(i, "day").format("DD/MM/YY");
+        span.push(nextDay);
+      }
+    }
   };
 
   const handleSubtract = (time: number) => {
@@ -183,6 +192,10 @@ function UserStats({
       ) : (
         <p>Não há avaliações para este dia</p>
       )}
+      {mySpan.map((item) => (
+        <p>{item}</p>
+      ))}
+      <button onClick={() => console.log(mySpan.length)}>Check</button>
     </div>
   );
 }
