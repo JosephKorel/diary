@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import {
+  MoodSpan,
   MyComments,
   MyNotes,
   MyReminder,
@@ -32,7 +33,7 @@ function UserStats({
     date: today,
     difference: 0,
   });
-  const [mySpan, setMySpan] = useState<string[]>([]);
+  const [mySpan, setMySpan] = useState<MoodSpan[]>([]);
 
   const currentDay = moment(value).format("DD/MM/YY");
 
@@ -47,29 +48,37 @@ function UserStats({
   }, [value]);
 
   const UserComments = (): JSX.Element => {
-    let humorValue: number = 0;
-    currentDayComments.forEach((item) => (humorValue += item.mood));
-    const humorAvg = (humorValue / currentDayComments.length).toFixed(1);
+    const average = (index: number): number | null => {
+      let humorValue: number = 0;
+      if (!mySpan[index].values.length) return null;
+      mySpan[index].values.forEach((value) => (humorValue += value));
+      const humorAvg = (humorValue / mySpan[index].values.length).toFixed(1);
+      return Number(humorAvg);
+    };
+
     return (
       <div className="bg-green-300 p-2 rounded-md">
-        {currentDayComments.length > 0 ? (
-          <div>
-            <ul>
-              {currentDayComments.map((item, index) => (
-                <li key={index}>
-                  <p>
-                    {item.comment}{" "}
-                    <span className="italic">as {item.time}</span>{" "}
-                    <span className="font-bold">Humor: {item.mood}</span>
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <p>Humor médio: {humorAvg}</p>
+        {mySpan.length > 0 ? (
+          <div className="flex justify-around items-center">
+            {mySpan.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md "
+              >
+                <p>Dia: {item.date}</p>
+                <p>Comentários: {item.values.length}</p>
+                {average(index) ? (
+                  <p>Humor médio: {average(index)}</p>
+                ) : (
+                  <p>Sem registros para este dia</p>
+                )}
+              </div>
+            ))}
           </div>
         ) : (
           <div></div>
         )}
+        <div></div>
       </div>
     );
   };
@@ -97,7 +106,8 @@ function UserStats({
     const now = moment().startOf("day");
     const difference = now.diff(moment(value).startOf("day"), "days");
     const date = currentDay;
-    timeSpanStatistics(difference);
+    const timeSpan = timeSpanStatistics(difference);
+    averageHumor(timeSpan);
 
     switch (difference) {
       case 0:
@@ -145,7 +155,7 @@ function UserStats({
     }
   };
 
-  const timeSpanStatistics = (dif: number) => {
+  const timeSpanStatistics = (dif: number): string[] => {
     let span: string[] = [];
 
     if (dif === 0 || dif === 1) {
@@ -154,12 +164,14 @@ function UserStats({
         const nextDay = currDay.add(i, "day").format("DD/MM/YY");
         span.push(nextDay);
       }
+      return span;
     } else {
       for (let i = 0; i < dif; i++) {
         const currDay = moment(value).startOf("day");
         const nextDay = currDay.add(i, "day").format("DD/MM/YY");
         span.push(nextDay);
       }
+      return span;
     }
   };
 
@@ -167,6 +179,24 @@ function UserStats({
     const today = new Date();
     const from = today.setDate(today.getDate() - time);
     onChange(new Date(from));
+  };
+
+  const averageHumor = (span: string[]) => {
+    let humorValues: { date: string; values: number[] }[] = [];
+
+    const commentFilter = (date: string): number[] => {
+      let values: number[] = [];
+      const filter = comments.filter((item) => item.date === date);
+      filter.length && filter.forEach((comment) => values.push(comment.mood));
+      return values;
+    };
+
+    span.forEach((date) => {
+      const values = commentFilter(date);
+      humorValues.push({ date, values });
+    });
+
+    setMySpan(humorValues);
   };
 
   return (
@@ -192,9 +222,6 @@ function UserStats({
       ) : (
         <p>Não há avaliações para este dia</p>
       )}
-      {mySpan.map((item) => (
-        <p>{item}</p>
-      ))}
       <button onClick={() => console.log(mySpan.length)}>Check</button>
     </div>
   );

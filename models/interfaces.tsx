@@ -53,6 +53,11 @@ export interface TimeSpanInt {
   difference: number;
 }
 
+export interface MoodSpan {
+  date: string;
+  values: number[];
+}
+
 export interface FileInt {
   name: string;
   url: string;
