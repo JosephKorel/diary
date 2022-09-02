@@ -40,6 +40,7 @@ function Today({
 
   const today = moment().format("DD/MM/YY");
   const thisDay = moment(value).format("DD/MM/YY");
+  const hour = moment().format("HH:mm");
 
   const currentDayTasks = myTasks.filter((task) => task.date === thisDay);
   const currentDayComments = myComments.filter((com) => com.date === thisDay);
@@ -64,6 +65,14 @@ function Today({
   useEffect(() => {
     getUserData();
   }, []);
+
+  const greetingMsg = (): string => {
+    if (hour <= "12:00") {
+      return "Bom dia";
+    } else if (hour <= "18:00") {
+      return "Boa tarde";
+    } else return "Boa noite";
+  };
 
   const currentTasks = async (currentUser: User): Promise<void> => {
     //Pega as tasks do dia de hoje
@@ -138,16 +147,44 @@ function Today({
     <div>
       <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
       {user && (
-        <div>
-          <div>
-            <img src={user.avatar}></img>
-            <h2>Olá, {user.name}</h2>
-            <MyNotesComponent
-              user={user}
-              myNotes={myNotes}
-              currentNotes={currentNotes}
-            />
+        <div className="w-5/6 m-auto">
+          {/* <header className="p-2">
+            <h1 className="text-lg font-semibold">
+              {greetingMsg()}, {user.name}
+            </h1>
+          </header> */}
+          <div className="flex justify-center">
+            <div className="border border-stone-800 rounded-full">
+              <img src={user.avatar} className="rounded-full"></img>
+            </div>
           </div>
+          <div>
+            <h2 className="text-lg font-semibold">
+              {greetingMsg()}, {user.name}
+            </h2>
+          </div>
+          <div className="flex flex-col absolute">
+            <p className="text-lg p-3 bg-indigo-700 rounded-full">ANOTAÇÕES</p>
+            <p className="text-lg p-3 bg-indigo-700 rounded-full">TAREFAS</p>
+            <p className="text-lg p-3 bg-indigo-700 rounded-full">LEMBRETES</p>
+          </div>
+          <div className="flex justify-center">
+            <div className="">
+              {presentOrPast && (
+                <CommentComponent
+                  user={user}
+                  myComments={currentDayComments}
+                  currentComments={currentComments}
+                  value={value}
+                />
+              )}
+            </div>
+          </div>
+          <MyNotesComponent
+            user={user}
+            myNotes={myNotes}
+            currentNotes={currentNotes}
+          />
           <div className="flex justify-around items-center">
             <MyTasksComp
               user={user}
@@ -155,14 +192,6 @@ function Today({
               currentTasks={currentTasks}
               value={value}
             />
-            {presentOrPast && (
-              <CommentComponent
-                user={user}
-                myComments={currentDayComments}
-                currentComments={currentComments}
-                value={value}
-              />
-            )}
           </div>
           <RemindComponent
             user={user}
