@@ -22,20 +22,6 @@ export default function DateViewComponent({
 
   const { user, value, onChange, setTime, reminders } = dateProps;
 
-  const dayView = (value: Date): string => {
-    const now = moment().startOf("day");
-    const viewDay = moment(value).format("DD/MM/YY");
-    const dayDiff = now.diff(moment(value).startOf("day"), "days");
-
-    if (dayDiff === 0) {
-      return "Hoje" + viewDay;
-    } else if (dayDiff === 1) {
-      return "Ontem" + viewDay;
-    } else if (dayDiff === -1) {
-      return "Amanhã" + viewDay;
-    } else return viewDay;
-  };
-
   const TileDiv = ({
     activeStartDate,
     date,
@@ -99,3 +85,17 @@ export default function DateViewComponent({
     </div>
   );
 }
+
+/* const dayView = (value: Date): string => {
+  const now = moment().startOf("day");
+  const viewDay = moment(value).format("DD/MM/YY");
+  const dayDiff = now.diff(moment(value).startOf("day"), "days");
+
+  if (dayDiff === 0) {
+    return "Hoje" + viewDay;
+  } else if (dayDiff === 1) {
+    return "Ontem" + viewDay;
+  } else if (dayDiff === -1) {
+    return "Amanhã" + viewDay;
+  } else return viewDay;
+}; */

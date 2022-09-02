@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { MyReminder, User } from "../../models/interfaces";
 import MyModal from "./modal";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 export default function RemindComponent({
   user,
@@ -24,15 +26,23 @@ export default function RemindComponent({
     const [when, setWhen] = useState("");
     const [time, setTime] = useState("");
     const [degree, setDegree] = useState(1);
+    const [value, onChange] = useState(new Date());
 
-    const addReminder = async () => {
+    const addReminder = async (): Promise<void | null> => {
+      const now = moment().startOf("day");
+      const dayDiff = now.diff(moment(value).startOf("day"), "days");
+      const rmdDay = moment(value).format("DD/MM/YY");
+
+      //Se o usuário tentar por um lembrete no passado
+      if (dayDiff > 0) return null;
+
       const remindDoc = {
         author: user.name,
         email: user.email,
         title,
         content,
         addedOn: today,
-        when,
+        when: rmdDay,
         time,
         degree,
       };
@@ -72,12 +82,16 @@ export default function RemindComponent({
           value={content}
           onChange={(e) => setContent(e.currentTarget.value)}
         />
-        <p>Dia</p>
-        <input
+        <div>
+          <p>Dia</p>
+          <Calendar value={value} onChange={(value: Date) => onChange(value)} />
+        </div>
+
+        {/* <input
           placeholder="DD/MM/YY"
           value={when}
           onChange={(e) => setWhen(e.currentTarget.value)}
-        />
+        /> */}
         <p>Horário</p>
         <input
           placeholder="HH:MM"
