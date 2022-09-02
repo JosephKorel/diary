@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import { MyReminder, User } from "../../models/interfaces";
 import MyModal from "./modal";
@@ -23,10 +23,17 @@ export default function RemindComponent({
   const NewRemind = (): JSX.Element => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [when, setWhen] = useState("");
     const [time, setTime] = useState("");
     const [degree, setDegree] = useState(1);
     const [value, onChange] = useState(new Date());
+
+    const hourFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const hour = event.currentTarget.value;
+      const pattern = /^(\d{2})(\d{2})/;
+      const replace = "$1:$2";
+      const onFormat = hour.replace(pattern, replace);
+      setTime(onFormat);
+    };
 
     const addReminder = async (): Promise<void | null> => {
       const now = moment().startOf("day");
@@ -35,6 +42,7 @@ export default function RemindComponent({
 
       //Se o usuário tentar por um lembrete no passado
       if (dayDiff > 0) return null;
+      else if (time.length < 5) return null;
 
       const remindDoc = {
         author: user.name,
@@ -58,7 +66,6 @@ export default function RemindComponent({
         if (newReminder.ok) {
           setTitle("");
           setContent("");
-          setWhen("");
           setTime("");
           currentReminders();
           setShow(false);
@@ -86,17 +93,12 @@ export default function RemindComponent({
           <p>Dia</p>
           <Calendar value={value} onChange={(value: Date) => onChange(value)} />
         </div>
-
-        {/* <input
-          placeholder="DD/MM/YY"
-          value={when}
-          onChange={(e) => setWhen(e.currentTarget.value)}
-        /> */}
         <p>Horário</p>
         <input
           placeholder="HH:MM"
           value={time}
-          onChange={(e) => setTime(e.currentTarget.value)}
+          onChange={(e) => hourFormat(e)}
+          maxLength={5}
         />
         <div className="flex gap-4">
           <button onClick={() => setDegree(1)}>1</button>
