@@ -39,6 +39,10 @@ function Today({
   const [value, onChange] = useState(new Date());
 
   const today = moment().format("DD/MM/YY");
+  const thisDay = moment(value).format("DD/MM/YY");
+
+  const currentDayTasks = myTasks.filter((task) => task.date === thisDay);
+  const currentDayComments = myComments.filter((com) => com.date === thisDay);
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
@@ -46,26 +50,19 @@ function Today({
   //Checa se é o dia de hoje ou dias anteriores
   const presentOrPast = dayDiff >= 0 ? true : false;
 
-  const getUserData = (date: string) => {
-    const todayTasks = tasks.filter((task) => task.date === date);
-    const todayComments = comments.filter((com) => com.date === date);
-
+  const getUserData = () => {
     if (dayVal.length === 0) {
       setDayVal(user.dayEvaluation);
     }
 
-    setMyTasks(todayTasks);
     setMyNotes(notes);
-    setMyComments(todayComments);
+    setMyTasks(tasks);
+    setMyComments(comments);
     setMyReminders(reminders);
   };
 
   useEffect(() => {
-    getUserData(moment(value).format("DD/MM/YY"));
-  }, [value]);
-
-  useEffect(() => {
-    getUserData(today);
+    getUserData();
   }, []);
 
   const currentTasks = async (currentUser: User): Promise<void> => {
@@ -81,7 +78,7 @@ function Today({
       const tasks = (await getTasks.json()) as { tasks: MyTasks[] };
       const todayTasks = tasks.tasks;
       const taskFilter = todayTasks.filter((item) => item.date === today);
-      setMyTasks(taskFilter);
+      setMyTasks(tasks.tasks);
     } catch (error) {
       console.log(error);
     }
@@ -115,10 +112,7 @@ function Today({
 
     try {
       const comments = (await getComments.json()) as { comments: MyComments[] };
-      const todayComments = comments.comments.filter(
-        (com) => com.date === today
-      );
-      setMyComments(todayComments);
+      setMyComments(comments.comments);
     } catch (error) {
       console.log(error);
     }
@@ -157,14 +151,14 @@ function Today({
           <div className="flex justify-around items-center">
             <MyTasksComp
               user={user}
-              myTasks={myTasks}
+              myTasks={currentDayTasks}
               currentTasks={currentTasks}
               value={value}
             />
             {presentOrPast && (
               <CommentComponent
                 user={user}
-                myComments={myComments}
+                myComments={currentDayComments}
                 currentComments={currentComments}
                 value={value}
               />

@@ -3,6 +3,7 @@ import moment from "moment";
 import MyModal from "./modal";
 import { MyTasks, User } from "../../models/interfaces";
 import { BsFlagFill } from "react-icons/bs";
+import { Calendar } from "react-calendar";
 
 //Componente que lida com tarefas
 export default function MyTasksComp({
@@ -24,8 +25,6 @@ export default function MyTasksComp({
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
-
-  const hasPassed = dayDiff > 0 ? true : false;
 
   const completeTask = async (id: string) => {
     //Manda a req pra atualizar
@@ -91,17 +90,19 @@ export default function MyTasksComp({
   const AddNewTask = (): JSX.Element => {
     const [content, setContent] = useState("");
     const [degree, setDegree] = useState(1);
+    const [showCal, setShowCal] = useState(false);
+    const [date, setDate] = useState(new Date());
 
     const addTask = async (): Promise<void | null> => {
       if (!content) return null;
-      const today = moment().format("DD/MM/YY");
+      const taskDate = moment(date).format("DD/MM/YY");
       const newTask = {
         author: user.name,
         email: user.email,
         task: content,
         done: false,
         degree,
-        date: today,
+        date: taskDate,
       };
 
       //Adiciona uma nova tarefa
@@ -139,21 +140,33 @@ export default function MyTasksComp({
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
           />
-          <div className="flex gap-5">
-            <div className="flex gap-1">
-              <BsFlagFill onClick={() => setDegree(1)} />
-              <p>Normal</p>
-            </div>
-            <div className="flex gap-1">
-              <BsFlagFill onClick={() => setDegree(2)} />
-              <p>Importante</p>
-            </div>
-            <div className="flex gap-1">
-              <BsFlagFill onClick={() => setDegree(3)} />
-              <p>Urgente</p>
-            </div>
-          </div>
         </form>
+        <div className="flex gap-5">
+          <div className="flex gap-1">
+            <BsFlagFill onClick={() => setDegree(1)} />
+            <p>Normal</p>
+          </div>
+          <div className="flex gap-1">
+            <BsFlagFill onClick={() => setDegree(2)} />
+            <p>Importante</p>
+          </div>
+          <div className="flex gap-1">
+            <BsFlagFill onClick={() => setDegree(3)} />
+            <p>Urgente</p>
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            setShowCal(false);
+            setDate(new Date());
+          }}
+        >
+          Hoje
+        </button>
+        <button onClick={() => setShowCal(true)}>Outro dia</button>
+        <div className={!showCal && ""}>
+          <Calendar value={date} onChange={(value: Date) => setDate(value)} />
+        </div>
         <button onClick={addTask}>Adicionar</button>
         <button onClick={() => setShow(false)}>Cancelar</button>
       </div>
@@ -174,7 +187,7 @@ export default function MyTasksComp({
             <p>Não há nenhuma tarefa ainda</p>
           </>
         )}
-        {!hasPassed && (
+        {dayDiff <= 0 && (
           <button
             onClick={() => {
               setElement(<AddNewTask />);
@@ -220,7 +233,7 @@ export default function MyTasksComp({
                     </>
                   ) : (
                     <>
-                      {!hasPassed && (
+                      {dayDiff === 0 && (
                         <>
                           <button onClick={() => completeTask(item._id)}>
                             Concluída
