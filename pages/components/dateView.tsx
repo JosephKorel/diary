@@ -75,9 +75,16 @@ export default function DateViewComponent({
           value={value}
           onChange={(value: Date) => {
             let date = moment(value).format("DD/MM/YY");
+            const now = moment().startOf("day");
+            const dayDiff = now.diff(moment(value).startOf("day"), "days");
             if (setTime) {
               onChange(value);
-              setTime({ when: "Dia", date, difference: null });
+              setTime({
+                when: "Dia",
+                date,
+                difference: dayDiff,
+                onSpan: false,
+              });
             } else onChange(value);
           }}
           tileContent={({ activeStartDate, date, view }) => (

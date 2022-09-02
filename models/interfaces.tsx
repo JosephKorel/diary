@@ -51,6 +51,7 @@ export interface TimeSpanInt {
   when: string;
   date: string;
   difference: number | null;
+  onSpan: boolean;
 }
 
 export interface DayStats {

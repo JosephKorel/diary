@@ -32,6 +32,7 @@ function UserStats({
     when: "Hoje",
     date: today,
     difference: 0,
+    onSpan: false,
   });
   const [mySpan, setMySpan] = useState<DayStats[]>([]);
 
@@ -39,13 +40,10 @@ function UserStats({
 
   const currentDay = moment(value).format("DD/MM/YY");
 
-  const dayEvaluation = user.dayEvaluation.filter(
-    (item) => item.date === time.date
-  );
-
-  const handleSubtract = (time: number): void => {
+  const handleSubtract = (amount: number): void => {
+    setTime({ ...time, onSpan: true });
     const today = new Date();
-    const from = today.setDate(today.getDate() - time);
+    const from = today.setDate(today.getDate() - amount);
     onChange(new Date(from));
   };
 
@@ -99,12 +97,10 @@ function UserStats({
           total++;
           acc += curr.evaluation;
         }
-
-        console.log(acc);
-        return acc / total;
+        return acc;
       }, 0);
 
-      return evaluationAvg;
+      return total > 0 ? evaluationAvg / total : 0;
     };
 
     return (
@@ -182,9 +178,8 @@ function UserStats({
     const difference = now.diff(moment(value).startOf("day"), "days");
     const date = currentDay;
 
-    if (time.difference === null) {
+    if (!time.onSpan) {
       getStatistics([time.date]);
-      setTime({ ...time, difference });
       return;
     }
 
@@ -197,6 +192,7 @@ function UserStats({
           when: "Hoje",
           date,
           difference,
+          onSpan: false,
         });
         break;
 
@@ -205,6 +201,7 @@ function UserStats({
           when: "Ontem",
           date,
           difference,
+          onSpan: true,
         });
         break;
 
@@ -213,6 +210,7 @@ function UserStats({
           when: "3 dias atrás",
           date,
           difference,
+          onSpan: true,
         });
         break;
 
@@ -221,6 +219,7 @@ function UserStats({
           when: "1 semana atrás",
           date,
           difference,
+          onSpan: true,
         });
         break;
 
@@ -229,10 +228,11 @@ function UserStats({
           when: "1 mês atrás",
           date,
           difference,
+          onSpan: true,
         });
         break;
       default:
-        setTime({ when: "Dia", date: currentDay, difference });
+        setTime({ when: "Dia", date: currentDay, difference, onSpan: false });
         break;
     }
   };
