@@ -9,16 +9,23 @@ export default function MyTasksComp({
   currentTasks,
   user,
   myTasks,
+  value,
 }: {
   currentTasks: (data: User) => void;
   user: User;
   myTasks: MyTasks[];
+  value: Date;
 }): JSX.Element {
   const [showTasks, setShowTasks] = useState(false);
   const [show, setShow] = useState(false);
   const [element, setElement] = useState<JSX.Element | null>(null);
   const [taskEdit, setTaskEdit] = useState("");
   const [edit, setEdit] = useState<boolean | number>(false);
+
+  const now = moment().startOf("day");
+  const dayDiff = now.diff(moment(value).startOf("day"), "days");
+
+  const hasPassed = dayDiff > 0 ? true : false;
 
   const completeTask = async (id: string) => {
     //Manda a req pra atualizar
@@ -167,14 +174,17 @@ export default function MyTasksComp({
             <p>Não há nenhuma tarefa ainda</p>
           </>
         )}
-        <button
-          onClick={() => {
-            setElement(<AddNewTask />);
-            setShow(true);
-          }}
-        >
-          Adicionar
-        </button>
+        {!hasPassed && (
+          <button
+            onClick={() => {
+              setElement(<AddNewTask />);
+              setShow(true);
+            }}
+          >
+            Adicionar
+          </button>
+        )}
+
         <button onClick={() => setShowTasks(!showTasks)}>Ver Tarefas</button>
         {showTasks && (
           <div>
@@ -210,13 +220,17 @@ export default function MyTasksComp({
                     </>
                   ) : (
                     <>
-                      <button onClick={() => completeTask(item._id)}>
-                        Concluída
-                      </button>
+                      {!hasPassed && (
+                        <>
+                          <button onClick={() => completeTask(item._id)}>
+                            Concluída
+                          </button>
+                          <button onClick={() => setEdit(index)}>Editar</button>
+                        </>
+                      )}
                       <button onClick={() => deleteTask(item._id)}>
                         Excluir
                       </button>
-                      <button onClick={() => setEdit(index)}>Editar</button>
                     </>
                   )}
                 </li>

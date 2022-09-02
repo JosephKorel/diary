@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import {
-  MoodSpan,
+  DayStats,
   MyComments,
   MyNotes,
   MyReminder,
@@ -33,11 +33,11 @@ function UserStats({
     date: today,
     difference: 0,
   });
-  const [mySpan, setMySpan] = useState<MoodSpan[]>([]);
+  const [mySpan, setMySpan] = useState<DayStats[]>([]);
+
+  const router = useRouter();
 
   const currentDay = moment(value).format("DD/MM/YY");
-
-  const currentDayComments = comments.filter((item) => item.date === time.date);
 
   const dayEvaluation = user.dayEvaluation.filter(
     (item) => item.date === time.date
@@ -54,7 +54,7 @@ function UserStats({
   }, [value]);
 
   const UserComments = (): JSX.Element => {
-    const dayAverage = (index: number): number | null => {
+    const dailyHumor = (index: number): number | null => {
       let humorValue: number = 0;
       if (!mySpan[index].values.length) return null;
       mySpan[index].values.forEach((value) => (humorValue += value));
@@ -62,7 +62,7 @@ function UserStats({
       return Number(humorAvg);
     };
 
-    const spanAverage = (): number => {
+    const humorSpanAverage = (): number => {
       let allValues: number[] = [];
       let valueSum = 0;
 
@@ -77,6 +77,36 @@ function UserStats({
       return Number(finalAverage);
     };
 
+    const completitionPercentage = (): number => {
+      let totalTasks = 0;
+      let completedTasks = 0;
+
+      mySpan.forEach((item) => {
+        totalTasks += item.tasks.total;
+        completedTasks += item.tasks.completed;
+      });
+
+      if (totalTasks > 0) {
+        const percentage = (completedTasks * 100) / totalTasks;
+        return Number(percentage.toFixed(1));
+      } else return NaN;
+    };
+
+    const spanEvaluation = (): number => {
+      let total = 0;
+      const evaluationAvg = mySpan.reduce((acc, curr) => {
+        if (curr.evaluation > 0) {
+          total++;
+          acc += curr.evaluation;
+        }
+
+        console.log(acc);
+        return acc / total;
+      }, 0);
+
+      return evaluationAvg;
+    };
+
     return (
       <div className="bg-green-300 p-2 rounded-md">
         {mySpan.length > 0 ? (
@@ -88,25 +118,49 @@ function UserStats({
               >
                 <p>Dia: {item.date}</p>
                 <p>Comentários: {item.values.length}</p>
-                {dayAverage(index) ? (
-                  <p>Humor médio: {dayAverage(index)}</p>
+                {dailyHumor(index) ? (
+                  <p>Humor médio: {dailyHumor(index)}</p>
                 ) : (
                   <p>Sem registros para este dia</p>
                 )}
+                <div>
+                  {item.tasks.total !== 0 ? (
+                    <p>
+                      Tarefas completas: {item.tasks.completed} de{" "}
+                      {item.tasks.total}
+                    </p>
+                  ) : (
+                    <p>Sem tarefas para este dia</p>
+                  )}
+                </div>
+                <div>
+                  {item.evaluation >= 0 ? (
+                    <p>Avaliação do dia: {item.evaluation}</p>
+                  ) : (
+                    <p>Sem avaliação para este dia</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <div></div>
         )}
-        <div>Média de humor deste período: {spanAverage()}</div>
+
+        <div>
+          {completitionPercentage() !== NaN ? (
+            <p>
+              Você completou {completitionPercentage()}% das tarefas propostas
+            </p>
+          ) : (
+            <p>Sem tarefas para este período</p>
+          )}
+        </div>
+        <div>Média de humor deste período: {humorSpanAverage()}</div>
+        <div>Média de avaliação diária neste período: {spanEvaluation()}</div>
       </div>
     );
   };
-
-  const now = moment().startOf("day");
-  const dayDiff = now.diff(moment(value).startOf("day"), "days");
-  const router = useRouter();
 
   const TimeSpan = (): JSX.Element => {
     return (
@@ -128,10 +182,14 @@ function UserStats({
     const difference = now.diff(moment(value).startOf("day"), "days");
     const date = currentDay;
 
-    if (time.difference === null) return;
+    if (time.difference === null) {
+      getStatistics([time.date]);
+      setTime({ ...time, difference });
+      return;
+    }
 
     const timeSpan = timeSpanStatistics(difference);
-    averageHumor(timeSpan);
+    getStatistics(timeSpan);
 
     switch (difference) {
       case 0:
@@ -199,9 +257,10 @@ function UserStats({
     }
   };
 
-  const averageHumor = (span: string[]) => {
-    let humorValues: { date: string; values: number[] }[] = [];
+  const getStatistics = (span: string[]) => {
+    let dayStats: DayStats[] = [];
 
+    //Pega os valores de humor dos comentários
     const commentFilter = (date: string): number[] => {
       let values: number[] = [];
       const filter = comments.filter((item) => item.date === date);
@@ -209,12 +268,45 @@ function UserStats({
       return values;
     };
 
+    //Pega as tarefas do usuário
+    const taskFilter = (date: string): { completed: number; total: number } => {
+      let completedTasks = 0;
+      const currentTasks = tasks.filter((item) => item.date === date);
+      currentTasks.forEach((task) => {
+        if (task.done) {
+          completedTasks += 1;
+        }
+      });
+      return { completed: completedTasks, total: currentTasks.length };
+    };
+
+    const evaluationFilter = (date: string): number => {
+      let evaluation = 0;
+
+      const dayFilter = user.dayEvaluation.filter((day) => day.date === date);
+
+      //Se não houve avaliação do dia
+      if (!dayFilter[0]) return -1;
+
+      //Se houve
+      evaluation += dayFilter[0].value;
+
+      return evaluation;
+    };
+
     span.forEach((date) => {
       const values = commentFilter(date);
-      humorValues.push({ date, values });
+      const tasks = taskFilter(date);
+      const evaluation = evaluationFilter(date);
+      dayStats.push({
+        date,
+        values,
+        tasks,
+        evaluation,
+      });
     });
 
-    setMySpan(humorValues);
+    setMySpan(dayStats);
   };
 
   return (
@@ -237,12 +329,6 @@ function UserStats({
         </p>
       </div>
       <UserComments />
-      {dayEvaluation[0] ? (
-        <p>Avaliação do dia: {dayEvaluation[0].value}</p>
-      ) : (
-        <p>Não há avaliações para este dia</p>
-      )}
-      <button onClick={() => console.log(mySpan.length)}>Check</button>
     </div>
   );
 }

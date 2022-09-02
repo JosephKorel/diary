@@ -53,9 +53,11 @@ export interface TimeSpanInt {
   difference: number | null;
 }
 
-export interface MoodSpan {
+export interface DayStats {
   date: string;
   values: number[];
+  tasks: { total: number; completed: number };
+  evaluation: number;
 }
 
 export interface FileInt {

@@ -159,6 +159,7 @@ function Today({
               user={user}
               myTasks={myTasks}
               currentTasks={currentTasks}
+              value={value}
             />
             {presentOrPast && (
               <CommentComponent
