@@ -72,13 +72,13 @@ export default function CommentComponent({
     } else setHasChoosed(true);
   };
 
-  const HumorIcon = (): JSX.Element => {
-    if (iconValue === 0) return <GiDualityMask />;
-    else if (iconValue === 1) return <ImCrying2 />;
-    else if (iconValue <= 3) return <ImSad2 />;
-    else if (iconValue === 4) return <ImConfused2 />;
-    else if (iconValue <= 6) return <ImNeutral2 />;
-    else if (iconValue < 9) return <ImSmile2 />;
+  const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
+    if (mood === 0) return <GiDualityMask />;
+    else if (mood === 1) return <ImCrying2 />;
+    else if (mood <= 3) return <ImSad2 />;
+    else if (mood === 4) return <ImConfused2 />;
+    else if (mood <= 6) return <ImNeutral2 />;
+    else if (mood < 9) return <ImSmile2 />;
     else return <ImHappy2 />;
   };
   return (
@@ -91,7 +91,7 @@ export default function CommentComponent({
               placeholder="Escreva aqui"
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              className="w-full rounded-full p-2"
+              className="w-full rounded-full p-2 text-stone-800"
             />
             <p>Escala de humor</p>
             <div className="flex justify-center items-center gap-5">
@@ -198,15 +198,19 @@ export default function CommentComponent({
                 />
               </div>
               <div>
-                <HumorIcon />
+                <HumorIcon mood={iconValue} />
               </div>
+              <button onClick={addComment}>Confirmar</button>
             </div>
-            <button onClick={addComment}>Confirmar</button>
-            <p>Comentários: {myComments.length}</p>
-            {myComments.map((item) => (
-              <p className="italic">
-                {item.comment} as <span className="font-bold">{item.time}</span>
-              </p>
+            {myComments.map((item, index) => (
+              <div
+                key={index}
+                className="p-1 rounded-md bg-gray-100 flex justify-between items-center mt-1 text-stone-800"
+              >
+                <HumorIcon mood={item.mood} />
+                <p className="italic">{item.comment}</p>
+                <p className="font-bold">{item.time}</p>
+              </div>
             ))}
           </div>
         ) : (
