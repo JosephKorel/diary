@@ -71,146 +71,163 @@ export default function CommentComponent({
     } else setHasChoosed(true);
   };
 
+  const humorSub = (mood: number): string => {
+    if (mood === 0) return "Humor";
+    else if (mood === 1) return "Muito triste";
+    else if (mood <= 3) return "Triste";
+    else if (mood === 4) return "Mais ou menos";
+    else if (mood <= 6) return "Normal";
+    else if (mood < 9) return "Feliz";
+    else return "Extremamente feliz";
+  };
+
   const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
-    if (mood === 0) return <GiDualityMask />;
-    else if (mood === 1) return <ImCrying2 />;
-    else if (mood <= 3) return <ImSad2 />;
-    else if (mood === 4) return <ImConfused2 />;
-    else if (mood <= 6) return <ImNeutral2 />;
-    else if (mood < 9) return <ImSmile2 />;
-    else return <ImHappy2 />;
+    if (mood === 0) return <GiDualityMask size="8%" />;
+    else if (mood === 1) return <ImCrying2 size="8%" />;
+    else if (mood <= 3) return <ImSad2 size="8%" />;
+    else if (mood === 4) return <ImConfused2 size="8%" />;
+    else if (mood <= 6) return <ImNeutral2 size="8%" />;
+    else if (mood < 9) return <ImSmile2 size="8%" />;
+    else return <ImHappy2 size="8%" />;
   };
   return (
     <>
-      <div className="p-10 bg-stone-800 text-gray-100 rounded-lg">
+      <div className="p-3 text-gray-100">
         {seingToday ? (
-          <div className="text-center">
-            <h2>Gostaria de compartilhar como você está neste momento?</h2>
-            <input
-              placeholder="Escreva aqui"
-              value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
-              className="w-full rounded-full p-2 text-stone-800"
-            />
-            <p>Escala de humor</p>
-            <div className="flex justify-center items-center gap-5">
-              <div className="flex gap-2">
-                <BsHexagonFill
-                  className={` text-white duration-200 ${
-                    iconValue > 0 && "text-blue-600"
-                  }  ${iconValue > 0 && hasChoosed && "text-indigo-700"}`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(1)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(1)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 1 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 1 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(2)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(2)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 2 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 2 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(3)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(3)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 3 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 3 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(4)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(4)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 4 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 4 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(5)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(5)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 5 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 5 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(6)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(6)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 6 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 6 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(7)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(7)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 7 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 7 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(8)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(8)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 8 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 8 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(9)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(9)}
-                />
-                <BsHexagonFill
-                  className={`${
-                    iconValue > 9 && "text-blue-600"
-                  } text-white duration-200 ${
-                    iconValue > 9 && hasChoosed && "text-indigo-700"
-                  }`}
-                  onMouseEnter={() => !hasChoosed && setIconValue(10)}
-                  onMouseLeave={() => !hasChoosed && setIconValue(0)}
-                  onClick={() => handleChoice(10)}
-                />
+          <div className="">
+            <div>
+              <h2 className="text-2xl mb-1 text-center font-semibold">
+                Gostaria de compartilhar algo?
+              </h2>
+              <input
+                placeholder="Escreva aqui"
+                value={text}
+                onChange={(e) => setText(e.currentTarget.value)}
+                className="w-full rounded-full p-2 text-stone-800"
+              />
+            </div>
+            <div className={!text.length && "hidden"}>
+              <p className="mt-2 text-2xl font-semibold text-center">
+                Como você está se sentindo?
+              </p>
+              <div className="flex justify-center items-center mt-2">
+                <div className="flex gap-2">
+                  <BsHexagonFill
+                    className={` text-ronchi duration-200 ${
+                      iconValue > 0 && "text-amaranth"
+                    }  ${iconValue > 0 && hasChoosed && "text-indigo-700"}`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(1)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(1)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 1 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 1 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(2)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(2)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 2 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 2 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(3)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(3)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 3 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 3 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(4)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(4)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 4 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 4 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(5)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(5)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 5 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 5 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(6)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(6)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 6 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 6 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(7)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(7)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 7 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 7 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(8)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(8)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 8 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 8 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(9)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(9)}
+                    size={25}
+                  />
+                  <BsHexagonFill
+                    className={`${
+                      iconValue > 9 && "text-amaranth"
+                    } text-ronchi duration-200 ${
+                      iconValue > 9 && hasChoosed && "text-amaranth"
+                    }`}
+                    onMouseEnter={() => !hasChoosed && setIconValue(10)}
+                    onMouseLeave={() => !hasChoosed && setIconValue(0)}
+                    onClick={() => handleChoice(10)}
+                    size={25}
+                  />
+                </div>
               </div>
-              <div>
+              <div className="flex justify-center items-center gap-2 mt-2 p-2 bg-gray-100 rounded-md text-stone-900">
+                <p className="text-lg">{humorSub(iconValue)}</p>
                 <HumorIcon mood={iconValue} />
               </div>
               <button onClick={addComment}>Confirmar</button>
             </div>
-            {myComments.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
-              >
-                <div className="flex items-center">
-                  <HumorIcon mood={item.mood} />
-                  <p className="italic text-center">{item.comment}</p>
-                </div>
-                <p className="font-bold self-start">{item.time}</p>
-              </div>
-            ))}
           </div>
         ) : (
           <div>

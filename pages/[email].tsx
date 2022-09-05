@@ -47,8 +47,8 @@ function Today({
   const [myReminders, setMyReminders] = useState<MyReminder[]>([]);
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
   const [value, onChange] = useState(new Date());
+  const [card, setCard] = useState(0);
 
-  const today = moment().format("DD/MM/YY");
   const thisDay = moment(value).format("DD/MM/YY");
   const hour = moment().format("HH:mm");
 
@@ -201,7 +201,7 @@ function Today({
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="">
+            <div className="w-1/2">
               {presentOrPast && (
                 <CommentComponent
                   user={user}
@@ -213,27 +213,58 @@ function Today({
             </div>
           </div>
           <div className="flex justify-around items-center text-stone-800">
-            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
-              <p className="text-xl font-bold">COMENTÁRIOS</p>
-              <div className="p-5">
-                <HumorIcon mood={humorAvg()} />
+            <div
+              onClick={() => setCard(1)}
+              className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md ${
+                card === 1 && "flex-1"
+              }`}
+            >
+              <div className="flex flex-col justify-center items-center">
+                <p className="text-xl font-bold">COMENTÁRIOS</p>
+                <div className="p-5">
+                  <HumorIcon mood={humorAvg()} />
+                </div>
+              </div>
+              <div className={card !== 1 && "hidden"}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCard(0);
+                  }}
+                  className="bg-red-400 p-10"
+                >
+                  Fechar
+                </button>
+                {currentDayComments.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
+                  >
+                    <div className="flex items-center">
+                      <HumorIcon mood={item.mood} />
+                      <p className="italic text-center">{item.comment}</p>
+                    </div>
+                    <p className="font-bold self-start">{item.time}</p>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
-              <p className="text-xl font-bold ">TAREFAS</p>
-              <p className="text-3xl p-2">{currentDayTasks.length}</p>
-              <button>
-                <MdLibraryAdd />
-              </button>
+            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
+              <MyTasksComp
+                user={user}
+                myTasks={currentDayTasks}
+                currentTasks={currentTasks}
+                value={value}
+              />
             </div>
-            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
               <p className="text-xl font-bold ">ANOTAÇÕES</p>
               <p className="text-3xl p-2">{myNotes.length}</p>
               <button>
                 <MdLibraryAdd />
               </button>
             </div>
-            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
               <p className="text-xl font-bold ">LEMBRETES</p>
               <p className="text-3xl p-2">{myReminders.length}</p>
               <button>

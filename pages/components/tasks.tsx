@@ -4,6 +4,7 @@ import MyModal from "./modal";
 import { MyTasks, User } from "../../models/interfaces";
 import { BsFlagFill } from "react-icons/bs";
 import { Calendar } from "react-calendar";
+import { MdLibraryAdd } from "react-icons/md";
 
 //Componente que lida com tarefas
 export default function MyTasksComp({
@@ -176,17 +177,9 @@ export default function MyTasksComp({
   return (
     <>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div className="p-20 bg-red-300 rounded-lg">
+      <div className="" onClick={() => setShowTasks(true)}>
         <h2>Tarefas</h2>
-        {myTasks.length > 0 ? (
-          <>
-            <h3>{myTasks.length}</h3>
-          </>
-        ) : (
-          <>
-            <p>Não há nenhuma tarefa ainda</p>
-          </>
-        )}
+        <p>{myTasks.length}</p>
         {dayDiff <= 0 && (
           <button
             onClick={() => {
@@ -194,11 +187,10 @@ export default function MyTasksComp({
               setShow(true);
             }}
           >
-            Adicionar
+            <MdLibraryAdd />
           </button>
         )}
-
-        <button onClick={() => setShowTasks(!showTasks)}>Ver Tarefas</button>
+        {/*   <button onClick={() => setShowTasks(!showTasks)}>Ver Tarefas</button> */}
         {showTasks && (
           <div>
             <ul>
