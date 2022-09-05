@@ -27,6 +27,8 @@ import {
   ImHappy2,
 } from "react-icons/im";
 import { GiDualityMask } from "react-icons/gi";
+import MyModal from "./components/modal";
+import { AiOutlineClose } from "react-icons/ai";
 
 function Today({
   user,
@@ -45,6 +47,8 @@ function Today({
   const [myNotes, setMyNotes] = useState<MyNotes[]>([]);
   const [myComments, setMyComments] = useState<MyComments[]>([]);
   const [myReminders, setMyReminders] = useState<MyReminder[]>([]);
+  const [element, setElement] = useState<JSX.Element>(null);
+  const [show, setShow] = useState(false);
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
   const [value, onChange] = useState(new Date());
   const [card, setCard] = useState(0);
@@ -183,129 +187,137 @@ function Today({
   };
 
   return (
-    <div className="bg-[#4361ee]">
-      <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
-      <header className="p-2 text-gray-100">
-        <h1 className="text-lg font-semibold">{dayView()}</h1>
-      </header>
-      {user && (
-        <div className="w-5/6 m-auto">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-100">
-              {greetingMsg()}, {user.name}
-            </h2>
-          </div>
-          <div className="flex justify-center">
-            <div className="border border-stone-800 rounded-full">
-              <img src={user.avatar} className="rounded-full"></img>
+    <>
+      {show && <MyModal children={element} setShow={setShow} />}
+      <div className="bg-[#4361ee] h-screen">
+        <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
+        <header className="p-2 text-gray-100">
+          <h1 className="text-lg font-semibold">{dayView()}</h1>
+        </header>
+        {user && (
+          <div className="w-5/6 m-auto">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-100">
+                {greetingMsg()}, {user.name}
+              </h2>
             </div>
-          </div>
-          <div className="flex justify-center">
-            <div className="w-1/2">
-              {presentOrPast && (
-                <CommentComponent
-                  user={user}
-                  myComments={currentDayComments}
-                  currentComments={currentComments}
-                  value={value}
-                />
-              )}
-            </div>
-          </div>
-          <div className="flex justify-around items-center text-stone-800">
-            <div
-              onClick={() => setCard(1)}
-              className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md ${
-                card === 1 && "flex-1"
-              }`}
-            >
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-xl font-bold">COMENTÁRIOS</p>
-                <div className="p-5">
-                  <HumorIcon mood={humorAvg()} />
-                </div>
+            <div className="flex justify-center">
+              <div className="border border-stone-800 rounded-full">
+                <img src={user.avatar} className="rounded-full"></img>
               </div>
-              <div className={card !== 1 && "hidden"}>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCard(0);
-                  }}
-                  className="bg-red-400 p-10"
-                >
-                  Fechar
-                </button>
-                {currentDayComments.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
-                  >
-                    <div className="flex items-center">
-                      <HumorIcon mood={item.mood} />
-                      <p className="italic text-center">{item.comment}</p>
-                    </div>
-                    <p className="font-bold self-start">{item.time}</p>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-1/2">
+                {presentOrPast && (
+                  <CommentComponent
+                    user={user}
+                    myComments={currentDayComments}
+                    currentComments={currentComments}
+                    value={value}
+                  />
+                )}
+              </div>
+            </div>
+            <div className="flex justify-around gap-10 text-stone-800">
+              <div
+                onClick={() => setCard(1)}
+                className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md relative ${
+                  card === 1 && "flex-1"
+                }`}
+              >
+                <div className="flex flex-col justify-center items-center">
+                  <p className="text-xl font-bold">COMENTÁRIOS</p>
+                  <div className="p-5">
+                    <HumorIcon mood={humorAvg()} />
                   </div>
-                ))}
+                </div>
+
+                {card === 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCard(0);
+                      }}
+                      className="absolute top-0 right-1"
+                    >
+                      <AiOutlineClose />
+                    </button>
+                    {currentDayComments.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
+                      >
+                        <div className="flex items-center">
+                          <HumorIcon mood={item.mood} />
+                          <p className="italic text-center">{item.comment}</p>
+                        </div>
+                        <p className="font-bold self-start">{item.time}</p>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+              <div
+                className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center ${
+                  card === 2 && "flex-1"
+                }`}
+              >
+                <MyTasksComp
+                  taskProps={{
+                    currentTasks,
+                    user,
+                    currentDayTasks,
+                    value,
+                    setShow,
+                    setElement,
+                    card,
+                    setCard,
+                  }}
+                />
+              </div>
+              <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
+                <p className="text-xl font-bold ">ANOTAÇÕES</p>
+                <p className="text-3xl p-2">{myNotes.length}</p>
+                <button>
+                  <MdLibraryAdd />
+                </button>
+              </div>
+              <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
+                <p className="text-xl font-bold ">LEMBRETES</p>
+                <p className="text-3xl p-2">{myReminders.length}</p>
+                <button>
+                  <MdLibraryAdd />
+                </button>
               </div>
             </div>
-            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
-              <MyTasksComp
+            {/* <MyNotesComponent
+              user={user}
+              myNotes={myNotes}
+              currentNotes={currentNotes}
+            />
+            <RemindComponent
+              user={user}
+              myReminders={myReminders}
+              currentReminders={currentReminders}
+            /> */}
+            <div>
+              <DayEvaluation
                 user={user}
-                myTasks={currentDayTasks}
-                currentTasks={currentTasks}
+                dayVal={dayVal}
+                setDayVal={setDayVal}
                 value={value}
               />
             </div>
-            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
-              <p className="text-xl font-bold ">ANOTAÇÕES</p>
-              <p className="text-3xl p-2">{myNotes.length}</p>
-              <button>
-                <MdLibraryAdd />
-              </button>
-            </div>
-            <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
-              <p className="text-xl font-bold ">LEMBRETES</p>
-              <p className="text-3xl p-2">{myReminders.length}</p>
-              <button>
-                <MdLibraryAdd />
-              </button>
-            </div>
+            <Link
+              href={{ pathname: "/user_stats", query: { email: user.email } }}
+            >
+              <a>Estatísticas</a>
+            </Link>
           </div>
-          <MyNotesComponent
-            user={user}
-            myNotes={myNotes}
-            currentNotes={currentNotes}
-          />
-          <div className="flex justify-around items-center">
-            <MyTasksComp
-              user={user}
-              myTasks={currentDayTasks}
-              currentTasks={currentTasks}
-              value={value}
-            />
-          </div>
-          <RemindComponent
-            user={user}
-            myReminders={myReminders}
-            currentReminders={currentReminders}
-          />
-          <div>
-            <DayEvaluation
-              user={user}
-              dayVal={dayVal}
-              setDayVal={setDayVal}
-              value={value}
-            />
-          </div>
-          <Link
-            href={{ pathname: "/user_stats", query: { email: user.email } }}
-          >
-            <a>Estatísticas</a>
-          </Link>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

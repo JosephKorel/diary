@@ -1,28 +1,40 @@
 import React, { useState } from "react";
 import moment from "moment";
-import MyModal from "./modal";
 import { MyTasks, User } from "../../models/interfaces";
 import { BsFlagFill } from "react-icons/bs";
 import { Calendar } from "react-calendar";
 import { MdLibraryAdd } from "react-icons/md";
+import { AiOutlineClose } from "react-icons/ai";
+
+interface TaskComp {
+  taskProps: {
+    currentTasks: (data: User) => void;
+    user: User;
+    currentDayTasks: MyTasks[];
+    value: Date;
+    setShow: (data: boolean) => void;
+    setElement: (data: JSX.Element) => void;
+    card: number;
+    setCard: (data: number) => void;
+  };
+}
 
 //Componente que lida com tarefas
-export default function MyTasksComp({
-  currentTasks,
-  user,
-  myTasks,
-  value,
-}: {
-  currentTasks: (data: User) => void;
-  user: User;
-  myTasks: MyTasks[];
-  value: Date;
-}): JSX.Element {
+export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
   const [showTasks, setShowTasks] = useState(false);
-  const [show, setShow] = useState(false);
-  const [element, setElement] = useState<JSX.Element | null>(null);
   const [taskEdit, setTaskEdit] = useState("");
   const [edit, setEdit] = useState<boolean | number>(false);
+
+  const {
+    currentTasks,
+    user,
+    currentDayTasks,
+    value,
+    setShow,
+    setElement,
+    card,
+    setCard,
+  } = taskProps;
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
@@ -175,75 +187,88 @@ export default function MyTasksComp({
   };
 
   return (
-    <>
-      {show && <MyModal children={element} setShow={setShow} />}
-      <div className="" onClick={() => setShowTasks(true)}>
-        <h2>Tarefas</h2>
-        <p>{myTasks.length}</p>
-        {dayDiff <= 0 && (
-          <button
-            onClick={() => {
-              setElement(<AddNewTask />);
-              setShow(true);
-            }}
-          >
-            <MdLibraryAdd />
-          </button>
-        )}
-        {/*   <button onClick={() => setShowTasks(!showTasks)}>Ver Tarefas</button> */}
-        {showTasks && (
-          <div>
-            <ul>
-              {myTasks.map((item, index) => (
-                <li className="p-1 bg-slate-100" key={index}>
-                  {edit === index ? (
-                    <>
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          editTask(item._id);
-                        }}
-                      >
-                        <input
-                          value={taskEdit}
-                          onChange={(e) => setTaskEdit(e.currentTarget.value)}
-                        />
-                      </form>
-                    </>
-                  ) : (
-                    <p className={`${item.done ? "line-through" : ""}`}>
-                      {item.task}
-                    </p>
-                  )}
+    <div
+      className={`flex flex-col justify-center items-center relative w-full`}
+      onClick={() => {
+        setCard(2);
+        setShowTasks(true);
+      }}
+    >
+      {card === 2 && (
+        <button
+          className="absolute top-0 right-1"
+          onClick={(e) => {
+            e.stopPropagation();
+            setCard(0);
+          }}
+        >
+          <AiOutlineClose />
+        </button>
+      )}
+      <h2 className="text-xl font-bold">Tarefas</h2>
+      <p className="text-3xl p-2">{currentDayTasks.length}</p>
+      {dayDiff <= 0 && (
+        <button
+          onClick={() => {
+            setElement(<AddNewTask />);
+            setShow(true);
+          }}
+        >
+          <MdLibraryAdd />
+        </button>
+      )}
+      {card === 2 && (
+        <div>
+          <ul>
+            {currentDayTasks.map((item, index) => (
+              <li className="p-1 bg-slate-100" key={index}>
+                {edit === index ? (
+                  <>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        editTask(item._id);
+                      }}
+                    >
+                      <input
+                        value={taskEdit}
+                        onChange={(e) => setTaskEdit(e.currentTarget.value)}
+                      />
+                    </form>
+                  </>
+                ) : (
+                  <p className={`${item.done ? "line-through" : ""}`}>
+                    {item.task}
+                  </p>
+                )}
 
-                  {edit === index ? (
-                    <>
-                      <button onClick={() => editTask(item._id)}>
-                        Confirmar
-                      </button>
-                      <button onClick={() => setEdit(false)}>Cancelar</button>
-                    </>
-                  ) : (
-                    <>
-                      {dayDiff === 0 && (
-                        <>
-                          <button onClick={() => completeTask(item._id)}>
-                            Concluída
-                          </button>
-                          <button onClick={() => setEdit(index)}>Editar</button>
-                        </>
-                      )}
-                      <button onClick={() => deleteTask(item._id)}>
-                        Excluir
-                      </button>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </>
+                {edit === index ? (
+                  <>
+                    <button onClick={() => editTask(item._id)}>
+                      Confirmar
+                    </button>
+                    <button onClick={() => setEdit(false)}>Cancelar</button>
+                  </>
+                ) : (
+                  <>
+                    {dayDiff === 0 && (
+                      <>
+                        <button onClick={() => completeTask(item._id)}>
+                          Concluída
+                        </button>
+                        <button onClick={() => setEdit(index)}>Editar</button>
+                      </>
+                    )}
+                    <button onClick={() => deleteTask(item._id)}>
+                      Excluir
+                    </button>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
