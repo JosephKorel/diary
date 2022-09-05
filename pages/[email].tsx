@@ -17,6 +17,16 @@ import "react-calendar/dist/Calendar.css";
 import DateViewComponent from "./components/dateView";
 import RemindComponent from "./components/reminders";
 import Link from "next/link";
+import { MdLibraryAdd } from "react-icons/md";
+import {
+  ImCrying2,
+  ImSad2,
+  ImConfused2,
+  ImNeutral2,
+  ImSmile2,
+  ImHappy2,
+} from "react-icons/im";
+import { GiDualityMask } from "react-icons/gi";
 
 function Today({
   user,
@@ -74,6 +84,16 @@ function Today({
     } else return "Boa noite";
   };
 
+  const dayView = (): string => {
+    if (dayDiff === 0) {
+      return "Hoje, " + thisDay;
+    } else if (dayDiff === 1) {
+      return "Ontem, " + thisDay;
+    } else if (dayDiff === -1) {
+      return "Amanhã, " + thisDay;
+    } else return thisDay;
+  };
+
   const currentTasks = async (currentUser: User): Promise<void> => {
     //Pega as tasks do dia de hoje
     const getTasks = await fetch(`/api/tasks/${currentUser.email}`, {
@@ -85,8 +105,6 @@ function Today({
 
     try {
       const tasks = (await getTasks.json()) as { tasks: MyTasks[] };
-      const todayTasks = tasks.tasks;
-      const taskFilter = todayTasks.filter((item) => item.date === today);
       setMyTasks(tasks.tasks);
     } catch (error) {
       console.log(error);
@@ -143,30 +161,44 @@ function Today({
     }
   };
 
+  const humorAvg = (): number => {
+    let total = 0;
+    const evaluationAvg = currentDayComments.reduce((acc, curr) => {
+      total++;
+      acc += curr.mood;
+      return acc;
+    }, 0);
+
+    return total > 0 ? evaluationAvg / total : 0;
+  };
+
+  const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
+    if (mood === 0) return <GiDualityMask />;
+    else if (mood === 1) return <ImCrying2 />;
+    else if (mood <= 3) return <ImSad2 />;
+    else if (mood === 4) return <ImConfused2 />;
+    else if (mood <= 6) return <ImNeutral2 />;
+    else if (mood < 9) return <ImSmile2 />;
+    else return <ImHappy2 />;
+  };
+
   return (
-    <div>
+    <div className="bg-[#4361ee]">
       <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
+      <header className="p-2 text-gray-100">
+        <h1 className="text-lg font-semibold">{dayView()}</h1>
+      </header>
       {user && (
         <div className="w-5/6 m-auto">
-          {/* <header className="p-2">
-            <h1 className="text-lg font-semibold">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-100">
               {greetingMsg()}, {user.name}
-            </h1>
-          </header> */}
+            </h2>
+          </div>
           <div className="flex justify-center">
             <div className="border border-stone-800 rounded-full">
               <img src={user.avatar} className="rounded-full"></img>
             </div>
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">
-              {greetingMsg()}, {user.name}
-            </h2>
-          </div>
-          <div className="flex flex-col absolute">
-            <p className="text-lg p-3 bg-indigo-700 rounded-full">ANOTAÇÕES</p>
-            <p className="text-lg p-3 bg-indigo-700 rounded-full">TAREFAS</p>
-            <p className="text-lg p-3 bg-indigo-700 rounded-full">LEMBRETES</p>
           </div>
           <div className="flex justify-center">
             <div className="">
@@ -178,6 +210,35 @@ function Today({
                   value={value}
                 />
               )}
+            </div>
+          </div>
+          <div className="flex justify-around items-center text-stone-800">
+            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+              <p className="text-xl font-bold">COMENTÁRIOS</p>
+              <div className="p-5">
+                <HumorIcon mood={humorAvg()} />
+              </div>
+            </div>
+            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+              <p className="text-xl font-bold ">TAREFAS</p>
+              <p className="text-3xl p-2">{currentDayTasks.length}</p>
+              <button>
+                <MdLibraryAdd />
+              </button>
+            </div>
+            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+              <p className="text-xl font-bold ">ANOTAÇÕES</p>
+              <p className="text-3xl p-2">{myNotes.length}</p>
+              <button>
+                <MdLibraryAdd />
+              </button>
+            </div>
+            <div className="p-3 bg-[#63EE44] rounded-md flex flex-col justify-center items-center">
+              <p className="text-xl font-bold ">LEMBRETES</p>
+              <p className="text-3xl p-2">{myReminders.length}</p>
+              <button>
+                <MdLibraryAdd />
+              </button>
             </div>
           </div>
           <MyNotesComponent

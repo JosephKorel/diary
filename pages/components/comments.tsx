@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { BiSad, BiMeh, BiHappyAlt } from "react-icons/bi";
 import { MyComments, User } from "../../models/interfaces";
 import { GiDualityMask } from "react-icons/gi";
 import { BsHexagonFill } from "react-icons/bs";
@@ -86,7 +85,7 @@ export default function CommentComponent({
       <div className="p-10 bg-stone-800 text-gray-100 rounded-lg">
         {seingToday ? (
           <div className="text-center">
-            <h2>Como você está neste momento?</h2>
+            <h2>Gostaria de compartilhar como você está neste momento?</h2>
             <input
               placeholder="Escreva aqui"
               value={text}
@@ -97,18 +96,16 @@ export default function CommentComponent({
             <div className="flex justify-center items-center gap-5">
               <div className="flex gap-2">
                 <BsHexagonFill
-                  className={`${
-                    iconValue > 0 && "text-blue-500"
-                  } text-white duration-200 ${
-                    iconValue > 0 && hasChoosed && "text-indigo-700"
-                  }`}
+                  className={` text-white duration-200 ${
+                    iconValue > 0 && "text-blue-600"
+                  }  ${iconValue > 0 && hasChoosed && "text-indigo-700"}`}
                   onMouseEnter={() => !hasChoosed && setIconValue(1)}
                   onMouseLeave={() => !hasChoosed && setIconValue(0)}
                   onClick={() => handleChoice(1)}
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 1 && "text-blue-500"
+                    iconValue > 1 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 1 && hasChoosed && "text-indigo-700"
                   }`}
@@ -118,7 +115,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 2 && "text-blue-500"
+                    iconValue > 2 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 2 && hasChoosed && "text-indigo-700"
                   }`}
@@ -128,7 +125,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 3 && "text-blue-500"
+                    iconValue > 3 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 3 && hasChoosed && "text-indigo-700"
                   }`}
@@ -138,7 +135,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 4 && "text-blue-500"
+                    iconValue > 4 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 4 && hasChoosed && "text-indigo-700"
                   }`}
@@ -148,7 +145,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 5 && "text-blue-500"
+                    iconValue > 5 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 5 && hasChoosed && "text-indigo-700"
                   }`}
@@ -158,7 +155,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 6 && "text-blue-500"
+                    iconValue > 6 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 6 && hasChoosed && "text-indigo-700"
                   }`}
@@ -168,7 +165,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 7 && "text-blue-500"
+                    iconValue > 7 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 7 && hasChoosed && "text-indigo-700"
                   }`}
@@ -178,7 +175,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 8 && "text-blue-500"
+                    iconValue > 8 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 8 && hasChoosed && "text-indigo-700"
                   }`}
@@ -188,7 +185,7 @@ export default function CommentComponent({
                 />
                 <BsHexagonFill
                   className={`${
-                    iconValue > 9 && "text-blue-500"
+                    iconValue > 9 && "text-blue-600"
                   } text-white duration-200 ${
                     iconValue > 9 && hasChoosed && "text-indigo-700"
                   }`}
@@ -205,21 +202,30 @@ export default function CommentComponent({
             {myComments.map((item, index) => (
               <div
                 key={index}
-                className="p-1 rounded-md bg-gray-100 flex justify-between items-center mt-1 text-stone-800"
+                className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
               >
-                <HumorIcon mood={item.mood} />
-                <p className="italic">{item.comment}</p>
-                <p className="font-bold">{item.time}</p>
+                <div className="flex items-center">
+                  <HumorIcon mood={item.mood} />
+                  <p className="italic text-center">{item.comment}</p>
+                </div>
+                <p className="font-bold self-start">{item.time}</p>
               </div>
             ))}
           </div>
         ) : (
           <div>
             <p>Comentários: {myComments.length}</p>
-            {myComments.map((item) => (
-              <p className="italic">
-                {item.comment} as <span className="font-bold">{item.time}</span>
-              </p>
+            {myComments.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
+              >
+                <div className="flex items-center">
+                  <HumorIcon mood={item.mood} />
+                  <p className="italic text-center">{item.comment}</p>
+                </div>
+                <p className="font-bold self-start">{item.time}</p>
+              </div>
             ))}
           </div>
         )}
