@@ -57,7 +57,9 @@ function Today({
   const hour = moment().format("HH:mm");
 
   const currentDayTasks = myTasks.filter((task) => task.date === thisDay);
-  const currentDayComments = myComments.filter((com) => com.date === thisDay);
+  const currentDayComments: MyComments[] = myComments.filter(
+    (com) => com.date === thisDay
+  );
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
@@ -176,28 +178,34 @@ function Today({
     return total > 0 ? evaluationAvg / total : 0;
   };
 
-  const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
-    if (mood === 0) return <GiDualityMask />;
-    else if (mood === 1) return <ImCrying2 />;
-    else if (mood <= 3) return <ImSad2 />;
-    else if (mood === 4) return <ImConfused2 />;
-    else if (mood <= 6) return <ImNeutral2 />;
-    else if (mood < 9) return <ImSmile2 />;
-    else return <ImHappy2 />;
+  const HumorIcon = ({
+    mood,
+    size,
+  }: {
+    mood: number;
+    size: number;
+  }): JSX.Element => {
+    if (mood === 0) return <GiDualityMask size={size} />;
+    else if (mood === 1) return <ImCrying2 size={size} />;
+    else if (mood <= 3) return <ImSad2 size={size} />;
+    else if (mood === 4) return <ImConfused2 size={size} />;
+    else if (mood <= 6) return <ImNeutral2 size={size} />;
+    else if (mood < 9) return <ImSmile2 size={size} />;
+    else return <ImHappy2 size={size} />;
   };
 
   return (
     <>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div className="bg-[#4361ee] h-screen">
+      <div className="bg-shark-100 h-screen">
         <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
         <header className="p-2 text-gray-100">
           <h1 className="text-lg font-semibold">{dayView()}</h1>
         </header>
         {user && (
           <div className="w-5/6 m-auto">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-100">
+            <div className="ml-20">
+              <h2 className="text-lg font-semibold text-stone-900">
                 {greetingMsg()}, {user.name}
               </h2>
             </div>
@@ -218,20 +226,29 @@ function Today({
                 )}
               </div>
             </div>
-            <div className="flex justify-around gap-10 text-stone-800">
+            <div className="flex justify-center gap-10 text-stone-800 relative z-0">
               <div
                 onClick={() => setCard(1)}
-                className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md relative ${
-                  card === 1 && "flex-1"
+                className={`w-[10%] shrink p-3 duration-200 shadow-lg drop-shadow-xl shadow-shark-300 text-white rounded-md relative  ${
+                  card === 1
+                    ? "flex-1 bg-gray-100"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
                 }`}
               >
                 <div className="flex flex-col justify-center items-center">
-                  <p className="text-xl font-bold">COMENTÁRIOS</p>
-                  <div className="p-5">
-                    <HumorIcon mood={humorAvg()} />
-                  </div>
+                  <p
+                    className={`text-xl font-bold ${
+                      card === 1 ? "text-stone-900" : "text-white"
+                    }`}
+                  >
+                    COMENTÁRIOS
+                  </p>
+                  {card !== 1 && (
+                    <div className="p-5">
+                      <HumorIcon mood={humorAvg()} size={45} />
+                    </div>
+                  )}
                 </div>
-
                 {card === 1 && (
                   <>
                     <button
@@ -239,28 +256,37 @@ function Today({
                         e.stopPropagation();
                         setCard(0);
                       }}
-                      className="absolute top-0 right-1"
+                      className={`absolute top-0 right-0 p-3 text-stone-900`}
                     >
                       <AiOutlineClose />
                     </button>
                     {currentDayComments.map((item, index) => (
                       <div
                         key={index}
-                        className="flex flex-col  bg-gray-100 p-1 rounded-md text-stone-800"
+                        className="flex flex-col mt-2 p-1 rounded-md text-stone-800"
                       >
-                        <div className="flex items-center">
-                          <HumorIcon mood={item.mood} />
-                          <p className="italic text-center">{item.comment}</p>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2 bg-stone-700 p-1 rounded-t-md self-start text-amaranth">
+                            <HumorIcon mood={item.mood} size={25} />
+                            <p>- Mais ou menos</p>
+                          </div>
+                          <p className="italic text-center p-2 bg-stone-700 text-gray-100 rounded-bl-md rounded-tr-md">
+                            {item.comment}
+                          </p>
+                          <p className="font-bold text-xs self-end bg-stone-700 rounded-b-md p-1 text-gray-200">
+                            {item.time}
+                          </p>
                         </div>
-                        <p className="font-bold self-start">{item.time}</p>
                       </div>
                     ))}
                   </>
                 )}
               </div>
               <div
-                className={`p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center ${
-                  card === 2 && "flex-1"
+                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center ${
+                  card === 2
+                    ? "flex-1"
+                    : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
                 }`}
               >
                 <MyTasksComp
@@ -276,14 +302,28 @@ function Today({
                   }}
                 />
               </div>
-              <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
+              <div
+                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center 
+              ${
+                card === 3
+                  ? "flex-1"
+                  : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
+              }`}
+              >
                 <p className="text-xl font-bold ">ANOTAÇÕES</p>
                 <p className="text-3xl p-2">{myNotes.length}</p>
                 <button>
                   <MdLibraryAdd />
                 </button>
               </div>
-              <div className="p-3 bg-radio duration-200 hover:bg-amaranth hover:border-white hover:text-gray-100 text-stone-800 cursor-pointer border border-radio rounded-md flex flex-col justify-center items-center">
+              <div
+                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
+              ${
+                card === 4
+                  ? "flex-1"
+                  : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl cursor-pointer"
+              }`}
+              >
                 <p className="text-xl font-bold ">LEMBRETES</p>
                 <p className="text-3xl p-2">{myReminders.length}</p>
                 <button>

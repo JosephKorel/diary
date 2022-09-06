@@ -209,12 +209,14 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
       <p className="text-3xl p-2">{currentDayTasks.length}</p>
       {dayDiff <= 0 && (
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setElement(<AddNewTask />);
             setShow(true);
           }}
+          className="hover:text-ronchi"
         >
-          <MdLibraryAdd />
+          <MdLibraryAdd size={25} />
         </button>
       )}
       {card === 2 && (

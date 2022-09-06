@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { MyComments, User } from "../../models/interfaces";
 import { GiDualityMask } from "react-icons/gi";
-import { BsHexagonFill } from "react-icons/bs";
+import { BsHexagonFill, BsFillCheckSquareFill } from "react-icons/bs";
 import {
   ImCrying2,
   ImSad2,
@@ -58,6 +58,7 @@ export default function CommentComponent({
         currentComments(user);
         setText("");
         setIconValue(0);
+        setHasChoosed(false);
       }
     } catch (error) {
       console.log(error);
@@ -92,7 +93,7 @@ export default function CommentComponent({
   };
   return (
     <>
-      <div className="p-3 text-gray-100">
+      <div className="p-3 text-stone-800">
         {seingToday ? (
           <div className="">
             <div>
@@ -115,7 +116,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={` text-ronchi duration-200 ${
                       iconValue > 0 && "text-amaranth"
-                    }  ${iconValue > 0 && hasChoosed && "text-indigo-700"}`}
+                    }  ${iconValue > 0 && hasChoosed && "text-amaranth"}`}
                     onMouseEnter={() => !hasChoosed && setIconValue(1)}
                     onMouseLeave={() => !hasChoosed && setIconValue(0)}
                     onClick={() => handleChoice(1)}
@@ -222,11 +223,19 @@ export default function CommentComponent({
                   />
                 </div>
               </div>
-              <div className="flex justify-center items-center gap-2 mt-2 p-2 bg-gray-100 rounded-md text-stone-900">
-                <p className="text-lg">{humorSub(iconValue)}</p>
-                <HumorIcon mood={iconValue} />
+              <div className="flex justify-center items-center mt-2 gap-2">
+                <div className="flex justify-center items-center gap-2 p-2 bg-gray-100 rounded-md text-stone-900">
+                  <p className="text-lg">{humorSub(iconValue)}</p>
+                  <HumorIcon mood={iconValue} />
+                </div>
+                <button
+                  onClick={addComment}
+                  className="flex items-center gap-1 p-2 bg-ronchi rounded-lg text-stone-800"
+                >
+                  <p>CONFIRMAR</p>
+                  <BsFillCheckSquareFill />
+                </button>
               </div>
-              <button onClick={addComment}>Confirmar</button>
             </div>
           </div>
         ) : (
