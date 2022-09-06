@@ -263,19 +263,16 @@ function Today({
                     {currentDayComments.map((item, index) => (
                       <div
                         key={index}
-                        className="flex flex-col mt-2 p-1 rounded-md text-stone-800"
+                        className="flex flex-col p-1 rounded-md text-stone-800"
                       >
                         <div className="flex flex-col">
-                          <div className="flex items-center gap-2 bg-stone-700 p-1 rounded-t-md self-start text-amaranth">
-                            <HumorIcon mood={item.mood} size={25} />
-                            <p>- Mais ou menos</p>
-                          </div>
-                          <p className="italic text-center p-2 bg-stone-700 text-gray-100 rounded-bl-md rounded-tr-md">
+                          <p className="italic text-center text-lg rounded-t-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
                             {item.comment}
                           </p>
-                          <p className="font-bold text-xs self-end bg-stone-700 rounded-b-md p-1 text-gray-200">
-                            {item.time}
-                          </p>
+                          <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm bg-shark -translate-y-4 rounded-l-sm rounded-br-md">
+                            <HumorIcon mood={item.mood} size={20} />
+                            <p className="font-bold text-xs">{item.time}</p>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -283,10 +280,10 @@ function Today({
                 )}
               </div>
               <div
-                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center ${
+                className={`w-[10%] shrink p-3  shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
-                    ? "flex-1"
-                    : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
+                    ? "flex-1 bg-gray-100"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl flex flex-col justify-center items-center cursor-pointer"
                 }`}
               >
                 <MyTasksComp

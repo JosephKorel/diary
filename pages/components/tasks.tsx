@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { MyTasks, User } from "../../models/interfaces";
-import { BsFlagFill } from "react-icons/bs";
+import { BsFlagFill, BsCheckSquareFill, BsEraserFill } from "react-icons/bs";
 import { Calendar } from "react-calendar";
-import { MdLibraryAdd } from "react-icons/md";
+import { MdLibraryAdd, MdEdit } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface TaskComp {
@@ -187,90 +187,136 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
   };
 
   return (
-    <div
-      className={`flex flex-col justify-center items-center relative w-full`}
-      onClick={() => {
-        setCard(2);
-        setShowTasks(true);
-      }}
-    >
-      {card === 2 && (
-        <button
-          className="absolute top-0 right-1"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCard(0);
-          }}
-        >
-          <AiOutlineClose />
-        </button>
-      )}
-      <h2 className="text-xl font-bold">Tarefas</h2>
-      <p className="text-3xl p-2">{currentDayTasks.length}</p>
-      {dayDiff <= 0 && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setElement(<AddNewTask />);
-            setShow(true);
-          }}
-          className="hover:text-ronchi"
-        >
-          <MdLibraryAdd size={25} />
-        </button>
-      )}
-      {card === 2 && (
-        <div>
-          <ul>
+    <>
+      {card === 2 ? (
+        <div className="w-full">
+          <div className="flex justify-between items-center text-stone-800">
+            <h2 className="text-xl font-bold">TAREFAS</h2>
+            <button
+              className=""
+              onClick={(e) => {
+                e.stopPropagation();
+                setCard(0);
+              }}
+            >
+              <AiOutlineClose />
+            </button>
+          </div>
+          <div>
             {currentDayTasks.map((item, index) => (
-              <li className="p-1 bg-slate-100" key={index}>
-                {edit === index ? (
-                  <>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        editTask(item._id);
-                      }}
-                    >
-                      <input
-                        value={taskEdit}
-                        onChange={(e) => setTaskEdit(e.currentTarget.value)}
-                      />
-                    </form>
-                  </>
-                ) : (
-                  <p className={`${item.done ? "line-through" : ""}`}>
-                    {item.task}
-                  </p>
-                )}
-
-                {edit === index ? (
-                  <>
-                    <button onClick={() => editTask(item._id)}>
-                      Confirmar
-                    </button>
-                    <button onClick={() => setEdit(false)}>Cancelar</button>
-                  </>
-                ) : (
-                  <>
-                    {dayDiff === 0 && (
-                      <>
-                        <button onClick={() => completeTask(item._id)}>
-                          Concluída
+              <>
+                <div className="text-stone-800 flex flex-col" key={index}>
+                  {edit === index ? (
+                    <>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          editTask(item._id);
+                        }}
+                      >
+                        <input
+                          value={taskEdit}
+                          onChange={(e) => setTaskEdit(e.currentTarget.value)}
+                        />
+                      </form>
+                    </>
+                  ) : (
+                    <>
+                      <p
+                        className={`${
+                          item.done
+                            ? "line-through"
+                            : "p-2 text-gray-100 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md border-r-2 border-gray-800"
+                        }`}
+                      >
+                        {item.task}
+                      </p>
+                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-gray-100 border-b-2 border-r-2 border-gray-800 border-gray-800 w-36 h-9">
+                        {dayDiff === 0 && (
+                          <>
+                            <button
+                              onClick={() => completeTask(item._id)}
+                              className="duration-200 hover:text-ronchi w-4 hover:w-6"
+                            >
+                              <BsCheckSquareFill size="full" />
+                            </button>
+                            <button onClick={() => setEdit(index)}>
+                              <MdEdit />
+                            </button>
+                          </>
+                        )}
+                        <button onClick={() => deleteTask(item._id)}>
+                          <BsEraserFill />
                         </button>
-                        <button onClick={() => setEdit(index)}>Editar</button>
-                      </>
-                    )}
-                    <button onClick={() => deleteTask(item._id)}>
-                      Excluir
-                    </button>
-                  </>
-                )}
-              </li>
+                      </div>
+                    </>
+                  )}
+                  {/* {edit === index ? (
+                    <>
+                      <button onClick={() => editTask(item._id)}>
+                        Confirmar
+                      </button>
+                      <button onClick={() => setEdit(false)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      {dayDiff === 0 && (
+                        <>
+                          <button onClick={() => completeTask(item._id)}>
+                            <BsCheckSquareFill />
+                          </button>
+                          <button onClick={() => setEdit(index)}>
+                            <MdEdit />
+                          </button>
+                        </>
+                      )}
+                      <button onClick={() => deleteTask(item._id)}>
+                        <BsEraserFill />
+                      </button>
+                    </>
+                  )} */}
+                </div>
+              </>
             ))}
-          </ul>
+          </div>
         </div>
+      ) : (
+        <>
+          <div
+            className={`flex flex-col justify-center items-center relative w-full`}
+            onClick={() => {
+              setCard(2);
+              setShowTasks(true);
+            }}
+          >
+            {card === 2 && (
+              <button
+                className="absolute top-0 right-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCard(0);
+                }}
+              >
+                <AiOutlineClose />
+              </button>
+            )}
+            <h2 className="text-xl font-bold">TAREFAS</h2>
+            <p className="text-3xl p-2">{currentDayTasks.length}</p>
+            {dayDiff <= 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setElement(<AddNewTask />);
+                  setShow(true);
+                }}
+                className="hover:text-ronchi"
+              >
+                <MdLibraryAdd size={25} />
+              </button>
+            )}
+          </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

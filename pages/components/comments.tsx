@@ -107,14 +107,14 @@ export default function CommentComponent({
                 className="w-full rounded-full p-2 text-stone-800"
               />
             </div>
-            <div className={!text.length && "hidden"}>
+            <div className={!text.length ? "hidden" : "mt-1 p-2 glass"}>
               <p className="mt-2 text-2xl font-semibold text-center">
                 Como você está se sentindo?
               </p>
               <div className="flex justify-center items-center mt-2">
                 <div className="flex gap-2">
                   <BsHexagonFill
-                    className={` text-ronchi duration-200 ${
+                    className={`text-shark duration-200 ${
                       iconValue > 0 && "text-amaranth"
                     }  ${iconValue > 0 && hasChoosed && "text-amaranth"}`}
                     onMouseEnter={() => !hasChoosed && setIconValue(1)}
@@ -125,7 +125,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 1 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 1 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(2)}
@@ -136,7 +136,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 2 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 2 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(3)}
@@ -147,7 +147,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 3 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 3 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(4)}
@@ -158,7 +158,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 4 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 4 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(5)}
@@ -169,7 +169,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 5 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 5 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(6)}
@@ -180,7 +180,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 6 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 6 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(7)}
@@ -191,7 +191,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 7 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 7 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(8)}
@@ -202,7 +202,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 8 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 8 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(9)}
@@ -213,7 +213,7 @@ export default function CommentComponent({
                   <BsHexagonFill
                     className={`${
                       iconValue > 9 && "text-amaranth"
-                    } text-ronchi duration-200 ${
+                    } text-shark duration-200 ${
                       iconValue > 9 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(10)}
@@ -223,16 +223,16 @@ export default function CommentComponent({
                   />
                 </div>
               </div>
-              <div className="flex justify-center items-center mt-2 gap-2">
-                <div className="flex justify-center items-center gap-2 p-2 bg-gray-100 rounded-md text-stone-900">
+              <div className="flex justify-center items-center my-2 relative">
+                <div className="flex justify-center items-center gap-2 p-2 rounded-md text-stone-900">
                   <p className="text-lg">{humorSub(iconValue)}</p>
                   <HumorIcon mood={iconValue} />
                 </div>
                 <button
                   onClick={addComment}
-                  className="flex items-center gap-1 p-2 bg-ronchi rounded-lg text-stone-800"
+                  className="flex items-center p-2 px-3 bg-gray-200 rounded-full text-stone-800 absolute self-end right-0 duration-200 hover:bg-shark hover:text-white hover:font-bold"
                 >
-                  <p>CONFIRMAR</p>
+                  <p className="w-32">CONFIRMAR</p>
                   <BsFillCheckSquareFill />
                 </button>
               </div>
