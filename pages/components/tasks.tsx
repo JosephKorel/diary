@@ -195,10 +195,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     <>
       {card === 2 ? (
         <div className="w-full">
-          <div className="flex justify-between items-center text-stone-800">
+          <div className="flex justify-between items-center text-stone-800 mb-4">
             <h2 className="text-xl font-bold">TAREFAS</h2>
             <button
-              className=""
+              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
               onClick={(e) => {
                 e.stopPropagation();
                 setCard(0);

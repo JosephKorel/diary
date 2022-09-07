@@ -11,3 +11,13 @@ backdrop-filter: blur(5px);
 -webkit-backdrop-filter: blur(5px);
 
 }
+
+.fade{
+    animation: fade .3s ease-out;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+
+@keyframes fade {
+    100%{opacity: 1;}
+}

@@ -1,22 +1,38 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { MyReminder, User } from "../../models/interfaces";
-import MyModal from "./modal";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { MdLibraryAdd } from "react-icons/md";
+import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { HiFlag } from "react-icons/hi";
+
+interface RemindInt {
+  remindProps: {
+    user: User;
+    myReminders: MyReminder[];
+    currentReminders: () => void;
+    setShow: (data: boolean) => void;
+    setElement: (data: JSX.Element) => void;
+    card: number;
+    setCard: (data: number) => void;
+  };
+}
 
 export default function RemindComponent({
-  user,
-  myReminders,
-  currentReminders,
-}: {
-  user: User;
-  myReminders: MyReminder[];
-  currentReminders: () => void;
-}): JSX.Element {
-  const [showRemind, setShowRemind] = useState(false);
-  const [show, setShow] = useState(false);
-  const [element, setElement] = useState<JSX.Element | null>(null);
+  remindProps,
+}: RemindInt): JSX.Element {
+  const [showRemind, setShowRemind] = useState(-1);
+
+  const {
+    user,
+    myReminders,
+    currentReminders,
+    setShow,
+    setElement,
+    card,
+    setCard,
+  } = remindProps;
 
   const today = moment().format("DD/MM/YY");
 
@@ -129,10 +145,110 @@ export default function RemindComponent({
     }
   };
 
+  const RemindFlag = ({ degree }: { degree: number }): JSX.Element => {
+    switch (degree) {
+      case 1:
+        return <HiFlag className="text-stone-800" />;
+
+      case 2:
+        return <HiFlag className="text-shark" />;
+
+      case 3:
+        return <HiFlag className="text-amaranth" />;
+
+      default:
+        break;
+    }
+  };
+
   return (
-    <div>
-      {show && <MyModal setShow={setShow} children={element} />}
-      <div className="bg-blue-400 p-1 rounded-md">
+    <>
+      {card === 4 ? (
+        <div className="w-full">
+          <div className="flex justify-between items-center text-stone-800 mb-4">
+            <h2 className="text-xl font-bold">LEMBRETES</h2>
+            <button
+              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCard(0);
+              }}
+            >
+              <AiOutlineClose />
+            </button>
+          </div>
+          {myReminders.map((rmd, index) => (
+            <div
+              className={`mt-2 p-2 border border-stone-800 rounded-md duration-200 text-stone-800  ${
+                showRemind !== index && "cursor-pointer hover:bg-gray-300"
+              }`}
+              onClick={() => setShowRemind(index)}
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <RemindFlag degree={rmd.degree} />
+                  <p className="text-lg font-semibold">{rmd.title}</p>
+                </div>
+                <div>
+                  {showRemind === index ? (
+                    <AiFillCaretUp
+                      className="text-stone-800"
+                      size={20}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowRemind(-1);
+                      }}
+                    />
+                  ) : (
+                    <AiFillCaretDown className="text-amaranth" size={20} />
+                  )}
+                </div>
+              </div>
+              {showRemind === index && (
+                <div>
+                  {rmd.degree}
+                  <button onClick={() => deleteRemind(rmd)}>Excluir</button>
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="flex items-center gap-4 text-stone-800">
+            <div className="flex items-center gap-1">
+              <HiFlag className="text-sotne-800" />
+              <p>NORMAL</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <HiFlag className="text-shark" />
+              <p>IMPORTANTE</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <HiFlag className="text-amaranth" />
+              <p>MUITO IMPORTANTE</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`flex flex-col justify-center items-center w-full`}
+          onClick={() => {
+            setCard(4);
+          }}
+        >
+          <h2 className="text-xl font-bold">LEMBRETES</h2>
+          <p className="text-3xl p-2">{myReminders.length}</p>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setElement(<NewRemind />);
+              setShow(true);
+            }}
+            className="hover:text-ronchi"
+          >
+            <MdLibraryAdd size={25} />
+          </button>
+        </div>
+      )}
+      {/* <div className="bg-blue-400 p-1 rounded-md">
         {myReminders.length > 0 ? (
           <div>
             <ul>
@@ -165,7 +281,7 @@ export default function RemindComponent({
             </button>
           </div>
         )}
-      </div>
-    </div>
+      </div> */}
+    </>
   );
 }

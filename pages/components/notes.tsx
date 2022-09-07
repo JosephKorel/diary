@@ -9,7 +9,8 @@ import {
 import { storage } from "../../firebase.config";
 import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
-import { MdLibraryAdd } from "react-icons/md";
+import { MdLibraryAdd, MdEdit } from "react-icons/md";
+import { BsEraserFill } from "react-icons/bs";
 import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 
 interface NoteComponent {
@@ -215,10 +216,10 @@ export default function MyNotesComponent({
     <>
       {card === 3 ? (
         <div className="w-full">
-          <div className="flex justify-between items-center text-stone-800">
+          <div className="flex justify-between items-center text-stone-800 mb-4">
             <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
             <button
-              className=""
+              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
               onClick={(e) => {
                 e.stopPropagation();
                 setCard(0);
@@ -262,12 +263,45 @@ export default function MyNotesComponent({
                 </div>
               </div>
               {showNote === index && (
-                <div>
-                  <div dangerouslySetInnerHTML={{ __html: item.note }}></div>
+                <div className="prose lg:prose-lg max-w-none mt-4 w-full fade flex flex-col">
+                  <div
+                    dangerouslySetInnerHTML={{ __html: item.note }}
+                    className="p-2 indent-2 lg:max-h-80 overflow-y-auto"
+                  ></div>
+                  <div className="flex items-center gap-2 self-end">
+                    <button
+                      onClick={() => {
+                        setShow(true);
+                        setElement(<NoteEditComponent targetNote={item} />);
+                      }}
+                      className="p-1 duration-200 hover:bg-shark hover:text-gray-100 rounded-md"
+                    >
+                      <MdEdit />
+                    </button>
+                    <button
+                      onClick={() => deleteNote(item)}
+                      className="p-1 duration-200 hover:bg-amaranth-600 hover:text-gray-100 rounded-md"
+                    >
+                      <BsEraserFill />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
           ))}
+          <div className="float-right mt-4">
+            <button
+              className="flex items-center gap-1 text-gray-100 font-semibold p-2 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
+              onClick={(e) => {
+                e.stopPropagation();
+                setElement(<AddNewNote />);
+                setShow(true);
+              }}
+            >
+              <p className="w-14">NOVA</p>
+              <MdLibraryAdd />
+            </button>
+          </div>
         </div>
       ) : (
         <div

@@ -231,7 +231,7 @@ function Today({
             <div className="flex justify-center gap-10 text-stone-800 relative z-0">
               <div
                 onClick={() => setCard(1)}
-                className={`w-[10%] shrink p-3 duration-200 shadow-lg drop-shadow-xl shadow-shark-300 text-white rounded-md relative  ${
+                className={`w-[10%] shrink p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                   card === 1
                     ? "flex-1 bg-gray-100"
                     : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl  cursor-pointer"
@@ -286,7 +286,7 @@ function Today({
                 )}
               </div>
               <div
-                className={`w-[10%] shrink p-3  shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md  ${
+                className={`w-[10%] shrink p-3  shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
                     ? "flex-1 bg-gray-100"
                     : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl flex flex-col justify-center items-center cursor-pointer"
@@ -306,7 +306,7 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] shrink p-3 shadow-lg drop-shadow-xl shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
+                className={`w-[10%] shrink p-3 shadow-lg shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
@@ -326,30 +326,26 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
+                className={`w-[10%] shrink p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
               ${
                 card === 4
-                  ? "flex-1"
-                  : "hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl cursor-pointer"
+                  ? "flex-1 bg-gray-100"
+                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl cursor-pointer"
               }`}
               >
-                <p className="text-xl font-bold ">LEMBRETES</p>
-                <p className="text-3xl p-2">{myReminders.length}</p>
-                <button>
-                  <MdLibraryAdd />
-                </button>
+                <RemindComponent
+                  remindProps={{
+                    user,
+                    myReminders,
+                    currentReminders,
+                    setShow,
+                    setElement,
+                    card,
+                    setCard,
+                  }}
+                />
               </div>
             </div>
-            {/* <MyNotesComponent
-              user={user}
-              myNotes={myNotes}
-              currentNotes={currentNotes}
-            />
-            <RemindComponent
-              user={user}
-              myReminders={myReminders}
-              currentReminders={currentReminders}
-            /> */}
             <div>
               <DayEvaluation
                 user={user}
