@@ -232,7 +232,7 @@ function Today({
                 className={`w-[10%] shrink p-3 duration-200 shadow-lg drop-shadow-xl shadow-shark-300 text-white rounded-md relative  ${
                   card === 1
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl  cursor-pointer"
                 }`}
               >
                 <div className="flex flex-col justify-center items-center">
@@ -266,12 +266,16 @@ function Today({
                         className="flex flex-col p-1 rounded-md text-stone-800"
                       >
                         <div className="flex flex-col">
-                          <p className="italic text-center text-lg rounded-t-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
+                          <p className="italic text-center text-lg rounded-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
                             {item.comment}
                           </p>
-                          <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm bg-shark -translate-y-4 rounded-l-sm rounded-br-md">
-                            <HumorIcon mood={item.mood} size={20} />
-                            <p className="font-bold text-xs">{item.time}</p>
+                          <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-5 rounded-l-sm rounded-br-md mr-2">
+                            <div className="bg-shark p-1 rounded-md">
+                              <HumorIcon mood={item.mood} size={24} />
+                            </div>
+                            <p className="font-bold text-xs p-2 bg-shark rounded-md">
+                              {item.time}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -283,7 +287,7 @@ function Today({
                 className={`w-[10%] shrink p-3  shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl flex flex-col justify-center items-center cursor-pointer"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl flex flex-col justify-center items-center cursor-pointer"
                 }`}
               >
                 <MyTasksComp
@@ -304,7 +308,7 @@ function Today({
               ${
                 card === 3
                   ? "flex-1"
-                  : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl  cursor-pointer"
+                  : "hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl  cursor-pointer"
               }`}
               >
                 <p className="text-xl font-bold ">ANOTAÇÕES</p>
@@ -318,7 +322,7 @@ function Today({
               ${
                 card === 4
                   ? "flex-1"
-                  : "hover:scale-105 hover:bg-amaranth hover:shadow-shark hover:drop-shadow-2xl cursor-pointer"
+                  : "hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl cursor-pointer"
               }`}
               >
                 <p className="text-xl font-bold ">LEMBRETES</p>

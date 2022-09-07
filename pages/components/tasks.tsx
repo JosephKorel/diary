@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { MyTasks, User } from "../../models/interfaces";
-import { BsFlagFill, BsCheckSquareFill, BsEraserFill } from "react-icons/bs";
+import {
+  BsFlagFill,
+  BsCheckSquareFill,
+  BsEraserFill,
+  BsCheckCircleFill,
+} from "react-icons/bs";
 import { Calendar } from "react-calendar";
-import { MdLibraryAdd, MdEdit } from "react-icons/md";
+import { MdLibraryAdd, MdEdit, MdCancel } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface TaskComp {
@@ -205,7 +210,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           <div>
             {currentDayTasks.map((item, index) => (
               <>
-                <div className="text-stone-800 flex flex-col" key={index}>
+                <div className="flex flex-col" key={index}>
                   {edit === index ? (
                     <>
                       <form
@@ -213,68 +218,69 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                           e.preventDefault();
                           editTask(item._id);
                         }}
+                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md border-r-2 border-gray-800"
                       >
                         <input
                           value={taskEdit}
                           onChange={(e) => setTaskEdit(e.currentTarget.value)}
+                          className="w-5/6 rounded-md p-1"
                         />
                       </form>
+                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-white border-b-2 border-r-2 border-gray-800">
+                        <button
+                          onClick={() => editTask(item._id)}
+                          className="duration-200 hover:text-gray-300"
+                        >
+                          <BsCheckCircleFill />
+                        </button>
+                        <button
+                          onClick={() => setEdit(false)}
+                          className="duration-200 hover:text-gray-300"
+                        >
+                          <MdCancel />
+                        </button>
+                      </div>
                     </>
                   ) : (
                     <>
                       <p
-                        className={`${
+                        className={`p-2 border-gray-800 text-gray-100 shadow-md border-r-2 font-semibold text-lg italic rounded-md ${
                           item.done
-                            ? "line-through"
-                            : "p-2 text-gray-100 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md border-r-2 border-gray-800"
+                            ? "line-through bg-gradient-to-r from-scampi-600 to-scampi-900"
+                            : "bg-gradient-to-r from-shark to-shark-300"
                         }`}
                       >
                         {item.task}
                       </p>
-                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-gray-100 border-b-2 border-r-2 border-gray-800 border-gray-800 w-36 h-9">
+                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-white border-b-2 border-r-2 border-gray-800">
                         {dayDiff === 0 && (
                           <>
                             <button
                               onClick={() => completeTask(item._id)}
-                              className="duration-200 hover:text-ronchi w-4 hover:w-6"
+                              className="duration-200 hover:text-gray-300"
                             >
-                              <BsCheckSquareFill size="full" />
+                              <BsCheckSquareFill />
                             </button>
-                            <button onClick={() => setEdit(index)}>
+                            <button
+                              onClick={() => {
+                                setEdit(index);
+                                setTaskEdit(item.task);
+                              }}
+                              className="duration-200 hover:text-gray-300"
+                            >
                               <MdEdit />
                             </button>
                           </>
                         )}
-                        <button onClick={() => deleteTask(item._id)}>
+                        <button
+                          onClick={() => deleteTask(item._id)}
+                          className="duration-200 hover:text-gray-300"
+                        >
                           <BsEraserFill />
                         </button>
                       </div>
                     </>
                   )}
-                  {/* {edit === index ? (
-                    <>
-                      <button onClick={() => editTask(item._id)}>
-                        Confirmar
-                      </button>
-                      <button onClick={() => setEdit(false)}>Cancelar</button>
-                    </>
-                  ) : (
-                    <>
-                      {dayDiff === 0 && (
-                        <>
-                          <button onClick={() => completeTask(item._id)}>
-                            <BsCheckSquareFill />
-                          </button>
-                          <button onClick={() => setEdit(index)}>
-                            <MdEdit />
-                          </button>
-                        </>
-                      )}
-                      <button onClick={() => deleteTask(item._id)}>
-                        <BsEraserFill />
-                      </button>
-                    </>
-                  )} */}
                 </div>
               </>
             ))}
