@@ -231,37 +231,26 @@ function Today({
             <div className="flex justify-center gap-10 text-stone-800 relative z-0">
               <div
                 onClick={() => setCard(1)}
-                className={`w-[10%] shrink p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
+                className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                   card === 1
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl  cursor-pointer"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer flex flex-col justify-center items-center"
                 }`}
               >
-                <div className="flex flex-col justify-center items-center">
-                  <p
-                    className={`text-xl font-bold ${
-                      card === 1 ? "text-stone-900" : "text-white"
-                    }`}
-                  >
-                    COMENTÁRIOS
-                  </p>
-                  {card !== 1 && (
-                    <div className="p-5">
-                      <HumorIcon mood={humorAvg()} size={45} />
+                {card === 1 ? (
+                  <div className="w-full">
+                    <div className="flex justify-between items-center text-stone-800 mb-4">
+                      <h2 className="text-xl font-bold">COMENTÁRIOS</h2>
+                      <button
+                        className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCard(0);
+                        }}
+                      >
+                        <AiOutlineClose />
+                      </button>
                     </div>
-                  )}
-                </div>
-                {card === 1 && (
-                  <>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCard(0);
-                      }}
-                      className={`absolute top-0 right-0 p-3 text-stone-900`}
-                    >
-                      <AiOutlineClose />
-                    </button>
                     {currentDayComments.map((item, index) => (
                       <div
                         key={index}
@@ -282,14 +271,22 @@ function Today({
                         </div>
                       </div>
                     ))}
-                  </>
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-around items-center h-full">
+                    <p className="text-xl font-bold text-white">COMENTÁRIOS</p>
+                    <div className="">
+                      <HumorIcon mood={humorAvg()} size={45} />
+                    </div>
+                  </div>
                 )}
               </div>
+
               <div
-                className={`w-[10%] shrink p-3  shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                className={`w-[10%] p-3  shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl flex flex-col justify-center items-center cursor-pointer"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 flex flex-col justify-center items-center cursor-pointer"
                 }`}
               >
                 <MyTasksComp
@@ -306,11 +303,11 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] shrink p-3 shadow-lg shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
+                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
-                  : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl text-white cursor-pointer"
+                  : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 text-white cursor-pointer"
               }`}
               >
                 <MyNotesComponent
@@ -326,11 +323,11 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] shrink p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
+                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
               ${
                 card === 4
                   ? "flex-1 bg-gray-100"
-                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl cursor-pointer"
+                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
               }`}
               >
                 <RemindComponent

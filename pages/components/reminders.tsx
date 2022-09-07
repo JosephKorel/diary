@@ -6,6 +6,12 @@ import "react-calendar/dist/Calendar.css";
 import { MdLibraryAdd } from "react-icons/md";
 import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { HiFlag } from "react-icons/hi";
+import {
+  BsFillCalendarEventFill,
+  BsFillClockFill,
+  BsEraserFill,
+} from "react-icons/bs";
+import { VscPassFilled } from "react-icons/vsc";
 
 interface RemindInt {
   remindProps: {
@@ -35,6 +41,10 @@ export default function RemindComponent({
   } = remindProps;
 
   const today = moment().format("DD/MM/YY");
+
+  const hasPassed = (date: string) => {
+    return today > date ? true : false;
+  };
 
   const NewRemind = (): JSX.Element => {
     const [title, setTitle] = useState("");
@@ -179,7 +189,7 @@ export default function RemindComponent({
           </div>
           {myReminders.map((rmd, index) => (
             <div
-              className={`mt-2 p-2 border border-stone-800 rounded-md duration-200 text-stone-800  ${
+              className={`mt-2 p-2 border border-stone-800 rounded-md duration-200  ${
                 showRemind !== index && "cursor-pointer hover:bg-gray-300"
               }`}
               onClick={() => setShowRemind(index)}
@@ -187,12 +197,17 @@ export default function RemindComponent({
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <RemindFlag degree={rmd.degree} />
-                  <p className="text-lg font-semibold">{rmd.title}</p>
+                  <p className={`text-lg font-semibold text-stone-800`}>
+                    {rmd.title}
+                  </p>
+                  {hasPassed(rmd.when) && (
+                    <VscPassFilled className="text-shark" size={20} />
+                  )}
                 </div>
                 <div>
                   {showRemind === index ? (
                     <AiFillCaretUp
-                      className="text-stone-800"
+                      className="text-stone-800 duration-200 cursor-pointer hover:text-amaranth"
                       size={20}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -205,14 +220,39 @@ export default function RemindComponent({
                 </div>
               </div>
               {showRemind === index && (
-                <div>
-                  {rmd.degree}
-                  <button onClick={() => deleteRemind(rmd)}>Excluir</button>
+                <div className="fade">
+                  <p className="text-lg text-center mb-2 font-bold text-stone-800">
+                    {rmd.content}
+                  </p>
+                  <div className="w-full p-[2px] rounded-full bg-stone-800 my-2"></div>
+                  <div className="flex justify-center items-center gap-4">
+                    <div
+                      className={`flex items-center gap-2 p-2 rounded-md  text-gray-200 ${
+                        hasPassed(rmd.when) ? "bg-stone-700" : "bg-amaranth"
+                      }`}
+                    >
+                      <BsFillCalendarEventFill />
+                      <p className="font-semibold">{rmd.when}</p>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 rounded-md bg-shark text-gray-200">
+                      <BsFillClockFill />
+                      <p className="font-semibold">{rmd.time}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-row-reverse">
+                    <button
+                      onClick={() => deleteRemind(rmd)}
+                      className="p-1 rounded-md duration-200 text-stone-800 hover:text-gray-100 hover:bg-amaranth flex items-center gap-2 text-right"
+                    >
+                      <BsEraserFill />
+                      <p className="font-semibold">EXCLUIR</p>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
           ))}
-          <div className="flex items-center gap-4 text-stone-800">
+          <div className="flex items-center gap-4 text-stone-800 mt-4">
             <div className="flex items-center gap-1">
               <HiFlag className="text-sotne-800" />
               <p>NORMAL</p>
@@ -248,40 +288,6 @@ export default function RemindComponent({
           </button>
         </div>
       )}
-      {/* <div className="bg-blue-400 p-1 rounded-md">
-        {myReminders.length > 0 ? (
-          <div>
-            <ul>
-              {myReminders.map((rmd) => (
-                <li>
-                  <p>{rmd.title}</p>
-                  <button onClick={() => deleteRemind(rmd)}>Excluir</button>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => {
-                setShow(true);
-                setElement(<NewRemind />);
-              }}
-            >
-              Novo lembrete
-            </button>
-          </div>
-        ) : (
-          <div>
-            <p>Você ainda não tem nenhum lembrete</p>
-            <button
-              onClick={() => {
-                setShow(true);
-                setElement(<NewRemind />);
-              }}
-            >
-              Novo lembrete
-            </button>
-          </div>
-        )}
-      </div> */}
     </>
   );
 }
