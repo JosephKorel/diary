@@ -197,7 +197,9 @@ function Today({
   return (
     <>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div className="bg-shark-100 h-screen">
+      <div
+        className={`${card !== 0 ? "bg-shark-100" : "bg-shark-100"} h-screen`}
+      >
         <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
         <header className="p-2 text-gray-100">
           <h1 className="text-lg font-semibold">{dayView()}</h1>
@@ -304,18 +306,24 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center 
+                className={`w-[10%] shrink p-3 shadow-lg drop-shadow-xl shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
               ${
                 card === 3
-                  ? "flex-1"
-                  : "hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl  cursor-pointer"
+                  ? "flex-1 bg-gray-100"
+                  : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl text-white cursor-pointer"
               }`}
               >
-                <p className="text-xl font-bold ">ANOTAÇÕES</p>
-                <p className="text-3xl p-2">{myNotes.length}</p>
-                <button>
-                  <MdLibraryAdd />
-                </button>
+                <MyNotesComponent
+                  noteProps={{
+                    user,
+                    myNotes,
+                    currentNotes,
+                    setShow,
+                    setElement,
+                    card,
+                    setCard,
+                  }}
+                />
               </div>
               <div
                 className={`w-[10%] shrink p-3 bg-scampi shadow-lg drop-shadow-xl shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center

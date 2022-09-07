@@ -289,23 +289,12 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
       ) : (
         <>
           <div
-            className={`flex flex-col justify-center items-center relative w-full`}
+            className={`flex flex-col justify-center items-center w-full`}
             onClick={() => {
               setCard(2);
               setShowTasks(true);
             }}
           >
-            {card === 2 && (
-              <button
-                className="absolute top-0 right-1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCard(0);
-                }}
-              >
-                <AiOutlineClose />
-              </button>
-            )}
             <h2 className="text-xl font-bold">TAREFAS</h2>
             <p className="text-3xl p-2">{currentDayTasks.length}</p>
             {dayDiff <= 0 && (

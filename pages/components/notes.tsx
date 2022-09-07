@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import moment from "moment";
-import MyModal from "./modal";
 import {
   deleteObject,
   getDownloadURL,
@@ -10,21 +9,30 @@ import {
 import { storage } from "../../firebase.config";
 import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
+import { MdLibraryAdd } from "react-icons/md";
+import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+
+interface NoteComponent {
+  noteProps: {
+    currentNotes: (data: User) => void;
+    user: User;
+    myNotes: MyNotes[];
+    setShow: (data: boolean) => void;
+    setElement: (data: JSX.Element) => void;
+    card: number;
+    setCard: (data: number) => void;
+  };
+}
 
 export default function MyNotesComponent({
-  currentNotes,
-  user,
-  myNotes,
-}: {
-  currentNotes: (data: User) => void;
-  user: User;
-  myNotes: MyNotes[];
-}): JSX.Element {
+  noteProps,
+}: NoteComponent): JSX.Element {
   const [showNotes, setShowNotes] = useState(false);
-  const [show, setShow] = useState(false);
-  const [element, setElement] = useState<JSX.Element | null>(null);
   const [edit, setEdit] = useState<boolean | number>(false);
   const [showNote, setShowNote] = useState<boolean | number>(false);
+
+  const { currentNotes, user, myNotes, setShow, setElement, card, setCard } =
+    noteProps;
 
   const addPhoto = async (
     file: any
@@ -205,68 +213,111 @@ export default function MyNotesComponent({
 
   return (
     <>
-      {show && <MyModal children={element} setShow={setShow} />}
-      <div className="p-20 bg-red-300 rounded-lg">
-        <h2>Anotações: {myNotes.length}</h2>
-        <button
+      {card === 3 ? (
+        <div className="w-full">
+          <div className="flex justify-between items-center text-stone-800">
+            <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
+            <button
+              className=""
+              onClick={(e) => {
+                e.stopPropagation();
+                setCard(0);
+              }}
+            >
+              <AiOutlineClose />
+            </button>
+          </div>
+          {myNotes.map((item, index) => (
+            <div
+              onClick={() => setShowNote(index)}
+              className={`p-2 mt-2 border rounded-b-md shadow-sm duration-200 hover:rounded-md hover:border  ${
+                showNote === index
+                  ? "border-stone-900 rounded-md"
+                  : "border-transparent border-b-stone-900 cursor-pointer hover:border-stone-800 hover:bg-gray-200"
+              }`}
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-shark rounded-full"></div>
+                  <h3
+                    key={index}
+                    className="italic font-semibold text-lg text-stone-900"
+                  >
+                    {item.title}
+                  </h3>
+                </div>
+                <div className="text-shark">
+                  {showNote === index ? (
+                    <AiFillCaretUp
+                      size={20}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowNote(false);
+                      }}
+                      className="cursor-pointer duration-200 hover:text-shark-600"
+                    />
+                  ) : (
+                    <AiFillCaretDown size={20} />
+                  )}
+                </div>
+              </div>
+              {showNote === index && (
+                <div>
+                  <div dangerouslySetInnerHTML={{ __html: item.note }}></div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`flex flex-col justify-center items-center w-full`}
           onClick={() => {
-            setElement(<AddNewNote />);
-            setShow(true);
+            setCard(3);
           }}
         >
-          Adicionar
-        </button>
-        <button onClick={() => setShowNotes(!showNotes)}>Ver anotações</button>
-        {showNotes && (
-          <div>
-            <ul>
-              {myNotes.map((item, index) => (
-                <>
-                  {showNote !== index ? (
-                    <li key={index} onClick={() => setShowNote(index)}>
-                      {item.title}
-                    </li>
-                  ) : (
-                    <li key={index}>
-                      {edit === index ? (
-                        <>
-                          <button onClick={() => setEdit(false)}>
-                            Cancelar
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <div
-                            dangerouslySetInnerHTML={{ __html: item.note }}
-                          ></div>
-                          <button onClick={() => deleteNote(item)}>
-                            Excluir
-                          </button>
-                          <button
-                            onClick={() => {
-                              /* setEdit(index);
-                              setNoteEdit(item.note); */
-                              setShow(true);
-                              setElement(
-                                <NoteEditComponent targetNote={item} />
-                              );
-                            }}
-                          >
-                            Editar
-                          </button>
-                          <button onClick={() => setShowNote(false)}>
-                            Minimizar
-                          </button>
-                        </>
-                      )}
-                    </li>
-                  )}
-                </>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+          <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
+          <p className="text-3xl p-2">{myNotes.length}</p>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setElement(<AddNewNote />);
+              setShow(true);
+            }}
+            className="hover:text-ronchi"
+          >
+            <MdLibraryAdd size={25} />
+          </button>
+        </div>
+      )}
     </>
   );
+}
+
+{
+  /* <li key={index}>
+                  {edit === index ? (
+                    <>
+                      <button onClick={() => setEdit(false)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.note }}
+                      ></div>
+                      <button onClick={() => deleteNote(item)}>Excluir</button>
+                      <button
+                        onClick={() => {
+                          setShow(true);
+                          setElement(<NoteEditComponent targetNote={item} />);
+                        }}
+                      >
+                        Editar
+                      </button>
+                      <button onClick={() => setShowNote(false)}>
+                        Minimizar
+                      </button>
+                    </>
+                  )}
+                </li> */
 }
