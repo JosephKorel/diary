@@ -27,7 +27,6 @@ interface TaskComp {
 
 //Componente que lida com tarefas
 export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
-  const [showTasks, setShowTasks] = useState(false);
   const [taskEdit, setTaskEdit] = useState("");
   const [edit, setEdit] = useState<boolean | number>(false);
 
@@ -112,6 +111,11 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     const [showCal, setShowCal] = useState(false);
     const [date, setDate] = useState(new Date());
 
+    const isToday =
+      moment(date).format("DD/MM/YY") === moment().format("DD/MM/YY")
+        ? true
+        : false;
+
     const addTask = async (): Promise<void | null> => {
       if (!content) return null;
       const taskDate = moment(date).format("DD/MM/YY");
@@ -145,7 +149,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     };
     return (
       <div
-        className="bg-green-400 p-20 rounded-md scaleup"
+        className="p-10 glass w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
         <form
@@ -158,36 +162,83 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
+            className="p-2 w-full rounded-full text-lg"
           />
         </form>
-        <div className="flex gap-5">
-          <div className="flex gap-1">
-            <BsFlagFill onClick={() => setDegree(1)} />
+        <div className="flex justify-around items-center mt-5">
+          <button
+            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+              degree === 1
+                ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+            }`}
+            onClick={() => setDegree(1)}
+          >
+            <BsFlagFill className={degree === 1 ? "" : "text-stone-800"} />
             <p>Normal</p>
-          </div>
-          <div className="flex gap-1">
-            <BsFlagFill onClick={() => setDegree(2)} />
+          </button>
+          <button
+            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+              degree === 2
+                ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+            }`}
+            onClick={() => setDegree(2)}
+          >
+            <BsFlagFill className={degree === 2 ? "" : "text-ronchi"} />
             <p>Importante</p>
-          </div>
-          <div className="flex gap-1">
-            <BsFlagFill onClick={() => setDegree(3)} />
+          </button>
+          <button
+            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+              degree === 3
+                ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+            }`}
+            onClick={() => setDegree(3)}
+          >
+            <BsFlagFill className={degree === 3 ? "" : "text-amaranth"} />
             <p>Urgente</p>
-          </div>
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setShowCal(false);
-            setDate(new Date());
-          }}
-        >
-          Hoje
-        </button>
-        <button onClick={() => setShowCal(true)}>Outro dia</button>
-        <div className={!showCal && ""}>
+        <div className="mt-5 flex items-center gap-4">
+          <button
+            onClick={() => {
+              setShowCal(false);
+              setDate(new Date());
+            }}
+            className={`p-1 px-3 text-xl rounded-md duration-200 ${
+              isToday ? "bg-shark text-gray-100" : "bg-gray-100 text-stone-800"
+            }`}
+          >
+            Hoje
+          </button>
+          <button
+            onClick={() => setShowCal(true)}
+            className={`p-1 px-3 text-xl rounded-md duration-200 ${
+              !isToday ? "bg-shark text-gray-100" : "bg-gray-100 text-stone-800"
+            }`}
+          >
+            Outro dia
+          </button>
+        </div>
+        <div className={!showCal ? "hidden" : "text-center mt-2"}>
           <Calendar value={date} onChange={(value: Date) => setDate(value)} />
         </div>
-        <button onClick={addTask}>Adicionar</button>
-        <button onClick={() => setShow(false)}>Cancelar</button>
+        <div className="flex items-center gap-4 mt-5">
+          <button
+            onClick={addTask}
+            className="p-1 px-3 rounded-md duration-200 text-lg font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+          >
+            <MdLibraryAdd />
+            <p>Adicionar</p>
+          </button>
+          <button
+            onClick={() => setShow(false)}
+            className="p-1 px-3 rounded-md duration-200 text-lg font-semibold flex items-center gap-2 bg-amaranth-600 text-gray-100 hover:bg-amaranth-700"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     );
   };
@@ -341,7 +392,6 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             className={`flex flex-col justify-center items-center w-full`}
             onClick={() => {
               setCard(2);
-              setShowTasks(true);
             }}
           >
             <h2 className="text-xl font-bold">TAREFAS</h2>
