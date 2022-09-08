@@ -21,3 +21,22 @@ backdrop-filter: blur(5px);
 @keyframes fade {
     100%{opacity: 1;}
 }
+
+.scaleup{
+    animation: scaleup .1s ease-out;
+    animation-fill-mode: forwards;
+    transform: scale3d(.1, .1, .1);
+    opacity: 0;
+}
+
+@keyframes scaleup {
+    50%{
+       
+    }
+
+    100%{
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+        
+    }
+}

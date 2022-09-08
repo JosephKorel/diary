@@ -10,6 +10,7 @@ import {
 import { Calendar } from "react-calendar";
 import { MdLibraryAdd, MdEdit, MdCancel } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
+import { HiFlag } from "react-icons/hi";
 
 interface TaskComp {
   taskProps: {
@@ -144,7 +145,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     };
     return (
       <div
-        className="bg-green-400 p-20 rounded-md"
+        className="bg-green-400 p-20 rounded-md scaleup"
         onClick={(e) => e.stopPropagation()}
       >
         <form
@@ -191,6 +192,22 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     );
   };
 
+  const DegreeFlag = ({ degree }: { degree: number }): JSX.Element => {
+    switch (degree) {
+      case 1:
+        return <HiFlag className="text-stone-800" />;
+
+      case 2:
+        return <HiFlag className="text-ronchi-600" />;
+
+      case 3:
+        return <HiFlag className="text-amaranth" />;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       {card === 2 ? (
@@ -207,9 +224,9 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               <AiOutlineClose />
             </button>
           </div>
-          <div>
-            {currentDayTasks.map((item, index) => (
-              <>
+          {currentDayTasks.length > 0 ? (
+            <div>
+              {currentDayTasks.map((item, index) => (
                 <div className="flex flex-col" key={index}>
                   {edit === index ? (
                     <>
@@ -243,15 +260,16 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                     </>
                   ) : (
                     <>
-                      <p
-                        className={`p-2 border-gray-800 text-gray-100 shadow-md border-r-2 font-semibold text-lg italic rounded-md ${
+                      <div
+                        className={`p-2 border-gray-800 text-gray-100 shadow-md border-r-2 font-semibold text-lg italic rounded-md flex items-center gap-2 ${
                           item.done
                             ? "line-through bg-gradient-to-r from-scampi-600 to-scampi-900"
                             : "bg-gradient-to-r from-shark to-shark-300"
                         }`}
                       >
-                        {item.task}
-                      </p>
+                        <DegreeFlag degree={item.degree} />
+                        <p>{item.task}</p>
+                      </div>
                       <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-white border-b-2 border-r-2 border-gray-800">
                         {dayDiff === 0 && (
                           <>
@@ -282,9 +300,40 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                     </>
                   )}
                 </div>
-              </>
-            ))}
-          </div>
+              ))}
+              <div className="flex justify-between items-center mt-4">
+                <div className="flex items-center gap-4 text-stone-800">
+                  <div className="flex items-center gap-1">
+                    <HiFlag className="text-sotne-800" />
+                    <p>NORMAL</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <HiFlag className="text-ronchi-600" />
+                    <p>IMPORTANTE</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <HiFlag className="text-amaranth" />
+                    <p>MUITO IMPORTANTE</p>
+                  </div>
+                </div>
+                <button
+                  className="flex items-center gap-1 text-gray-100 font-semibold p-1 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setElement(<AddNewTask />);
+                    setShow(true);
+                  }}
+                >
+                  <p className="w-14">NOVA</p>
+                  <MdLibraryAdd />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="prose max-w-none text-center text-base">
+              <h1>Não há nenhuma tarefa para hoje</h1>
+            </div>
+          )}
         </div>
       ) : (
         <>

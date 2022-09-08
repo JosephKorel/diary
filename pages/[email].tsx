@@ -281,7 +281,6 @@ function Today({
                   </div>
                 )}
               </div>
-
               <div
                 className={`w-[10%] p-3  shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
