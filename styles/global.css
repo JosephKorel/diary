@@ -43,5 +43,22 @@
 
 .react-calendar{
     @apply border-none 
-   
 }
+
+
+#__next > div > div.w-2\/3.m-auto > div > div > div > div > div.react-calendar__navigation > button.react-calendar__navigation__label > span{
+    @apply font-semibold text-base uppercase
+}
+
+#__next > div > div.w-2\/3.m-auto > div > div > div > div > div.react-calendar__viewContainer > div > div > div > div.react-calendar__month-view__weekdays > div{
+    @apply no-underline
+}
+
+#__next > div > div.w-2\/3.m-auto > div > div > div > div > div.react-calendar__viewContainer > div > div > div > div.react-calendar__month-view__weekdays > div > abbr{
+    @apply p-2 rounded-md bg-shark text-gray-100 no-underline
+}
+
+#__next > div > div.w-2\/3.m-auto > div > div > div > div > div.react-calendar__viewContainer > div > div > div > div.react-calendar__month-view__days > button {
+    @apply rounded-md
+}
+

@@ -28,7 +28,6 @@ import {
 import { GiDualityMask } from "react-icons/gi";
 import MyModal from "./components/modal";
 import { AiOutlineClose } from "react-icons/ai";
-import { BsFillCalendarEventFill } from "react-icons/bs";
 
 function Today({
   user,

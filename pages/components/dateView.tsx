@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import moment from "moment";
 import Calendar, { Detail } from "react-calendar";
-import { BsFillCalendarDateFill } from "react-icons/bs";
+import {
+  BsFillCalendarDateFill,
+  BsFillCalendarEventFill,
+} from "react-icons/bs";
 import "react-calendar/dist/Calendar.css";
 import { MyReminder, TimeSpanInt, User } from "../../models/interfaces";
 import { GiCancel } from "react-icons/gi";
+import { AiOutlineClose } from "react-icons/ai";
+import { VscDebugBreakpointData } from "react-icons/vsc";
 
 interface DateView {
   dateProps: {
@@ -33,18 +38,27 @@ export default function DateViewComponent({
     view: Detail;
   }) => {
     return (
-      <div className="">
+      <div className="flex flex-col justify-start rounded-md bg-shark text-gray-100">
         <div className="">
           {user.dayEvaluation.map((item) => {
             if (item.date === moment(date).format("DD/MM/YY")) {
-              return <p>Nota: {item.value}</p>;
+              return (
+                <div className="flex items-center gap-1 text-xs">
+                  <VscDebugBreakpointData />
+                  <p>{item.value}</p>
+                </div>
+              );
             }
           })}
         </div>
-        <div>
+        <div className="">
           {reminders.map((rmd) => {
             if (rmd.when === moment(date).format("DD/MM/YY")) {
-              return <div className="rounded-full p-1 bg-green-500"></div>;
+              return (
+                <div className="p-1">
+                  <BsFillCalendarEventFill size={10} />
+                </div>
+              );
             }
           })}
         </div>
@@ -58,7 +72,11 @@ export default function DateViewComponent({
         <BsFillCalendarDateFill />
       </button>
       <div
-        className={show ? "absolute z-10 p-2 bg-gray-100 flex gap-1" : "hidden"}
+        className={
+          show
+            ? "absolute z-10 rounded-md p-2 bg-gray-100 flex gap-1"
+            : "hidden"
+        }
       >
         <Calendar
           value={value}
@@ -86,24 +104,25 @@ export default function DateViewComponent({
             />
           )}
         />
-        <button onClick={() => setShow(!show)}>
-          <GiCancel />
-        </button>
+        <div className="flex flex-col justify-center items-center self-start">
+          <button
+            onClick={() => setShow(!show)}
+            className="rounded-md duration-200 hover:bg-gray-300"
+          >
+            <AiOutlineClose />
+          </button>
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex items-center gap-1 text-xs w-full">
+              <VscDebugBreakpointData className="text-shark" />
+              <p>Avaliação do dia</p>
+            </div>
+            <div className="flex items-center gap-1 text-xs">
+              <BsFillCalendarEventFill className="text-shark" />
+              <p>Lembrete para este dia</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-/* const dayView = (value: Date): string => {
-  const now = moment().startOf("day");
-  const viewDay = moment(value).format("DD/MM/YY");
-  const dayDiff = now.diff(moment(value).startOf("day"), "days");
-
-  if (dayDiff === 0) {
-    return "Hoje" + viewDay;
-  } else if (dayDiff === 1) {
-    return "Ontem" + viewDay;
-  } else if (dayDiff === -1) {
-    return "Amanhã" + viewDay;
-  } else return viewDay;
-}; */
