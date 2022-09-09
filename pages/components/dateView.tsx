@@ -4,6 +4,7 @@ import Calendar, { Detail } from "react-calendar";
 import { BsFillCalendarDateFill } from "react-icons/bs";
 import "react-calendar/dist/Calendar.css";
 import { MyReminder, TimeSpanInt, User } from "../../models/interfaces";
+import { GiCancel } from "react-icons/gi";
 
 interface DateView {
   dateProps: {
@@ -32,8 +33,8 @@ export default function DateViewComponent({
     view: Detail;
   }) => {
     return (
-      <div>
-        <div>
+      <div className="">
+        <div className="">
           {user.dayEvaluation.map((item) => {
             if (item.date === moment(date).format("DD/MM/YY")) {
               return <p>Nota: {item.value}</p>;
@@ -56,9 +57,13 @@ export default function DateViewComponent({
       <button onClick={() => setShow(!show)}>
         <BsFillCalendarDateFill />
       </button>
-      <div className={show ? "absolute z-10" : "hidden"}>
+      <div
+        className={show ? "absolute z-10 p-2 bg-gray-100 flex gap-1" : "hidden"}
+      >
         <Calendar
           value={value}
+          className="bg-gray-100 border-gray-100"
+          navigationAriaLabel="Go up"
           onChange={(value: Date) => {
             let date = moment(value).format("DD/MM/YY");
             const now = moment().startOf("day");
@@ -81,7 +86,9 @@ export default function DateViewComponent({
             />
           )}
         />
-        <button onClick={() => setShow(!show)}>Fechar</button>
+        <button onClick={() => setShow(!show)}>
+          <GiCancel />
+        </button>
       </div>
     </div>
   );

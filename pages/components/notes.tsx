@@ -111,10 +111,21 @@ export default function MyNotesComponent({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 border-b-4 rounded-br-md border-shark text-2xl flex items-center gap-2 w-fit">
-          <h1 className="text-stone-800">Nova anotação</h1>
-          <div className="w-8 bg-shark rounded-t-md">
-            <MdEditNote size="full" className="text-gray-100" />
-          </div>
+          {title ? (
+            <>
+              <h1 className="text-stone-800">{title}</h1>
+              <div className="w-8 bg-shark rounded-t-md">
+                <MdEditNote size="full" className="text-gray-100" />
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="text-stone-800">Nova anotação</h1>
+              <div className="w-8 bg-shark rounded-t-md">
+                <MdEditNote size="full" className="text-gray-100" />
+              </div>
+            </>
+          )}
         </div>
         <div className="">
           <TextEditor
@@ -141,7 +152,7 @@ export default function MyNotesComponent({
             onClick={() => setShow(false)}
             className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
-            Cancelar
+            CANCELAR
           </button>
         </div>
       </div>
@@ -327,7 +338,7 @@ export default function MyNotesComponent({
         </div>
       ) : (
         <div
-          className={`flex flex-col justify-center items-center w-full`}
+          className={`flex flex-col h-full justify-around items-center w-full`}
           onClick={() => {
             setCard(3);
           }}
@@ -340,9 +351,9 @@ export default function MyNotesComponent({
               setElement(<AddNewNote />);
               setShow(true);
             }}
-            className="hover:text-ronchi"
+            className="w-8 duration-200 p-1 rounded-md hover:bg-shark hover:text-gray-100"
           >
-            <MdLibraryAdd size={25} />
+            <MdLibraryAdd size="full" />
           </button>
         </div>
       )}

@@ -344,7 +344,7 @@ export default function RemindComponent({
         </div>
       ) : (
         <div
-          className={`flex flex-col justify-center items-center w-full`}
+          className={`flex flex-col justify-around items-center h-full w-full`}
           onClick={() => {
             setCard(4);
           }}
@@ -357,9 +357,9 @@ export default function RemindComponent({
               setElement(<NewRemind />);
               setShow(true);
             }}
-            className="hover:text-ronchi"
+            className="w-8 duration-200 p-1 rounded-md hover:bg-shark hover:text-gray-100"
           >
-            <MdLibraryAdd size={25} />
+            <MdLibraryAdd size="full" />
           </button>
         </div>
       )}

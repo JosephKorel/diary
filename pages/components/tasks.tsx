@@ -161,11 +161,22 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         className="p-10 py-5 bg-gray-100 rounded-md w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center text-2xl gap-2 mb-4 border-b-2 border-shark w-fit">
-          <h1 className="text-stone-800">Nova tarefa</h1>
-          <div className="w-8">
-            <CgGoogleTasks size="full" className="text-shark" />
-          </div>
+        <div className="flex items-center text-2xl gap-1 mb-4 border-b-2 border-shark w-fit">
+          {content ? (
+            <>
+              <div className="w-8">
+                <CgGoogleTasks size="full" className="text-shark" />
+              </div>
+              <h1 className="text-stone-800">{content}</h1>
+            </>
+          ) : (
+            <>
+              <div className="w-8">
+                <CgGoogleTasks size="full" className="text-shark" />
+              </div>
+              <h1 className="text-stone-800">Nova tarefa</h1>
+            </>
+          )}
         </div>
         <form
           onSubmit={(e) => {
@@ -177,12 +188,12 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
-            className="p-2 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+            className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
           />
         </form>
         <div className="flex items-center mt-5 gap-2">
           <button
-            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 1
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -190,10 +201,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             onClick={() => setDegree(1)}
           >
             <BsFlagFill className={degree === 1 ? "" : "text-stone-800"} />
-            <p>Normal</p>
+            <p>NORMAL</p>
           </button>
           <button
-            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 2
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -201,10 +212,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             onClick={() => setDegree(2)}
           >
             <BsFlagFill className={degree === 2 ? "" : "text-ronchi"} />
-            <p>Importante</p>
+            <p>IMPORTANTE</p>
           </button>
           <button
-            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 3
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -212,7 +223,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             onClick={() => setDegree(3)}
           >
             <BsFlagFill className={degree === 3 ? "" : "text-amaranth"} />
-            <p>Urgente</p>
+            <p>URGENTE</p>
           </button>
         </div>
         <div className="mt-5 flex items-center gap-4">
@@ -221,11 +232,13 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               setShowCal(false);
               setDate(new Date());
             }}
-            className={`p-1 px-2 text-base rounded-full duration-200 ${
-              isToday ? "bg-shark text-gray-100" : "bg-gray-100 text-stone-800"
+            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
+              isToday
+                ? "bg-shark text-gray-100"
+                : "hover:bg-gray-300 text-stone-800"
             }`}
           >
-            Hoje
+            HOJE
           </button>
           <button
             onClick={() => {
@@ -234,23 +247,23 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               const tomorrow = today.setDate(today.getDate() + 1);
               setDate(new Date(tomorrow));
             }}
-            className={`p-1 px-2 text-base rounded-full duration-200 ${
+            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
               isTomorrow
                 ? "bg-shark text-gray-100"
-                : "bg-gray-100 text-stone-800"
+                : "hover:bg-gray-300 text-stone-800"
             }`}
           >
-            Amanhã
+            AMANHÃ
           </button>
           <button
             onClick={() => setShowCal(true)}
-            className={`p-1 px-2 text-base rounded-full duration-200 ${
+            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
               !isToday && !isTomorrow
                 ? "bg-shark text-gray-100"
-                : "bg-gray-100 text-stone-800"
+                : "hover:bg-gray-300 text-stone-800"
             }`}
           >
-            Outro dia
+            OUTRO DIA
           </button>
         </div>
         <div className={!showCal ? "hidden" : "text-center mt-2"}>
@@ -262,13 +275,13 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
           >
             <MdLibraryAdd />
-            <p>Adicionar</p>
+            <p>ADICIONAR</p>
           </button>
           <button
             onClick={() => setShow(false)}
             className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
-            Cancelar
+            CANCELAR
           </button>
         </div>
       </div>
@@ -421,7 +434,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
       ) : (
         <>
           <div
-            className={`flex flex-col justify-center items-center w-full`}
+            className={`flex flex-col h-full justify-around items-center w-full`}
             onClick={() => {
               setCard(2);
             }}
@@ -435,9 +448,9 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                   setElement(<AddNewTask />);
                   setShow(true);
                 }}
-                className="hover:text-ronchi"
+                className="w-8 duration-200 p-1 rounded-md hover:bg-shark hover:text-gray-100"
               >
-                <MdLibraryAdd size={25} />
+                <MdLibraryAdd size="full" />
               </button>
             )}
           </div>

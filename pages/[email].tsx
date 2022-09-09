@@ -178,20 +178,14 @@ function Today({
     return total > 0 ? evaluationAvg / total : 0;
   };
 
-  const HumorIcon = ({
-    mood,
-    size,
-  }: {
-    mood: number;
-    size: number;
-  }): JSX.Element => {
-    if (mood === 0) return <GiDualityMask size={size} />;
-    else if (mood === 1) return <ImCrying2 size={size} />;
-    else if (mood <= 3) return <ImSad2 size={size} />;
-    else if (mood === 4) return <ImConfused2 size={size} />;
-    else if (mood <= 6) return <ImNeutral2 size={size} />;
-    else if (mood < 9) return <ImSmile2 size={size} />;
-    else return <ImHappy2 size={size} />;
+  const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
+    if (mood === 0) return <GiDualityMask size="full" />;
+    else if (mood === 1) return <ImCrying2 size="full" />;
+    else if (mood <= 3) return <ImSad2 size="full" />;
+    else if (mood === 4) return <ImConfused2 size="full" />;
+    else if (mood <= 6) return <ImNeutral2 size="full" />;
+    else if (mood < 9) return <ImSmile2 size="full" />;
+    else return <ImHappy2 size="full" />;
   };
 
   return (
@@ -203,16 +197,11 @@ function Today({
         } h-screen pt-10`}
       >
         <div className="w-2/3 m-auto">
-          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full w-fit relative">
+          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full w-fit relative shadow-lg">
             <h1 className="text-xl font-semibold">{dayView()}</h1>
-            <div className="">
-              {/* <button>
-                <BsFillCalendarEventFill />
-              </button> */}
-              <DateViewComponent
-                dateProps={{ user, value, onChange, reminders }}
-              />
-            </div>
+            <DateViewComponent
+              dateProps={{ user, value, onChange, reminders }}
+            />
           </div>
         </div>
         {user && (
@@ -245,7 +234,7 @@ function Today({
                 className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                   card === 1
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer flex flex-col justify-center items-center"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
                 }`}
               >
                 {card === 1 ? (
@@ -272,8 +261,8 @@ function Today({
                             {item.comment}
                           </p>
                           <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-5 rounded-l-sm rounded-br-md mr-2">
-                            <div className="bg-shark p-1 rounded-md">
-                              <HumorIcon mood={item.mood} size={24} />
+                            <div className="bg-shark p-1 rounded-md w-8">
+                              <HumorIcon mood={item.mood} />
                             </div>
                             <p className="font-bold text-xs p-2 bg-shark rounded-md">
                               {item.time}
@@ -286,17 +275,32 @@ function Today({
                 ) : (
                   <div className="flex flex-col justify-around items-center h-full">
                     <p className="text-xl font-bold text-white">COMENTÁRIOS</p>
-                    <div className="">
-                      <HumorIcon mood={humorAvg()} size={45} />
+                    <div className="w-12 h-16">
+                      <HumorIcon mood={humorAvg()} />
+                    </div>
+                    <div className="flex justify-between items-center gap-1 w-full">
+                      <div className="w-5">
+                        <ImCrying2 size="full" />
+                      </div>
+                      <div className="w-full relative">
+                        <div
+                          className={`p-1 rounded-full bg-ronchi-600 absolute`}
+                          style={{ width: `${humorAvg() * 10}%` }}
+                        ></div>
+                        <div className="p-1 rounded-full bg-gray-100"></div>
+                      </div>
+                      <div className="w-5">
+                        <ImHappy2 size="full" />
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
               <div
-                className={`w-[10%] p-3  shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                   card === 2
                     ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 flex flex-col justify-center items-center cursor-pointer"
+                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
                 }`}
               >
                 <MyTasksComp
@@ -313,7 +317,7 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md flex flex-col justify-center items-center 
+                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
@@ -333,7 +337,7 @@ function Today({
                 />
               </div>
               <div
-                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md flex flex-col justify-center items-center
+                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
               ${
                 card === 4
                   ? "flex-1 bg-gray-100"

@@ -40,3 +40,8 @@
         
     }
 }
+
+.react-calendar{
+    @apply border-none 
+   
+}
