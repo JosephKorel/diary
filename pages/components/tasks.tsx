@@ -11,6 +11,7 @@ import { Calendar } from "react-calendar";
 import { MdLibraryAdd, MdEdit, MdCancel } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiFlag } from "react-icons/hi";
+import { CgGoogleTasks } from "react-icons/cg";
 
 interface TaskComp {
   taskProps: {
@@ -111,8 +112,15 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     const [showCal, setShowCal] = useState(false);
     const [date, setDate] = useState(new Date());
 
+    const tomorrow = moment().add(1, "day");
+
     const isToday =
       moment(date).format("DD/MM/YY") === moment().format("DD/MM/YY")
+        ? true
+        : false;
+
+    const isTomorrow =
+      moment(date).format("DD/MM/YY") === tomorrow.format("DD/MM/YY")
         ? true
         : false;
 
@@ -147,11 +155,18 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         console.log(error);
       }
     };
+
     return (
       <div
-        className="p-10 glass w-2/3 m-auto scaleup"
+        className="p-10 py-5 bg-gray-100 rounded-md w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="flex items-center text-2xl gap-2 mb-4 border-b-2 border-shark w-fit">
+          <h1 className="text-stone-800">Nova tarefa</h1>
+          <div className="w-8">
+            <CgGoogleTasks size="full" className="text-shark" />
+          </div>
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -162,12 +177,12 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
-            className="p-2 w-full rounded-full text-lg"
+            className="p-2 px-4 w-full rounded-full text-lg text-stone-800 bg-gray-300 focus:bg-gray-200"
           />
         </form>
-        <div className="flex justify-around items-center mt-5">
+        <div className="flex items-center mt-5 gap-2">
           <button
-            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 1
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -178,7 +193,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             <p>Normal</p>
           </button>
           <button
-            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 2
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -189,7 +204,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             <p>Importante</p>
           </button>
           <button
-            className={`flex items-center text-xl gap-1 p-1 px-3 rounded-md duration-200 ${
+            className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 3
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -206,16 +221,33 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               setShowCal(false);
               setDate(new Date());
             }}
-            className={`p-1 px-3 text-xl rounded-md duration-200 ${
+            className={`p-1 px-2 text-base rounded-full duration-200 ${
               isToday ? "bg-shark text-gray-100" : "bg-gray-100 text-stone-800"
             }`}
           >
             Hoje
           </button>
           <button
+            onClick={() => {
+              setShowCal(false);
+              const today = new Date();
+              const tomorrow = today.setDate(today.getDate() + 1);
+              setDate(new Date(tomorrow));
+            }}
+            className={`p-1 px-2 text-base rounded-full duration-200 ${
+              isTomorrow
+                ? "bg-shark text-gray-100"
+                : "bg-gray-100 text-stone-800"
+            }`}
+          >
+            Amanhã
+          </button>
+          <button
             onClick={() => setShowCal(true)}
-            className={`p-1 px-3 text-xl rounded-md duration-200 ${
-              !isToday ? "bg-shark text-gray-100" : "bg-gray-100 text-stone-800"
+            className={`p-1 px-2 text-base rounded-full duration-200 ${
+              !isToday && !isTomorrow
+                ? "bg-shark text-gray-100"
+                : "bg-gray-100 text-stone-800"
             }`}
           >
             Outro dia
@@ -227,14 +259,14 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         <div className="flex items-center gap-4 mt-5">
           <button
             onClick={addTask}
-            className="p-1 px-3 rounded-md duration-200 text-lg font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
           >
             <MdLibraryAdd />
             <p>Adicionar</p>
           </button>
           <button
             onClick={() => setShow(false)}
-            className="p-1 px-3 rounded-md duration-200 text-lg font-semibold flex items-center gap-2 bg-amaranth-600 text-gray-100 hover:bg-amaranth-700"
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
             Cancelar
           </button>
