@@ -10,6 +10,7 @@ import {
   BsFillCalendarEventFill,
   BsFillClockFill,
   BsEraserFill,
+  BsFlagFill,
 } from "react-icons/bs";
 import { VscPassFilled } from "react-icons/vsc";
 
@@ -49,7 +50,7 @@ export default function RemindComponent({
   const NewRemind = (): JSX.Element => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [time, setTime] = useState("");
+    const [time, setTime] = useState("08:00");
     const [degree, setDegree] = useState(1);
     const [value, onChange] = useState(new Date());
 
@@ -102,38 +103,112 @@ export default function RemindComponent({
     };
     return (
       <div
-        className="bg-blue-400 p-1 rounded-md"
+        className="w-2/3 m-auto py-5 px-10 rounded-md bg-gray-100 scaleup"
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="flex items-center gap-2 border-b-2 border-shark w-fit">
+          {title.length > 0 ? (
+            <>
+              <div className="w-6">
+                <BsFillCalendarEventFill size="full" className="text-shark" />
+              </div>
+              <h1 className="text-stone-800 text-xl">{title}</h1>
+            </>
+          ) : (
+            <>
+              <div className="w-6">
+                <BsFillCalendarEventFill size="full" className="text-shark" />
+              </div>
+              <h1 className="text-stone-800 text-xl">Novo lembrete</h1>
+            </>
+          )}
+        </div>
         <input
           placeholder="Título"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
+          className="p-2 rounded-md mt-4 w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
         />
-        <input
+        <textarea
           placeholder="Descrição"
           value={content}
           onChange={(e) => setContent(e.currentTarget.value)}
+          className="p-2 mt-2 rounded-md w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
         />
-        <div>
-          <p>Dia</p>
-          <Calendar value={value} onChange={(value: Date) => onChange(value)} />
+        <div className="flex justify-center gap-5">
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-lg font-semibold">Escolha o dia</p>
+            <Calendar
+              value={value}
+              onChange={(value: Date) => onChange(value)}
+            />
+          </div>
+          <div className="flex flex-col justify-around items-center gap-1">
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-semibold">Horário</p>
+                <BsFillClockFill />
+              </div>
+              <input
+                placeholder="HH:MM"
+                value={time}
+                onChange={(e) => hourFormat(e)}
+                maxLength={5}
+                className="p-1 rounded-md w-1/2 text-base block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                  degree === 1
+                    ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                    : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+                }`}
+                onClick={() => setDegree(1)}
+              >
+                <BsFlagFill className={degree === 1 ? "" : "text-stone-800"} />
+                <p>Normal</p>
+              </button>
+              <button
+                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                  degree === 2
+                    ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                    : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+                }`}
+                onClick={() => setDegree(2)}
+              >
+                <BsFlagFill className={degree === 2 ? "" : "text-ronchi"} />
+                <p>Importante</p>
+              </button>
+              <button
+                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                  degree === 3
+                    ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                    : "text-stone-800 bg-gray-100 hover:bg-gray-300"
+                }`}
+                onClick={() => setDegree(3)}
+              >
+                <BsFlagFill className={degree === 3 ? "" : "text-amaranth"} />
+                <p>Urgente</p>
+              </button>
+            </div>
+          </div>
         </div>
-        <p>Horário</p>
-        <input
-          placeholder="HH:MM"
-          value={time}
-          onChange={(e) => hourFormat(e)}
-          maxLength={5}
-        />
-        <div className="flex gap-4">
-          <button onClick={() => setDegree(1)}>1</button>
-          <button onClick={() => setDegree(2)}>2</button>
-          <button onClick={() => setDegree(3)}>3</button>
-          <button onClick={() => setDegree(4)}>4</button>
-          <button onClick={() => setDegree(5)}>5</button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={addReminder}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+          >
+            <MdLibraryAdd />
+            <p>ADICIONAR</p>
+          </button>
+          <button
+            onClick={() => setShow(false)}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
+          >
+            Cancelar
+          </button>
         </div>
-        <button onClick={addReminder}>Confirmar</button>
       </div>
     );
   };

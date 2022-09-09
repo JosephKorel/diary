@@ -17,7 +17,6 @@ import "react-calendar/dist/Calendar.css";
 import DateViewComponent from "./components/dateView";
 import RemindComponent from "./components/reminders";
 import Link from "next/link";
-import { MdLibraryAdd } from "react-icons/md";
 import {
   ImCrying2,
   ImSad2,
@@ -29,6 +28,7 @@ import {
 import { GiDualityMask } from "react-icons/gi";
 import MyModal from "./components/modal";
 import { AiOutlineClose } from "react-icons/ai";
+import { BsFillCalendarEventFill } from "react-icons/bs";
 
 function Today({
   user,
@@ -198,19 +198,30 @@ function Today({
     <>
       {show && <MyModal children={element} setShow={setShow} />}
       <div
-        className={`${card !== 0 ? "bg-shark-100" : "bg-shark-100"} h-screen`}
+        className={`${
+          card !== 0 ? "bg-shark-100" : "bg-shark-100"
+        } h-screen pt-10`}
       >
-        <DateViewComponent dateProps={{ user, value, onChange, reminders }} />
-        <header className="p-2 text-gray-100">
-          <h1 className="text-lg font-semibold">{dayView()}</h1>
-        </header>
+        <div className="w-2/3 m-auto">
+          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full w-fit relative">
+            <h1 className="text-xl font-semibold">{dayView()}</h1>
+            <div className="">
+              {/* <button>
+                <BsFillCalendarEventFill />
+              </button> */}
+              <DateViewComponent
+                dateProps={{ user, value, onChange, reminders }}
+              />
+            </div>
+          </div>
+        </div>
         {user && (
           <div className="w-5/6 m-auto">
-            <div className="ml-20">
+            {/* <div className="ml-20">
               <h2 className="text-lg font-semibold text-stone-900">
                 {greetingMsg()}, {user.name}
               </h2>
-            </div>
+            </div> */}
             <div className="flex justify-center">
               <div className="border border-stone-800 rounded-full">
                 <img src={user.avatar} className="rounded-full"></img>

@@ -56,7 +56,7 @@ export default function DateViewComponent({
       <button onClick={() => setShow(!show)}>
         <BsFillCalendarDateFill />
       </button>
-      <div className={show ? "" : "hidden"}>
+      <div className={show ? "absolute z-10" : "hidden"}>
         <Calendar
           value={value}
           onChange={(value: Date) => {
@@ -81,6 +81,7 @@ export default function DateViewComponent({
             />
           )}
         />
+        <button onClick={() => setShow(!show)}>Fechar</button>
       </div>
     </div>
   );

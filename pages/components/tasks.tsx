@@ -177,7 +177,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
-            className="p-2 px-4 w-full rounded-full text-lg text-stone-800 bg-gray-300 focus:bg-gray-200"
+            className="p-2 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
           />
         </form>
         <div className="flex items-center mt-5 gap-2">

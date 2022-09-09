@@ -116,10 +116,14 @@ export default function CommentComponent({
               placeholder="Escreva aqui"
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              className="w-full rounded-full p-2 text-stone-800"
+              className="p-2 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
             />
-            <div className={!text.length ? "hidden" : "mt-1 p-2 glass"}>
-              <p className="mt-2 text-2xl font-semibold text-center">
+            <div
+              className={
+                !text.length ? "hidden" : "mt-1 p-2 bg-stone-700 rounded-md"
+              }
+            >
+              <p className="mt-2 text-2xl font-semibold text-center text-gray-100">
                 Como você está se sentindo?
               </p>
               <div className="flex justify-center items-center mt-2">
@@ -235,15 +239,17 @@ export default function CommentComponent({
                 </div>
               </div>
               <div className="flex justify-center items-center my-2 relative">
-                <div className="flex justify-center items-center gap-2 p-2 rounded-md text-stone-900">
-                  <p className="text-lg">{humorSub(iconValue)}</p>
+                <div className="flex justify-center items-center gap-2 p-2 rounded-md text-gray-100">
+                  <p className="text-xl font-semibold">
+                    {humorSub(iconValue).toUpperCase()}
+                  </p>
                   <HumorIcon mood={iconValue} />
                 </div>
                 <button
                   onClick={addComment}
-                  className="flex items-center p-2 px-3 bg-gray-200 rounded-full text-stone-800 absolute self-end right-0 duration-200 hover:bg-shark hover:text-white hover:font-bold"
+                  className="flex items-center gap-2 p-2 px-3 bg-shark rounded-full text-gray-100 absolute self-end right-0 duration-200 hover:bg-shark-600"
                 >
-                  <p className="w-32">CONFIRMAR</p>
+                  <p className="font-semibold">CONFIRMAR</p>
                   <BsFillCheckSquareFill />
                 </button>
               </div>
