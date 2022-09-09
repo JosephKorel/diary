@@ -29,8 +29,17 @@ export default function CommentComponent({
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
+  const hour = moment().format("HH:mm");
 
   const seingToday = dayDiff === 0 ? true : false;
+
+  const greetingMsg = (): string => {
+    if (hour <= "12:00") {
+      return "Bom dia";
+    } else if (hour <= "18:00") {
+      return "Boa tarde";
+    } else return "Boa noite";
+  };
 
   const addComment = async () => {
     const today = moment().format("DD/MM/YY");
@@ -96,17 +105,19 @@ export default function CommentComponent({
       <div className="p-3 text-stone-800">
         {seingToday ? (
           <div className="">
-            <div>
-              <h2 className="text-2xl mb-1 text-center font-semibold">
-                Gostaria de compartilhar algo?
-              </h2>
-              <input
-                placeholder="Escreva aqui"
-                value={text}
-                onChange={(e) => setText(e.currentTarget.value)}
-                className="w-full rounded-full p-2 text-stone-800"
-              />
+            <div className="flex items-center justify-center mb-1 text-2xl font-semibold">
+              <h1>
+                {greetingMsg()}, {user.name}
+              </h1>
+              <div className="p-1 rounded-full translate-y-1 mt-1 bg-shark ml-1"></div>
+              <h1 className="ml-2">Gostaria de compartilhar algo?</h1>
             </div>
+            <input
+              placeholder="Escreva aqui"
+              value={text}
+              onChange={(e) => setText(e.currentTarget.value)}
+              className="w-full rounded-full p-2 text-stone-800"
+            />
             <div className={!text.length ? "hidden" : "mt-1 p-2 glass"}>
               <p className="mt-2 text-2xl font-semibold text-center">
                 Como você está se sentindo?

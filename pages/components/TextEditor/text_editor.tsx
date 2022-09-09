@@ -3,9 +3,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import React, { useState } from "react";
 import { FaBold, FaItalic, FaStrikethrough, FaHeading } from "react-icons/fa";
-import { AiOutlineLine } from "react-icons/ai";
+import { BiUpload } from "react-icons/bi";
 import { BsFillImageFill } from "react-icons/bs";
-import Head from "next/head";
 import { FileInt } from "../../../models/interfaces";
 
 const MenuBar = ({
@@ -57,51 +56,49 @@ const MenuBar = ({
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-3 py-1 px-2 rounded-md">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={
           editor.isActive("bold")
-            ? "is-active rounded p-1 bg-stone-800 duration-200"
-            : "p-1"
+            ? "is-active p-2 rounded-md duration-200 bg-shark text-gray-100"
+            : "p-2 rounded-md text-stone-800 duration-200 hover:bg-gray-300"
         }
       >
-        <FaBold className={editor.isActive("bold") && "text-slate-100"} />
+        <FaBold />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={
           editor.isActive("italic")
-            ? "is-active rounded p-1 bg-stone-800 duration-200"
-            : "p-1"
+            ? "is-active p-2 rounded-md duration-200 bg-shark text-gray-100"
+            : "p-2 rounded-md text-stone-800 duration-200 hover:bg-gray-300"
         }
       >
-        <FaItalic className={editor.isActive("italic") && "text-slate-100"} />
+        <FaItalic />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={
           editor.isActive("strike")
-            ? "is-active rounded p-1 bg-stone-800 duration-200"
-            : "p-1"
+            ? "is-active p-2 rounded-md duration-200 bg-shark text-gray-100"
+            : "p-2 rounded-md text-stone-800 duration-200 hover:bg-gray-300"
         }
       >
-        <FaStrikethrough
-          className={editor.isActive("strike") && "text-slate-100"}
-        />
+        <FaStrikethrough />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={
           editor.isActive("heading", { level: 1 })
-            ? "is-active rounded p-1 bg-stone-800 duration-200"
-            : "p-1"
+            ? "is-active p-2 rounded-md duration-200 bg-shark text-gray-100"
+            : "p-2 rounded-md text-stone-800 duration-200 hover:bg-gray-300"
         }
       >
-        <FaHeading className={editor.isActive("heading") && "text-slate-100"} />
+        <FaHeading />
       </button>
       {newImg ? (
-        <div>
+        <div className="flex items-center gap-3">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -112,9 +109,10 @@ const MenuBar = ({
               placeholder="URL da imagem"
               value={url}
               onChange={(e) => setUrl(e.currentTarget.value)}
+              className="p-2 rounded-md text-sm block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
             />
           </form>
-          <p>OU</p>
+          <p className="font-bold">OU</p>
           <input
             type="file"
             multiple
@@ -126,13 +124,29 @@ const MenuBar = ({
             onClick={() => {
               document.getElementById("file_upload").click();
             }}
+            className="p-1 px-3 text-sm rounded-full font-semibold flex items-center gap-2 text-gray-100 bg-stone-800 duration-200 hover:bg-stone-900"
           >
-            Fazer Upload
+            <p>ENVIAR</p>
+            <BiUpload />
           </button>
-          <button onClick={handleImage}>Confirmar</button>
+          <button
+            onClick={handleImage}
+            className="p-1 px-3 rounded-full font-semibold text-sm bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+          >
+            CONFIRMAR
+          </button>
+          <button
+            className="p-1 px-3 font-semibold text-sm rounded-full bg-gray-200 text-amaranth duration-200 hover:bg-amaranth-600 hover:text-gray-100"
+            onClick={() => setNewImg(false)}
+          >
+            CANCELAR
+          </button>
         </div>
       ) : (
-        <button onClick={() => setNewImg(true)}>
+        <button
+          onClick={() => setNewImg(true)}
+          className="p-2 rounded-md text-stone-800 duration-200 hover:bg-gray-300"
+        >
           <BsFillImageFill />
         </button>
       )}
@@ -176,27 +190,20 @@ export default function TextEditor({
     },
     editorProps: {
       attributes: {
-        class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none bg-red-300",
+        class: "prose lg:prose-lg focus:outline-none indent-2 text-stone-800",
       },
     },
   });
 
   return (
     <div>
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography/dist/typography.min.css"
-        />
-        ;
-      </Head>
       <input
         placeholder="Título"
         value={title}
         onChange={(e) => setTitle(e.currentTarget.value)}
+        className="p-2 px-4 w-full rounded-lg text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
       />
-      <div className="p-1 rounded-md border border-stone-800">
+      <div className="mt-4 p-1 rounded-md border border-gray-300">
         <MenuBar
           editor={editor}
           file={file}
@@ -205,8 +212,6 @@ export default function TextEditor({
           userUpload={userUpload}
           setUserUpload={setUserUpload}
         />
-      </div>
-      <div className="p-1 rounded-md border border-stone-800">
         <EditorContent editor={editor} />
       </div>
     </div>

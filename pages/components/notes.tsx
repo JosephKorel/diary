@@ -9,7 +9,7 @@ import {
 import { storage } from "../../firebase.config";
 import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
-import { MdLibraryAdd, MdEdit } from "react-icons/md";
+import { MdLibraryAdd, MdEdit, MdEditNote } from "react-icons/md";
 import { BsEraserFill } from "react-icons/bs";
 import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 
@@ -59,7 +59,9 @@ export default function MyNotesComponent({
 
   const AddNewNote = (): JSX.Element => {
     const [file, setFile] = useState<null | any>(null);
-    const [html, setHtml] = useState("<p>We should eat chocolate</p>");
+    const [html, setHtml] = useState(
+      "<p>Espero que você esteja tendo um ótimo dia :D</p>"
+    );
     const [title, setTitle] = useState("");
     const [userUpload, setUserUpload] = useState<FileInt[]>([]);
 
@@ -105,26 +107,43 @@ export default function MyNotesComponent({
 
     return (
       <div
-        className="bg-green-400 p-20 rounded-md"
+        className="bg-gray-100 p-10 py-5 scaleup rounded-md w-2/3 m-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div>
-          <div className="p-2 bg-slate-100">
-            <TextEditor
-              html={html}
-              setHtml={setHtml}
-              title={title}
-              setTitle={setTitle}
-              file={file}
-              setFile={setFile}
-              addPhoto={addPhoto}
-              userUpload={null}
-              setUserUpload={setUserUpload}
-            />
+        <div className="mb-4 border-b-4 rounded-br-md border-shark text-2xl flex items-center gap-2 w-fit">
+          <h1 className="text-stone-800">Nova anotação</h1>
+          <div className="w-8 bg-shark rounded-t-md">
+            <MdEditNote size="full" className="text-gray-100" />
           </div>
         </div>
-        <button onClick={() => addNote(html, title)}>Adicionar</button>
-        <button onClick={() => setShow(false)}>Cancelar</button>
+        <div className="">
+          <TextEditor
+            html={html}
+            setHtml={setHtml}
+            title={title}
+            setTitle={setTitle}
+            file={file}
+            setFile={setFile}
+            addPhoto={addPhoto}
+            userUpload={null}
+            setUserUpload={setUserUpload}
+          />
+        </div>
+        <div className="flex items-center gap-4 mt-5">
+          <button
+            onClick={() => addNote(html, title)}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+          >
+            <MdLibraryAdd />
+            <p>ADICIONAR</p>
+          </button>
+          <button
+            onClick={() => setShow(false)}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     );
   };
@@ -190,8 +209,11 @@ export default function MyNotesComponent({
     };
 
     return (
-      <div onClick={(e) => e.stopPropagation()}>
-        <div className="p-2 bg-slate-100">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-gray-100 scaleup w-2/3 m-auto"
+      >
+        <div className="">
           <TextEditor
             html={content}
             setHtml={setContent}
@@ -326,32 +348,4 @@ export default function MyNotesComponent({
       )}
     </>
   );
-}
-
-{
-  /* <li key={index}>
-                  {edit === index ? (
-                    <>
-                      <button onClick={() => setEdit(false)}>Cancelar</button>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        dangerouslySetInnerHTML={{ __html: item.note }}
-                      ></div>
-                      <button onClick={() => deleteNote(item)}>Excluir</button>
-                      <button
-                        onClick={() => {
-                          setShow(true);
-                          setElement(<NoteEditComponent targetNote={item} />);
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button onClick={() => setShowNote(false)}>
-                        Minimizar
-                      </button>
-                    </>
-                  )}
-                </li> */
 }
