@@ -110,20 +110,20 @@ export default function MyNotesComponent({
         className="bg-gray-100 p-10 py-5 scaleup rounded-md w-2/3 m-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 border-b-4 rounded-br-md border-shark text-2xl flex items-center gap-2 w-fit">
+        <div className="mb-4 text-2xl flex items-center gap-2 w-1/3">
           {title ? (
             <>
-              <h1 className="text-stone-800">{title}</h1>
-              <div className="w-8 bg-shark rounded-t-md">
+              <div className="w-8 bg-shark rounded-md">
                 <MdEditNote size="full" className="text-gray-100" />
               </div>
+              <h1 className="text-stone-800">{title}</h1>
             </>
           ) : (
             <>
-              <h1 className="text-stone-800">Nova anotação</h1>
-              <div className="w-8 bg-shark rounded-t-md">
+              <div className="w-8 bg-shark rounded-md">
                 <MdEditNote size="full" className="text-gray-100" />
               </div>
+              <h1 className="text-stone-800">Nova anotação</h1>
             </>
           )}
         </div>
@@ -264,7 +264,7 @@ export default function MyNotesComponent({
           {myNotes.map((item, index) => (
             <div
               onClick={() => setShowNote(index)}
-              className={`p-2 mt-2 border rounded-b-md shadow-sm duration-200 hover:rounded-md hover:border  ${
+              className={`p-2 mt-2 border shadow-sm duration-200 hover:rounded-md hover:border  ${
                 showNote === index
                   ? "border-stone-900 rounded-md"
                   : "border-transparent border-b-stone-900 cursor-pointer hover:border-stone-800 hover:bg-gray-200"

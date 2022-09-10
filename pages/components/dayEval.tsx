@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import moment from "moment";
-import { DateInt, Evaluation, User } from "../../models/interfaces";
+import { Evaluation, User } from "../../models/interfaces";
 
 export default function DayEvaluation({
   user,
@@ -89,6 +89,16 @@ export default function DayEvaluation({
     }
   };
 
+  const humorSub = (mood: number): string => {
+    if (mood === 0) return "Humor";
+    else if (mood === 1) return "Muito triste";
+    else if (mood <= 3) return "Triste";
+    else if (mood === 4) return "Mais ou menos";
+    else if (mood <= 6) return "Normal";
+    else if (mood < 9) return "Feliz";
+    else return "Extremamente feliz";
+  };
+
   const yesterDayEvaluation = (
     <>
       {yesterdayVal.length > 0 ? (
@@ -106,10 +116,17 @@ export default function DayEvaluation({
               <button onClick={() => setEdit(false)}>Cancelar</button>
             </>
           ) : (
-            <>
-              <p>Seu dia de ontem foi um {yesterdayVal[0].value}</p>
-              <button onClick={() => setEdit(true)}>Editar</button>
-            </>
+            <div className="py-2 px-3 bg-amaranth shadow-lg rounded-full text-stone-100">
+              <p className="font-semibold text-lg">
+                ONTEM FOI UM DIA:{" "}
+                <span className="uppercase">
+                  {humorSub(yesterdayVal[0].value)}
+                </span>
+              </p>
+              {yesterdayVal[0].date === today && (
+                <button onClick={() => setEdit(true)}>Editar</button>
+              )}
+            </div>
           )}
         </>
       ) : (

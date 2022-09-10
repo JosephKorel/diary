@@ -105,18 +105,18 @@ export default function CommentComponent({
       <div className="p-3 text-stone-800">
         {seingToday ? (
           <div className="">
-            <div className="flex items-center justify-center mb-1 text-2xl font-semibold">
+            <div className="text-center mb-1 text-2xl font-semibold">
               <h1>
                 {greetingMsg()}, {user.name}
               </h1>
-              <div className="p-1 rounded-full translate-y-1 mt-1 bg-shark ml-1"></div>
+              {/* <div className="p-1 rounded-full translate-y-1 mt-1 bg-shark ml-1"></div> */}
               <h1 className="ml-2">Gostaria de compartilhar algo?</h1>
             </div>
             <input
               placeholder="Escreva aqui"
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              className="p-2 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
+              className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
             />
             <div
               className={

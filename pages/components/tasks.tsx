@@ -45,6 +45,15 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
 
+  const taskDegreeSort = currentDayTasks.sort((a, b) => {
+    if (a.degree > b.degree) return -1;
+    else return 1;
+  });
+
+  const myTasks = taskDegreeSort.sort((a, b) => {
+    if (!a.done) return -1;
+  });
+
   const completeTask = async (id: string) => {
     //Manda a req pra atualizar
     const updateTask = await fetch(`/api/tasks/[tasks]/${id}`, {
@@ -161,7 +170,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         className="p-10 py-5 bg-gray-100 rounded-md w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center text-2xl gap-1 mb-4 border-b-2 border-shark w-fit">
+        <div className="flex items-center text-2xl gap-1 mb-4">
           {content ? (
             <>
               <div className="w-8">
@@ -206,7 +215,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           <button
             className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 2
-                ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
+                ? "bg-ronchi text-stone-800 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
             }`}
             onClick={() => setDegree(2)}
@@ -322,7 +331,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           </div>
           {currentDayTasks.length > 0 ? (
             <div>
-              {currentDayTasks.map((item, index) => (
+              {myTasks.map((item, index) => (
                 <div className="flex flex-col" key={index}>
                   {edit === index ? (
                     <>
@@ -331,24 +340,24 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                           e.preventDefault();
                           editTask(item._id);
                         }}
-                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md border-r-2 border-gray-800"
+                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md"
                       >
                         <input
                           value={taskEdit}
                           onChange={(e) => setTaskEdit(e.currentTarget.value)}
-                          className="w-5/6 rounded-md p-1"
+                          className="p-1 px-3 rounded-md w-5/6 text-base block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
                         />
                       </form>
-                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-white border-b-2 border-r-2 border-gray-800">
+                      <div className="rounded-md -translate-y-4 flex justify-center gap-4 self-end bg-gray-200 border border-gray-500 text-stone-800 mr-4">
                         <button
                           onClick={() => editTask(item._id)}
-                          className="duration-200 hover:text-gray-300"
+                          className="p-2 duration-200 hover:bg-shark hover:text-gray-100"
                         >
                           <BsCheckCircleFill />
                         </button>
                         <button
                           onClick={() => setEdit(false)}
-                          className="duration-200 hover:text-gray-300"
+                          className="p-2 duration-200 hover:bg-amaranth hover:text-gray-100"
                         >
                           <MdCancel />
                         </button>
@@ -357,7 +366,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                   ) : (
                     <>
                       <div
-                        className={`p-2 border-gray-800 text-gray-100 shadow-md border-r-2 font-semibold text-lg italic rounded-md flex items-center gap-2 ${
+                        className={`p-2 text-gray-100 shadow-md font-semibold text-lg italic rounded-md flex items-center gap-2 ${
                           item.done
                             ? "line-through bg-gradient-to-r from-scampi-600 to-scampi-900"
                             : "bg-gradient-to-r from-shark to-shark-300"
@@ -366,12 +375,12 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                         <DegreeFlag degree={item.degree} />
                         <p>{item.task}</p>
                       </div>
-                      <div className="p-2 rounded-b-md -translate-y-4 flex justify-center gap-8 self-end bg-amaranth-600 text-white border-b-2 border-r-2 border-gray-800">
+                      <div className="rounded-md -translate-y-4 flex justify-center gap-2 self-end bg-gray-200 text-stone-800 border border-gray-500 mr-4">
                         {dayDiff === 0 && (
                           <>
                             <button
                               onClick={() => completeTask(item._id)}
-                              className="duration-200 hover:text-gray-300"
+                              className="p-2 duration-200 hover:bg-shark hover:text-gray-100"
                             >
                               <BsCheckSquareFill />
                             </button>
@@ -380,7 +389,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                                 setEdit(index);
                                 setTaskEdit(item.task);
                               }}
-                              className="duration-200 hover:text-gray-300"
+                              className="p-2 duration-200 hover:bg-shark hover:text-gray-100"
                             >
                               <MdEdit />
                             </button>
@@ -388,7 +397,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                         )}
                         <button
                           onClick={() => deleteTask(item._id)}
-                          className="duration-200 hover:text-gray-300"
+                          className="p-2 duration-200 hover:bg-amaranth hover:text-gray-100"
                         >
                           <BsEraserFill />
                         </button>
@@ -448,7 +457,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                   setElement(<AddNewTask />);
                   setShow(true);
                 }}
-                className="w-8 duration-200 p-1 rounded-md hover:bg-shark hover:text-gray-100"
+                className="w-8 duration-200 p-1 rounded-md hover:bg-gray-100 hover:text-amaranth"
               >
                 <MdLibraryAdd size="full" />
               </button>

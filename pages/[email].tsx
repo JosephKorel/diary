@@ -195,21 +195,31 @@ function Today({
           card !== 0 ? "bg-shark-100" : "bg-shark-100"
         } h-screen pt-10`}
       >
-        <div className="w-2/3 m-auto">
-          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full w-fit relative shadow-lg">
+        <div className="w-2/3 m-auto flex justify-between items-center">
+          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg">
             <h1 className="text-xl font-semibold">{dayView()}</h1>
             <DateViewComponent
               dateProps={{ user, value, onChange, reminders }}
             />
           </div>
+          <div className="flex flex-col">
+            <DayEvaluation
+              user={user}
+              dayVal={dayVal}
+              setDayVal={setDayVal}
+              value={value}
+            />
+            <button className="mt-4 py-2 px-3 rounded-full bg-shark text-gray-100 text-lg font-semibold">
+              <Link
+                href={{ pathname: "/user_stats", query: { email: user.email } }}
+              >
+                <a>VER MINHAS ESTATÍSTICAS</a>
+              </Link>
+            </button>
+          </div>
         </div>
         {user && (
           <div className="w-5/6 m-auto">
-            {/* <div className="ml-20">
-              <h2 className="text-lg font-semibold text-stone-900">
-                {greetingMsg()}, {user.name}
-              </h2>
-            </div> */}
             <div className="flex justify-center">
               <div className="border border-stone-800 rounded-full">
                 <img src={user.avatar} className="rounded-full"></img>
@@ -356,19 +366,6 @@ function Today({
                 />
               </div>
             </div>
-            <div>
-              <DayEvaluation
-                user={user}
-                dayVal={dayVal}
-                setDayVal={setDayVal}
-                value={value}
-              />
-            </div>
-            <Link
-              href={{ pathname: "/user_stats", query: { email: user.email } }}
-            >
-              <a>Estatísticas</a>
-            </Link>
           </div>
         )}
       </div>
