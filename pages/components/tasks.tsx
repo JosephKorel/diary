@@ -120,30 +120,30 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
 
   const TaskPopup = ({ id }: { id: string }): JSX.Element => {
     return (
-      <div className="w-1/4 m-auto py-2 px-1 bg-gray-100 rounded-md">
+      <div className="w-[35%] m-auto scaleup pt-1 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
         <div className="flex flex-col justify-between">
           <div className="flex justify-between items-center border-b-2 border-gray-500 pb-1">
-            <p className="text-xl font-bold text-stone-800">EXCLUIR TAREFA</p>
+            <p className="text-2xl font-bold text-stone-800">EXCLUIR TAREFA</p>
             <button
               className="duration-200 text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
               onClick={() => setShow(false)}
             >
-              <AiOutlineClose />
+              <AiOutlineClose size={25} />
             </button>
           </div>
           <div className="py-5 px-1">
             <p className="text-lg">Deseja mesmo excluir esta tarefa?</p>
           </div>
-          <div className="flex items-center gap-2 px-1">
+          <div className="flex items-center gap-2 px-1 mt-4">
             <button
               onClick={() => deleteTask(id)}
-              className="font-semibold py-1 px-3 rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
             >
               SIM
             </button>
             <button
               onClick={() => setShow(false)}
-              className="font-semibold py-1 px-3 rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
             >
               NÃO
             </button>
@@ -360,7 +360,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           <div className="flex justify-between items-center text-stone-800 mb-4">
             <h2 className="text-xl font-bold">TAREFAS</h2>
             <button
-              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
+              className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
                 e.stopPropagation();
                 setCard(0);
@@ -380,7 +380,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                           e.preventDefault();
                           editTask(item._id);
                         }}
-                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-md bg-gradient-to-r from-shark to-shark-300 rounded-md"
+                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-sm shadow-black rounded-md"
                       >
                         <input
                           value={taskEdit}
@@ -406,10 +406,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                   ) : (
                     <>
                       <div
-                        className={`p-2 text-gray-100 shadow-md font-semibold text-lg italic rounded-md flex items-center gap-2 ${
+                        className={`p-2 shadow-sm shadow-black font-semibold text-lg italic rounded-md flex items-center border border-gray-600 gap-2 ${
                           item.done
-                            ? "line-through bg-gradient-to-r from-scampi-600 to-scampi-900"
-                            : "bg-gradient-to-r from-shark to-shark-300"
+                            ? "line-through text-gray-100 bg-stone-800"
+                            : "bg-gray-100 text-stone-800"
                         }`}
                       >
                         <DegreeFlag degree={item.degree} />

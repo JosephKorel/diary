@@ -38,7 +38,7 @@ export default function DateViewComponent({
     view: Detail;
   }) => {
     return (
-      <div className="flex flex-col justify-start rounded-md bg-shark text-gray-100">
+      <div className="flex flex-col justify-center items-center">
         <div className="">
           {user.dayEvaluation.map((item) => {
             if (item.date === moment(date).format("DD/MM/YY")) {
@@ -48,18 +48,7 @@ export default function DateViewComponent({
                   <p>{item.value}</p>
                 </div>
               );
-            }
-          })}
-        </div>
-        <div className="">
-          {reminders.map((rmd) => {
-            if (rmd.when === moment(date).format("DD/MM/YY")) {
-              return (
-                <div className="p-1">
-                  <BsFillCalendarEventFill size={10} />
-                </div>
-              );
-            }
+            } else return <div className=""></div>;
           })}
         </div>
       </div>
@@ -68,13 +57,16 @@ export default function DateViewComponent({
 
   return (
     <div className="flex">
-      <button onClick={() => setShow(!show)}>
+      <button
+        onClick={() => setShow(!show)}
+        className="p-1 text-stone-800 duration-200 rounded-md hover:bg-shark hover:text-gray-100"
+      >
         <BsFillCalendarDateFill />
       </button>
       <div
         className={
           show
-            ? "absolute z-10 rounded-md p-2 bg-gray-100 flex gap-1"
+            ? "absolute z-10 fade rounded-md p-2 bg-gray-100 flex gap-1"
             : "hidden"
         }
       >
@@ -104,22 +96,16 @@ export default function DateViewComponent({
             />
           )}
         />
-        <div className="flex flex-col justify-center items-center self-start">
+        <div className="flex flex-col items-center">
           <button
             onClick={() => setShow(!show)}
-            className="rounded-md duration-200 hover:bg-gray-300"
+            className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100 self-end"
           >
             <AiOutlineClose />
           </button>
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center gap-1 text-xs w-full">
-              <VscDebugBreakpointData className="text-shark" />
-              <p>Avaliação do dia</p>
-            </div>
-            <div className="flex items-center gap-1 text-xs">
-              <BsFillCalendarEventFill className="text-shark" />
-              <p>Lembrete para este dia</p>
-            </div>
+          <div className="flex items-center gap-1 text-xs w-full">
+            <VscDebugBreakpointData className="text-shark" />
+            <p>Avaliação do dia</p>
           </div>
         </div>
       </div>

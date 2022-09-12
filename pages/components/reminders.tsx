@@ -23,6 +23,8 @@ interface RemindInt {
     setElement: (data: JSX.Element) => void;
     card: number;
     setCard: (data: number) => void;
+    setMsg: (data: string) => void;
+    setErrorMsg: (data: string) => void;
   };
 }
 
@@ -39,12 +41,58 @@ export default function RemindComponent({
     setElement,
     card,
     setCard,
+    setMsg,
+    setErrorMsg,
   } = remindProps;
 
   const today = moment().format("DD/MM/YY");
 
   const hasPassed = (date: string) => {
     return today > date ? true : false;
+  };
+
+  const reminder = myReminders.sort((a, b) => {
+    if (hasPassed(a.when) != hasPassed(b.when)) {
+      return !hasPassed(a.when) && hasPassed(b.when) ? -1 : 1;
+    }
+    return b.degree - a.degree;
+  });
+
+  const RemindPopup = ({ rmd }: { rmd: MyReminder }): JSX.Element => {
+    return (
+      <div className="w-[35%] m-auto scaleup pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
+        <div className="flex flex-col justify-between">
+          <div className="flex justify-between items-center border-b-2 border-stone-800 pb-1">
+            <p className="text-2xl font-bold text-stone-800">
+              EXCLUIR LEMBRETE
+            </p>
+            <button
+              className="duration-200 text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
+              onClick={() => setShow(false)}
+            >
+              <AiOutlineClose size={25} />
+            </button>
+          </div>
+          <div className="py-5 px-1">
+            <p className="text-lg">Deseja mesmo excluir este lembrete?</p>
+          </div>
+          <div className="flex items-center gap-2 px-1 mt-4">
+            <button
+              onClick={() => deleteRemind(rmd)}
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+            >
+              SIM
+            </button>
+            <button
+              onClick={() => setShow(false)}
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+            >
+              NÃO
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const NewRemind = (): JSX.Element => {
@@ -96,9 +144,10 @@ export default function RemindComponent({
           setTime("");
           currentReminders();
           setShow(false);
+          setMsg("Lembrete adicinado");
         }
       } catch (error) {
-        console.log(error);
+        setErrorMsg("Houve algum erro, tente novamente");
       }
     };
     return (
@@ -189,7 +238,7 @@ export default function RemindComponent({
                 onClick={() => setDegree(3)}
               >
                 <BsFlagFill className={degree === 3 ? "" : "text-amaranth"} />
-                <p>Urgente</p>
+                <p>Muito importante</p>
               </button>
             </div>
           </div>
@@ -224,9 +273,10 @@ export default function RemindComponent({
     try {
       if (handleDelete.ok) {
         currentReminders();
+        setMsg("Lembrete excluído");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -253,7 +303,7 @@ export default function RemindComponent({
           <div className="flex justify-between items-center text-stone-800 mb-4">
             <h2 className="text-xl font-bold">LEMBRETES</h2>
             <button
-              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
+              className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
                 e.stopPropagation();
                 setCard(0);
@@ -262,9 +312,9 @@ export default function RemindComponent({
               <AiOutlineClose />
             </button>
           </div>
-          {myReminders.map((rmd, index) => (
+          {reminder.map((rmd, index) => (
             <div
-              className={`mt-2 p-2 border border-stone-800 rounded-md duration-200  ${
+              className={`mt-2 p-2 shadow-sm shadow-stone-700 rounded-md duration-200  ${
                 showRemind !== index && "cursor-pointer hover:bg-gray-300"
               }`}
               onClick={() => setShowRemind(index)}
@@ -281,16 +331,17 @@ export default function RemindComponent({
                 </div>
                 <div>
                   {showRemind === index ? (
-                    <AiFillCaretUp
-                      className="text-stone-800 duration-200 cursor-pointer hover:text-amaranth"
-                      size={20}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowRemind(-1);
-                      }}
-                    />
+                    <button className="p-1 text-shark rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100">
+                      <AiFillCaretUp
+                        size={20}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowRemind(-1);
+                        }}
+                      />
+                    </button>
                   ) : (
-                    <AiFillCaretDown className="text-amaranth" size={20} />
+                    <AiFillCaretDown className="text-shark" size={20} />
                   )}
                 </div>
               </div>
@@ -316,7 +367,10 @@ export default function RemindComponent({
                   </div>
                   <div className="flex flex-row-reverse">
                     <button
-                      onClick={() => deleteRemind(rmd)}
+                      onClick={() => {
+                        setShow(true);
+                        setElement(<RemindPopup rmd={rmd} />);
+                      }}
                       className="p-1 rounded-md duration-200 text-stone-800 hover:text-gray-100 hover:bg-amaranth flex items-center gap-2 text-right"
                     >
                       <BsEraserFill />

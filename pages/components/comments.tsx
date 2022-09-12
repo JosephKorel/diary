@@ -132,8 +132,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
               <div className="flex justify-center items-center mt-2">
                 <div className="flex gap-2">
                   <BsHexagonFill
-                    className={`text-shark duration-200 ${
-                      iconValue > 0 && "text-amaranth"
+                    className={`duration-200 ${
+                      iconValue > 0 ? "text-amaranth" : "text-shark"
                     }  ${iconValue > 0 && hasChoosed && "text-amaranth"}`}
                     onMouseEnter={() => !hasChoosed && setIconValue(1)}
                     onMouseLeave={() => !hasChoosed && setIconValue(0)}
@@ -142,8 +142,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 1 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 1 ? "text-amaranth" : "text-shark"
+                    }  duration-200 ${
                       iconValue > 1 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(2)}
@@ -153,8 +153,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 2 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 2 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 2 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(3)}
@@ -164,8 +164,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 3 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 3 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 3 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(4)}
@@ -175,8 +175,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 4 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 4 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 4 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(5)}
@@ -186,8 +186,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 5 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 5 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 5 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(6)}
@@ -197,8 +197,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 6 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 6 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 6 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(7)}
@@ -208,8 +208,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 7 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 7 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 7 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(8)}
@@ -219,8 +219,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 8 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 8 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 8 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(9)}
@@ -230,8 +230,8 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                   />
                   <BsHexagonFill
                     className={`${
-                      iconValue > 9 && "text-amaranth"
-                    } text-shark duration-200 ${
+                      iconValue > 9 ? "text-amaranth" : "text-shark"
+                    } duration-200 ${
                       iconValue > 9 && hasChoosed && "text-amaranth"
                     }`}
                     onMouseEnter={() => !hasChoosed && setIconValue(10)}

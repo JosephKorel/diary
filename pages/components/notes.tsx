@@ -85,16 +85,16 @@ export default function MyNotesComponent({
           <div className="py-5 px-1">
             <p className="text-lg">Deseja mesmo excluir esta nota?</p>
           </div>
-          <div className="flex items-center gap-2 px-1">
+          <div className="flex items-center gap-2 px-1 mt-4">
             <button
               onClick={() => deleteNote(note)}
-              className="font-semibold py-1 px-3 rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
             >
               SIM
             </button>
             <button
               onClick={() => setShow(false)}
-              className="font-semibold py-1 px-3 rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
             >
               NÃO
             </button>
@@ -312,7 +312,7 @@ export default function MyNotesComponent({
           <div className="flex justify-between items-center text-stone-800 mb-4">
             <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
             <button
-              className="duration-200 p-1 hover:bg-stone-800 hover:text-gray-100 rounded-md"
+              className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
                 e.stopPropagation();
                 setCard(0);
