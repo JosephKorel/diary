@@ -22,18 +22,28 @@ interface NoteComponent {
     setElement: (data: JSX.Element) => void;
     card: number;
     setCard: (data: number) => void;
+    setMsg: (data: string) => void;
+    setErrorMsg: (data: string) => void;
   };
 }
 
 export default function MyNotesComponent({
   noteProps,
 }: NoteComponent): JSX.Element {
-  const [showNotes, setShowNotes] = useState(false);
   const [edit, setEdit] = useState<boolean | number>(false);
   const [showNote, setShowNote] = useState<boolean | number>(false);
 
-  const { currentNotes, user, myNotes, setShow, setElement, card, setCard } =
-    noteProps;
+  const {
+    currentNotes,
+    user,
+    myNotes,
+    setShow,
+    setElement,
+    card,
+    setCard,
+    setMsg,
+    setErrorMsg,
+  } = noteProps;
 
   const addPhoto = async (
     file: any
@@ -55,6 +65,43 @@ export default function MyNotesComponent({
       console.log(error);
       return null;
     }
+  };
+
+  const NotePopup = ({ note }: { note: MyNotes }): JSX.Element => {
+    return (
+      <div className="w-[35%] m-auto pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
+        <div className="flex flex-col justify-between">
+          <div className="flex justify-between items-center border-b-2 border-stone-800 pb-1">
+            <p className="text-2xl font-bold text-stone-800">
+              EXCLUIR ANOTAÇÃO
+            </p>
+            <button
+              className="duration-200 text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
+              onClick={() => setShow(false)}
+            >
+              <AiOutlineClose size={25} />
+            </button>
+          </div>
+          <div className="py-5 px-1">
+            <p className="text-lg">Deseja mesmo excluir esta nota?</p>
+          </div>
+          <div className="flex items-center gap-2 px-1">
+            <button
+              onClick={() => deleteNote(note)}
+              className="font-semibold py-1 px-3 rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+            >
+              SIM
+            </button>
+            <button
+              onClick={() => setShow(false)}
+              className="font-semibold py-1 px-3 rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+            >
+              NÃO
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const AddNewNote = (): JSX.Element => {
@@ -99,9 +146,10 @@ export default function MyNotesComponent({
           currentNotes(user);
           setShow(false);
           setFile(null);
+          setMsg("Nota adicionada");
         }
       } catch (error) {
-        console.log(error);
+        setErrorMsg("Houve algum erro, tente novamente");
       }
     };
 
@@ -178,9 +226,10 @@ export default function MyNotesComponent({
     try {
       if (handleDelete.ok) {
         currentNotes(user);
+        setMsg("Nota excluída");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -213,16 +262,17 @@ export default function MyNotesComponent({
           currentNotes(user);
           setEdit(false);
           setShow(false);
+          setMsg("Nota editada");
         }
       } catch (error) {
-        console.log(error);
+        setErrorMsg("Houve algum erro, tente novamente");
       }
     };
 
     return (
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-gray-100 scaleup w-2/3 m-auto"
+        className="bg-gray-100 p-10 py-5 rounded-md scaleup w-2/3 m-auto"
       >
         <div className="">
           <TextEditor
@@ -237,9 +287,19 @@ export default function MyNotesComponent({
             setUserUpload={setUserUpload}
           />
         </div>
-        <div>
-          <button onClick={() => editNote(targetNote)}>Salvar</button>
-          <button onClick={() => setEdit(false)}>Cancelar</button>
+        <div className="flex items-center gap-4 mt-5">
+          <button
+            onClick={() => editNote(targetNote)}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+          >
+            SALVAR
+          </button>
+          <button
+            onClick={() => setEdit(false)}
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
+          >
+            CANCELAR
+          </button>
         </div>
       </div>
     );
@@ -282,14 +342,15 @@ export default function MyNotesComponent({
                 </div>
                 <div className="text-shark">
                   {showNote === index ? (
-                    <AiFillCaretUp
-                      size={20}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowNote(false);
-                      }}
-                      className="cursor-pointer duration-200 hover:text-shark-600"
-                    />
+                    <button className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100">
+                      <AiFillCaretUp
+                        size={20}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowNote(false);
+                        }}
+                      />
+                    </button>
                   ) : (
                     <AiFillCaretDown size={20} />
                   )}
@@ -312,7 +373,10 @@ export default function MyNotesComponent({
                       <MdEdit />
                     </button>
                     <button
-                      onClick={() => deleteNote(item)}
+                      onClick={() => {
+                        setShow(true);
+                        setElement(<NotePopup note={item} />);
+                      }}
                       className="p-1 duration-200 hover:bg-amaranth-600 hover:text-gray-100 rounded-md"
                     >
                       <BsEraserFill />

@@ -23,6 +23,8 @@ interface TaskComp {
     setElement: (data: JSX.Element) => void;
     card: number;
     setCard: (data: number) => void;
+    setMsg: (data: string) => void;
+    setErrorMsg: (data: string) => void;
   };
 }
 
@@ -40,20 +42,17 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     setElement,
     card,
     setCard,
+    setMsg,
+    setErrorMsg,
   } = taskProps;
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
 
-  const taskDegreeSort = currentDayTasks.sort((a, b) => {
-    if (a.degree > b.degree) return -1;
-    else return 1;
-  });
-
   const myTasks = currentDayTasks.sort((a, b) => {
-    if (!a.done && a.degree > b.degree) return -1;
-    else if (a.degree > b.degree) return -1;
-    else return 1;
+    if (a.done != b.done) {
+      return !a.done && b.done ? -1 : 1;
+    } else return b.degree - a.degree;
   });
 
   const completeTask = async (id: string) => {
@@ -69,9 +68,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     try {
       if (updateTask.ok) {
         currentTasks(user);
+        setMsg("Parabéns! Você concluiu sua tarefa!");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -92,9 +92,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         currentTasks(user);
         setTaskEdit("");
         setEdit(false);
+        setMsg("Tarefa editada");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -110,10 +111,46 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
     try {
       if (updateTask.ok) {
         currentTasks(user);
+        setMsg("Tarefa excluída");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
+  };
+
+  const TaskPopup = ({ id }: { id: string }): JSX.Element => {
+    return (
+      <div className="w-1/4 m-auto py-2 px-1 bg-gray-100 rounded-md">
+        <div className="flex flex-col justify-between">
+          <div className="flex justify-between items-center border-b-2 border-gray-500 pb-1">
+            <p className="text-xl font-bold text-stone-800">EXCLUIR TAREFA</p>
+            <button
+              className="duration-200 text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
+              onClick={() => setShow(false)}
+            >
+              <AiOutlineClose />
+            </button>
+          </div>
+          <div className="py-5 px-1">
+            <p className="text-lg">Deseja mesmo excluir esta tarefa?</p>
+          </div>
+          <div className="flex items-center gap-2 px-1">
+            <button
+              onClick={() => deleteTask(id)}
+              className="font-semibold py-1 px-3 rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+            >
+              SIM
+            </button>
+            <button
+              onClick={() => setShow(false)}
+              className="font-semibold py-1 px-3 rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+            >
+              NÃO
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   //Componente task do modal
@@ -161,9 +198,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           currentTasks(user);
           setContent("");
           setShow(false);
+          setMsg("Tarefa adicionada");
         }
       } catch (error) {
-        console.log(error);
+        setErrorMsg("Houve algum erro, tente novamente");
       }
     };
 
@@ -400,7 +438,11 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                           </>
                         )}
                         <button
-                          onClick={() => deleteTask(item._id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setElement(<TaskPopup id={item._id} />);
+                            setShow(true);
+                          }}
                           className="p-2 duration-200 hover:bg-amaranth hover:text-gray-100"
                         >
                           <BsEraserFill />

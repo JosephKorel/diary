@@ -52,13 +52,15 @@ function Today({
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
   const [value, onChange] = useState(new Date());
   const [card, setCard] = useState(0);
-  const [msg, setMsg] = useState("Comentário adicionado com sucesso");
+  const [msg, setMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  /*  useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       setMsg("");
+      setErrorMsg("");
     }, 2500);
-  }, [msg]); */
+  }, [msg, errorMsg]);
 
   const thisDay = moment(value).format("DD/MM/YY");
   const hour = moment().format("HH:mm");
@@ -331,6 +333,8 @@ function Today({
                     setElement,
                     card,
                     setCard,
+                    setMsg,
+                    setErrorMsg,
                   }}
                 />
               </div>
@@ -351,6 +355,8 @@ function Today({
                     setElement,
                     card,
                     setCard,
+                    setMsg,
+                    setErrorMsg,
                   }}
                 />
               </div>
@@ -378,7 +384,7 @@ function Today({
           </div>
         )}
       </div>
-      {<Alert msg={msg} />}
+      {<Alert msg={msg} errorMsg={errorMsg} />}
     </>
   );
 }
