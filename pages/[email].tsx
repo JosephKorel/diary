@@ -28,6 +28,7 @@ import {
 import { GiDualityMask } from "react-icons/gi";
 import MyModal from "./components/modal";
 import { AiOutlineClose } from "react-icons/ai";
+import Alert from "./components/alert";
 
 function Today({
   user,
@@ -51,6 +52,13 @@ function Today({
   const [dayVal, setDayVal] = useState<Evaluation[]>([]);
   const [value, onChange] = useState(new Date());
   const [card, setCard] = useState(0);
+  const [msg, setMsg] = useState("Comentário adicionado com sucesso");
+
+  /*  useEffect(() => {
+    setTimeout(() => {
+      setMsg("");
+    }, 2500);
+  }, [msg]); */
 
   const thisDay = moment(value).format("DD/MM/YY");
   const hour = moment().format("HH:mm");
@@ -229,10 +237,7 @@ function Today({
               <div className="w-1/2">
                 {presentOrPast && (
                   <CommentComponent
-                    user={user}
-                    myComments={currentDayComments}
-                    currentComments={currentComments}
-                    value={value}
+                    props={{ user, myComments, currentComments, value, setMsg }}
                   />
                 )}
               </div>
@@ -373,6 +378,7 @@ function Today({
           </div>
         )}
       </div>
+      {<Alert msg={msg} />}
     </>
   );
 }

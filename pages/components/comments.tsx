@@ -12,20 +12,22 @@ import {
   ImHappy2,
 } from "react-icons/im";
 
-export default function CommentComponent({
-  user,
-  myComments,
-  currentComments,
-  value,
-}: {
-  user: User;
-  myComments: MyComments[];
-  currentComments: (data: User) => void;
-  value: Date;
-}): JSX.Element {
+interface CommentComp {
+  props: {
+    user: User;
+    myComments: MyComments[];
+    currentComments: (data: User) => void;
+    value: Date;
+    setMsg: (data: string) => void;
+  };
+}
+
+export default function CommentComponent({ props }: CommentComp): JSX.Element {
   const [text, setText] = useState("");
   const [iconValue, setIconValue] = useState(0);
   const [hasChoosed, setHasChoosed] = useState(false);
+
+  const { user, myComments, currentComments, value, setMsg } = props;
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
@@ -68,6 +70,7 @@ export default function CommentComponent({
         setText("");
         setIconValue(0);
         setHasChoosed(false);
+        setMsg("Comentário adicionado com sucesso!");
       }
     } catch (error) {
       console.log(error);
