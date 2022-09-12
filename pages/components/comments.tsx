@@ -19,15 +19,17 @@ interface CommentComp {
     currentComments: (data: User) => void;
     value: Date;
     setMsg: (data: string) => void;
+    text: string;
+    setText: (data: string) => void;
   };
 }
 
 export default function CommentComponent({ props }: CommentComp): JSX.Element {
-  const [text, setText] = useState("");
   const [iconValue, setIconValue] = useState(0);
   const [hasChoosed, setHasChoosed] = useState(false);
 
-  const { user, myComments, currentComments, value, setMsg } = props;
+  const { user, myComments, currentComments, value, setMsg, text, setText } =
+    props;
 
   const now = moment().startOf("day");
   const dayDiff = now.diff(moment(value).startOf("day"), "days");
@@ -118,7 +120,12 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
             <input
               placeholder="Escreva aqui"
               value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
+              autoFocus
+              onChange={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setText(e.currentTarget.value);
+              }}
               className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
             />
             <div

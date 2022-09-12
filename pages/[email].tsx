@@ -54,6 +54,7 @@ function Today({
   const [card, setCard] = useState(0);
   const [msg, setMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [text, setText] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -235,154 +236,188 @@ function Today({
                 <img src={user.avatar} className="rounded-full"></img>
               </div>
             </div>
-            <div className="flex justify-center">
-              <div className="w-1/2">
-                {presentOrPast && (
-                  <CommentComponent
-                    props={{ user, myComments, currentComments, value, setMsg }}
-                  />
-                )}
-              </div>
-            </div>
-            <div className="flex justify-center gap-10 text-stone-800 relative z-0">
-              <div
-                onClick={() => setCard(1)}
-                className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
-                  card === 1
-                    ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
-                }`}
-              >
-                {card === 1 ? (
-                  <div className="w-full">
-                    <div className="flex justify-between items-center text-stone-800 mb-4">
-                      <h2 className="text-xl font-bold">COMENTÁRIOS</h2>
-                      <button
-                        className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCard(0);
+            {text ? (
+              <div className="fade">
+                <div className="flex justify-center">
+                  <div className="w-1/2">
+                    {presentOrPast && (
+                      <CommentComponent
+                        props={{
+                          user,
+                          myComments,
+                          currentComments,
+                          value,
+                          setMsg,
+                          text,
+                          setText,
                         }}
-                      >
-                        <AiOutlineClose />
-                      </button>
-                    </div>
-                    {currentDayComments.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-col p-1 rounded-md text-stone-800"
-                      >
-                        <div className="flex flex-col">
-                          <p className="italic text-center text-lg rounded-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
-                            {item.comment}
-                          </p>
-                          <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-5 rounded-l-sm rounded-br-md mr-2">
-                            <div className="bg-shark p-1 rounded-md w-8">
-                              <HumorIcon mood={item.mood} />
-                            </div>
-                            <p className="font-bold text-xs p-2 bg-shark rounded-md">
-                              {item.time}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col justify-around items-center h-full">
-                    <p className="text-xl font-bold text-white">COMENTÁRIOS</p>
-                    <div className="w-12 h-16">
-                      <HumorIcon mood={humorAvg()} />
-                    </div>
-                    {humorAvg() !== 0 ? (
-                      <div className="flex justify-between items-center gap-1 w-full">
-                        <div className="w-5">
-                          <ImCrying2 size="full" />
-                        </div>
-                        <div className="w-full relative">
-                          <div
-                            className={`p-1 rounded-full bg-ronchi-600 absolute`}
-                            style={{ width: `${humorAvg() * 10}%` }}
-                          ></div>
-                          <div className="p-1 rounded-full bg-gray-100"></div>
-                        </div>
-                        <div className="w-5">
-                          <ImHappy2 size="full" />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-5"></div>
+                      />
                     )}
                   </div>
-                )}
+                </div>
               </div>
-              <div
-                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
-                  card === 2
-                    ? "flex-1 bg-gray-100"
-                    : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
-                }`}
-              >
-                <MyTasksComp
-                  taskProps={{
-                    currentTasks,
-                    user,
-                    currentDayTasks,
-                    value,
-                    setShow,
-                    setElement,
-                    card,
-                    setCard,
-                    setMsg,
-                    setErrorMsg,
-                  }}
-                />
-              </div>
-              <div
-                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
+            ) : (
+              <>
+                <div className="flex justify-center fade">
+                  <div className="w-1/2">
+                    {presentOrPast && (
+                      <CommentComponent
+                        props={{
+                          user,
+                          myComments,
+                          currentComments,
+                          value,
+                          setMsg,
+                          text,
+                          setText,
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade">
+                  <div
+                    onClick={() => setCard(1)}
+                    className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
+                      card === 1
+                        ? "flex-1 bg-gray-100"
+                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
+                    }`}
+                  >
+                    {card === 1 ? (
+                      <div className="w-full">
+                        <div className="flex justify-between items-center text-stone-800 mb-4">
+                          <h2 className="text-xl font-bold">COMENTÁRIOS</h2>
+                          <button
+                            className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCard(0);
+                            }}
+                          >
+                            <AiOutlineClose />
+                          </button>
+                        </div>
+                        {currentDayComments.map((item, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col p-1 rounded-md text-stone-800"
+                          >
+                            <div className="flex flex-col">
+                              <p className="italic text-center text-lg rounded-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
+                                {item.comment}
+                              </p>
+                              <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-5 rounded-l-sm rounded-br-md mr-2">
+                                <div className="bg-shark p-1 rounded-md w-8">
+                                  <HumorIcon mood={item.mood} />
+                                </div>
+                                <p className="font-bold text-xs p-2 bg-shark rounded-md">
+                                  {item.time}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col justify-around items-center h-full">
+                        <p className="text-xl font-bold text-white">
+                          COMENTÁRIOS
+                        </p>
+                        <div className="w-12 h-16">
+                          <HumorIcon mood={humorAvg()} />
+                        </div>
+                        {humorAvg() !== 0 ? (
+                          <div className="flex justify-between items-center gap-1 w-full">
+                            <div className="w-5">
+                              <ImCrying2 size="full" />
+                            </div>
+                            <div className="w-full relative">
+                              <div
+                                className={`p-1 rounded-full bg-ronchi-600 absolute`}
+                                style={{ width: `${humorAvg() * 10}%` }}
+                              ></div>
+                              <div className="p-1 rounded-full bg-gray-100"></div>
+                            </div>
+                            <div className="w-5">
+                              <ImHappy2 size="full" />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="h-5"></div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                      card === 2
+                        ? "flex-1 bg-gray-100"
+                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
+                    }`}
+                  >
+                    <MyTasksComp
+                      taskProps={{
+                        currentTasks,
+                        user,
+                        currentDayTasks,
+                        value,
+                        setShow,
+                        setElement,
+                        card,
+                        setCard,
+                        setMsg,
+                        setErrorMsg,
+                      }}
+                    />
+                  </div>
+                  <div
+                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
                   : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 text-white cursor-pointer"
               }`}
-              >
-                <MyNotesComponent
-                  noteProps={{
-                    user,
-                    myNotes,
-                    currentNotes,
-                    setShow,
-                    setElement,
-                    card,
-                    setCard,
-                    setMsg,
-                    setErrorMsg,
-                  }}
-                />
-              </div>
-              <div
-                className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
+                  >
+                    <MyNotesComponent
+                      noteProps={{
+                        user,
+                        myNotes,
+                        currentNotes,
+                        setShow,
+                        setElement,
+                        card,
+                        setCard,
+                        setMsg,
+                        setErrorMsg,
+                      }}
+                    />
+                  </div>
+                  <div
+                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
               ${
                 card === 4
                   ? "flex-1 bg-gray-100"
                   : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
               }`}
-              >
-                <RemindComponent
-                  remindProps={{
-                    user,
-                    myReminders,
-                    currentReminders,
-                    setShow,
-                    setElement,
-                    card,
-                    setCard,
-                    setMsg,
-                    setErrorMsg,
-                  }}
-                />
-              </div>
-            </div>
+                  >
+                    <RemindComponent
+                      remindProps={{
+                        user,
+                        myReminders,
+                        currentReminders,
+                        setShow,
+                        setElement,
+                        card,
+                        setCard,
+                        setMsg,
+                        setErrorMsg,
+                      }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
