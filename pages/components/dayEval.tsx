@@ -2,30 +2,26 @@ import React, { useState } from "react";
 import moment from "moment";
 import { Evaluation, User } from "../../models/interfaces";
 import { MdEdit, MdCancel, MdCheck } from "react-icons/md";
-import {
-  BsFlagFill,
-  BsCheckSquareFill,
-  BsEraserFill,
-  BsCheckCircleFill,
-  BsHexagonFill,
-} from "react-icons/bs";
+import { BsHexagonFill } from "react-icons/bs";
 
-export default function DayEvaluation({
-  user,
-  dayVal,
-  setDayVal,
-  value,
-}: {
-  user: User;
-  dayVal: Evaluation[];
-  setDayVal: (data: Evaluation[]) => void;
-  value: Date;
-}): JSX.Element {
-  const [evaluate, setEvaluate] = useState(0);
+interface DayComponent {
+  dayProps: {
+    user: User;
+    dayVal: Evaluation[];
+    setDayVal: (data: Evaluation[]) => void;
+    value: Date;
+    setMsg: (data: string) => void;
+    setErrorMsg: (data: string) => void;
+  };
+}
+
+export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
   const [edit, setEdit] = useState(false);
   const [iconValue, setIconValue] = useState(0);
   const [hasChoosed, setHasChoosed] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
+
+  const { user, dayVal, setDayVal, value, setMsg, setErrorMsg } = dayProps;
 
   const today = moment().format("DD/MM/YY");
 
@@ -68,9 +64,11 @@ export default function DayEvaluation({
         setIconValue(0);
         getTodayVal();
         setIsEvaluating(false);
+        setHasChoosed(false);
+        setMsg("Avaliação registrada");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -94,9 +92,11 @@ export default function DayEvaluation({
         setIconValue(0);
         setEdit(false);
         getTodayVal();
+        setHasChoosed(false);
+        setMsg("Avaliação editada");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Houve algum erro, tente novamente");
     }
   };
 
@@ -141,7 +141,7 @@ export default function DayEvaluation({
         <BsHexagonFill
           className={`${
             iconValue > 2 ? "text-amaranth" : "text-gray-100"
-          } duration-200 ${iconValue > 2 && hasChoosed && "text-stone-800"}`}
+          } duration-200 ${iconValue > 2 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(3)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(3)}
@@ -149,10 +149,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 3 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 3 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 3 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 3 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(4)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(4)}
@@ -160,10 +158,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 4 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 4 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 4 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 4 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(5)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(5)}
@@ -171,10 +167,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 5 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 5 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 5 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 5 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(6)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(6)}
@@ -182,10 +176,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 6 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 6 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 6 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 6 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(7)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(7)}
@@ -193,10 +185,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 7 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 7 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 7 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 7 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(8)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(8)}
@@ -204,10 +194,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 8 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 8 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 8 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 8 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(9)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(9)}
@@ -215,10 +203,8 @@ export default function DayEvaluation({
         />
         <BsHexagonFill
           className={`${
-            iconValue > 9 && "text-amaranth"
-          } text-gray-100 duration-200 ${
-            iconValue > 9 && hasChoosed && "text-amaranth"
-          }`}
+            iconValue > 9 ? "text-amaranth" : "text-gray-100"
+          } duration-200 ${iconValue > 9 && hasChoosed && "text-amaranth"}`}
           onMouseEnter={() => !hasChoosed && setIconValue(10)}
           onMouseLeave={() => !hasChoosed && setIconValue(0)}
           onClick={() => handleChoice(10)}
@@ -269,7 +255,6 @@ export default function DayEvaluation({
                   <span className="uppercase">{humorSub(iconValue)}</span>
                 </p>
               </div>
-
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => evaluateDay(yesterday)}
@@ -303,12 +288,13 @@ export default function DayEvaluation({
       {currentDayVal.length > 0 ? (
         <>
           {edit ? (
-            <div className="flex items-center gap-2 py-2 px-3 rounded-full bg-amaranth text-gray-100">
-              {/* <input
-                value={evaluate}
-                onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
-              /> */}
-              <EvalIcons />
+            <div className="flex items-center gap-2 py-2 px-3 rounded-full bg-shark text-gray-100">
+              <div className="flex flex-col gap-1">
+                <EvalIcons />
+                <p className="uppercase h-3 font-semibold text-sm px-2">
+                  {humorSub(iconValue)}
+                </p>
+              </div>
               <button
                 onClick={() => editEvaluation(today)}
                 className="p-1 text-gray-100 duration-200 rounded-md hover:bg-gray-100 hover:text-amaranth"
@@ -323,7 +309,7 @@ export default function DayEvaluation({
               </button>
             </div>
           ) : (
-            <div className="flex text-base items-center gap-2 py-1 px-3 rounded-full bg-amaranth text-gray-100">
+            <div className="flex justify-center text-base items-center gap-2 py-1 px-3 rounded-full bg-amaranth text-gray-100">
               <p className="uppercase font-semibold">
                 Seu dia foi: {humorSub(currentDayVal[0].value)}
               </p>
@@ -337,14 +323,40 @@ export default function DayEvaluation({
           )}
         </>
       ) : (
-        <div>
-          <p>Avalie o dia de hoje</p>
-          <input
-            value={evaluate}
-            onChange={(e) => setEvaluate(Number(e.currentTarget.value))}
-          />
-          <button onClick={() => evaluateDay(today)}>Confirmar</button>
-        </div>
+        <>
+          {isEvaluating ? (
+            <div className="py-1 px-3 text-center bg-shark shadow-lg rounded-full text-stone-100 flex items-center gap-4">
+              <div className="flex flex-col gap-1">
+                <EvalIcons />
+                <p className="font-semibold text-sm self-start ml-2">
+                  HOJE FOI UM DIA:{" "}
+                  <span className="uppercase">{humorSub(iconValue)}</span>
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => evaluateDay(today)}
+                  className="p-1 text-gray-100 duration-200 rounded-md hover:bg-gray-100 hover:text-shark"
+                >
+                  <MdCheck size={20} />
+                </button>
+                <button
+                  onClick={() => setIsEvaluating(false)}
+                  className="p-1 text-gray-100 duration-200 rounded-md hover:bg-gray-100 hover:text-shark"
+                >
+                  <MdCancel size={20} />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="py-1 px-3 text-center text-gray-100 bg-amaranth shadow-lg rounded-full font-semibold text-base duration-200 hover:bg-amaranth-600"
+              onClick={() => setIsEvaluating(true)}
+            >
+              AVALIE O DIA DE HOJE
+            </button>
+          )}
+        </>
       )}
     </>
   );

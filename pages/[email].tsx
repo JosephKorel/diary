@@ -215,10 +215,7 @@ function Today({
           </div>
           <div className="flex flex-col gap-2">
             <DayEvaluation
-              user={user}
-              dayVal={dayVal}
-              setDayVal={setDayVal}
-              value={value}
+              dayProps={{ user, dayVal, setDayVal, value, setMsg, setErrorMsg }}
             />
             <button className="py-1 px-3 rounded-full bg-shark text-gray-100 text-base font-semibold self-start">
               <Link
