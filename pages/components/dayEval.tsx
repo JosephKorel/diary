@@ -298,8 +298,6 @@ export default function DayEvaluation({
     </>
   );
 
-  console.log(iconValue);
-
   const todayEvaluation = (
     <>
       {currentDayVal.length > 0 ? (
@@ -366,11 +364,13 @@ export default function DayEvaluation({
           ) : (
             <>
               {yesterdayVal[0] ? (
-                <>
-                  <p>Seu dia foi um {yesterdayVal[0].value}</p>
-                </>
+                <div className="py-1 px-3 rounded-full bg-amaranth text-gray-100">
+                  <p className="uppercase font-semibold text-center">
+                    Seu dia foi: {humorSub(yesterdayVal[0].value)}
+                  </p>
+                </div>
               ) : (
-                <>{yesterDayEvaluation}</>
+                <>{yesterdayVal}</>
               )}
             </>
           )}
@@ -378,9 +378,11 @@ export default function DayEvaluation({
       ) : (
         <>
           {currentDayVal[0] ? (
-            <>
-              <p>Seu dia foi um {currentDayVal[0].value}</p>
-            </>
+            <div className="py-1 px-3 rounded-full bg-amaranth text-gray-100">
+              <p className="uppercase font-semibold text-center">
+                Seu dia foi: {humorSub(currentDayVal[0].value)}
+              </p>
+            </div>
           ) : (
             <>
               <p>Não há registros para este dia</p>

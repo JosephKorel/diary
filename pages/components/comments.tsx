@@ -117,14 +117,6 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
       <div className="p-3 text-stone-800">
         {seingToday ? (
           <div className="bg-gray-100 p-5 rounded-md shadow-lg shadow-stone-800">
-            {/*             <div className="text-center mb-1 text-2xl font-semibold">
-              <h1>
-                {greetingMsg()}, {user.name}
-              </h1>
-              <h1 className="ml-2">Gostaria de compartilhar algo?</h1>
-            </div>
- */}
-
             <input
               placeholder="Escreva aqui"
               value={text}

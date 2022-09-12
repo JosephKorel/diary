@@ -12,6 +12,7 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import DateViewComponent from "./components/dateView";
+import { BsArrowReturnLeft } from "react-icons/bs";
 
 function UserStats({
   user,
@@ -310,10 +311,19 @@ function UserStats({
   };
 
   return (
-    <div>
-      <button onClick={() => router.back()}>Voltar</button>
-      <div>
-        <div>
+    <div className="h-screen bg-shark-100 pt-10">
+      <div className="w-2/3 m-auto">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
+        >
+          <p className="font-semibold">VOLTAR</p>
+          <BsArrowReturnLeft />
+        </button>
+      </div>
+
+      <div className="">
+        <div className="">
           <img src={user.avatar}></img>
         </div>
       </div>

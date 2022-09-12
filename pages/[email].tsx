@@ -260,7 +260,7 @@ function Today({
               <>
                 <div className="flex justify-center fade">
                   <div className="w-1/2">
-                    {presentOrPast && (
+                    {dayDiff == 0 && (
                       <div>
                         <div className="text-center mb-1 text-2xl font-semibold">
                           <h1>

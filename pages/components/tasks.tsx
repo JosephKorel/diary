@@ -496,7 +496,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           >
             <h2 className="text-xl font-bold">TAREFAS</h2>
             <p className="text-3xl p-2">{currentDayTasks.length}</p>
-            {dayDiff <= 0 && (
+            {dayDiff <= 0 ? (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -507,6 +507,8 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               >
                 <MdLibraryAdd size="full" />
               </button>
+            ) : (
+              <div className="p-2"></div>
             )}
           </div>
         </>
