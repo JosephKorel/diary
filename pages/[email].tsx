@@ -196,20 +196,20 @@ function Today({
         } h-screen pt-10`}
       >
         <div className="w-2/3 m-auto flex justify-between items-center">
-          <div className="py-2 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg">
+          <div className="py-1 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">
             <h1 className="text-xl font-semibold">{dayView()}</h1>
             <DateViewComponent
               dateProps={{ user, value, onChange, reminders }}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <DayEvaluation
               user={user}
               dayVal={dayVal}
               setDayVal={setDayVal}
               value={value}
             />
-            <button className="mt-4 py-2 px-3 rounded-full bg-shark text-gray-100 text-lg font-semibold">
+            <button className="py-1 px-3 rounded-full bg-shark text-gray-100 text-base font-semibold self-start">
               <Link
                 href={{ pathname: "/user_stats", query: { email: user.email } }}
               >
@@ -287,21 +287,25 @@ function Today({
                     <div className="w-12 h-16">
                       <HumorIcon mood={humorAvg()} />
                     </div>
-                    <div className="flex justify-between items-center gap-1 w-full">
-                      <div className="w-5">
-                        <ImCrying2 size="full" />
+                    {humorAvg() !== 0 ? (
+                      <div className="flex justify-between items-center gap-1 w-full">
+                        <div className="w-5">
+                          <ImCrying2 size="full" />
+                        </div>
+                        <div className="w-full relative">
+                          <div
+                            className={`p-1 rounded-full bg-ronchi-600 absolute`}
+                            style={{ width: `${humorAvg() * 10}%` }}
+                          ></div>
+                          <div className="p-1 rounded-full bg-gray-100"></div>
+                        </div>
+                        <div className="w-5">
+                          <ImHappy2 size="full" />
+                        </div>
                       </div>
-                      <div className="w-full relative">
-                        <div
-                          className={`p-1 rounded-full bg-ronchi-600 absolute`}
-                          style={{ width: `${humorAvg() * 10}%` }}
-                        ></div>
-                        <div className="p-1 rounded-full bg-gray-100"></div>
-                      </div>
-                      <div className="w-5">
-                        <ImHappy2 size="full" />
-                      </div>
-                    </div>
+                    ) : (
+                      <div className="h-5"></div>
+                    )}
                   </div>
                 )}
               </div>

@@ -324,14 +324,14 @@ export default function MyNotesComponent({
           ))}
           <div className="float-right mt-4">
             <button
-              className="flex items-center gap-1 text-gray-100 font-semibold p-2 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
+              className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-3 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
               onClick={(e) => {
                 e.stopPropagation();
                 setElement(<AddNewNote />);
                 setShow(true);
               }}
             >
-              <p className="w-14">NOVA</p>
+              <p>NOVA</p>
               <MdLibraryAdd />
             </button>
           </div>
@@ -351,7 +351,7 @@ export default function MyNotesComponent({
               setElement(<AddNewNote />);
               setShow(true);
             }}
-            className="w-8 duration-200 p-1 rounded-md hover:bg-shark hover:text-gray-100"
+            className="w-8 duration-200 p-1 rounded-md hover:bg-gray-100 hover:text-amaranth"
           >
             <MdLibraryAdd size="full" />
           </button>
