@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { MyComments, User } from "../../models/interfaces";
 import { GiDualityMask } from "react-icons/gi";
-import { BsHexagonFill, BsFillCheckSquareFill } from "react-icons/bs";
+import {
+  BsHexagonFill,
+  BsFillCheckSquareFill,
+  BsFillCheckCircleFill,
+  BsArrowReturnLeft,
+} from "react-icons/bs";
 import {
   ImCrying2,
   ImSad2,
@@ -10,6 +15,8 @@ import {
   ImNeutral2,
   ImSmile2,
   ImHappy2,
+  ImQuotesLeft,
+  ImQuotesRight,
 } from "react-icons/im";
 
 interface CommentComp {
@@ -87,7 +94,7 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
   };
 
   const humorSub = (mood: number): string => {
-    if (mood === 0) return "Humor";
+    if (mood === 0) return "";
     else if (mood === 1) return "Muito triste";
     else if (mood <= 3) return "Triste";
     else if (mood === 4) return "Mais ou menos";
@@ -97,43 +104,41 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
   };
 
   const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
-    if (mood === 0) return <GiDualityMask size="8%" />;
+    if (mood === 0) return <GiDualityMask size="10%" />;
     else if (mood === 1) return <ImCrying2 size="8%" />;
     else if (mood <= 3) return <ImSad2 size="8%" />;
     else if (mood === 4) return <ImConfused2 size="8%" />;
     else if (mood <= 6) return <ImNeutral2 size="8%" />;
     else if (mood < 9) return <ImSmile2 size="8%" />;
-    else return <ImHappy2 size="8%" />;
+    else return <ImHappy2 size="7%" />;
   };
   return (
     <>
       <div className="p-3 text-stone-800">
         {seingToday ? (
-          <div className="">
-            <div className="text-center mb-1 text-2xl font-semibold">
+          <div className="bg-gray-100 p-5 rounded-md shadow-lg shadow-stone-800">
+            {/*             <div className="text-center mb-1 text-2xl font-semibold">
               <h1>
                 {greetingMsg()}, {user.name}
               </h1>
-              {/* <div className="p-1 rounded-full translate-y-1 mt-1 bg-shark ml-1"></div> */}
               <h1 className="ml-2">Gostaria de compartilhar algo?</h1>
             </div>
+ */}
+
             <input
               placeholder="Escreva aqui"
               value={text}
               autoFocus
-              onChange={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setText(e.currentTarget.value);
-              }}
-              className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
+              onChange={(e) => setText(e.currentTarget.value)}
+              className="p-2 px-4 rounded-md w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
             />
-            <div
-              className={
-                !text.length ? "hidden" : "mt-1 p-2 bg-stone-700 rounded-md"
-              }
-            >
-              <p className="mt-2 text-2xl font-semibold text-center text-gray-100">
+            <div className="flex justify-center items-center gap-1">
+              <ImQuotesLeft className="self-start" />
+              <h1 className="text-xl italic">{text}</h1>
+              <ImQuotesRight className="self-end" />
+            </div>
+            <div className={!text.length ? "hidden" : "mt-1 p-2"}>
+              <p className="mt-2 text-2xl font-semibold text-center text-stone-800">
                 Como você está se sentindo?
               </p>
               <div className="flex justify-center items-center mt-2">
@@ -249,18 +254,27 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
                 </div>
               </div>
               <div className="flex justify-center items-center my-2 relative">
-                <div className="flex justify-center items-center gap-2 p-2 rounded-md text-gray-100">
-                  <p className="text-xl font-semibold">
+                <div className="flex justify-center items-center gap-2 p-2 rounded-md text-stone-700">
+                  <HumorIcon mood={iconValue} />
+                  <p className="text-xl font-semibold h-9 mt-1">
                     {humorSub(iconValue).toUpperCase()}
                   </p>
-                  <HumorIcon mood={iconValue} />
                 </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={() => setText("")}
+                  className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
+                >
+                  <p className="font-semibold">VOLTAR</p>
+                  <BsArrowReturnLeft />
+                </button>
                 <button
                   onClick={addComment}
-                  className="flex items-center gap-2 p-2 px-3 bg-shark rounded-full text-gray-100 absolute self-end right-0 duration-200 hover:bg-shark-600"
+                  className="flex items-center gap-2 p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
                 >
                   <p className="font-semibold">CONFIRMAR</p>
-                  <BsFillCheckSquareFill />
+                  <BsFillCheckCircleFill />
                 </button>
               </div>
             </div>

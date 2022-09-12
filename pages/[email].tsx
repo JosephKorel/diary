@@ -261,21 +261,26 @@ function Today({
                 <div className="flex justify-center fade">
                   <div className="w-1/2">
                     {presentOrPast && (
-                      <CommentComponent
-                        props={{
-                          user,
-                          myComments,
-                          currentComments,
-                          value,
-                          setMsg,
-                          text,
-                          setText,
-                        }}
-                      />
+                      <div>
+                        <div className="text-center mb-1 text-2xl font-semibold">
+                          <h1>
+                            {greetingMsg()}, {user.name}
+                          </h1>
+                          <h1 className="ml-2">
+                            Gostaria de compartilhar algo?
+                          </h1>
+                        </div>
+                        <input
+                          placeholder="Escreva aqui"
+                          value={text}
+                          onChange={(e) => setText(e.currentTarget.value)}
+                          className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-stone-800 hover:border-stone-800"
+                        ></input>
+                      </div>
                     )}
                   </div>
                 </div>
-                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade">
+                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade mt-5">
                   <div
                     onClick={() => setCard(1)}
                     className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
