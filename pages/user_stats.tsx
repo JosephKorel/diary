@@ -91,12 +91,28 @@ function UserStats({
     else return <ImHappy2 size="full" />;
   };
 
-  const UserComments = ({ period }: { period: number }): JSX.Element => {
+  const humorSub = (mood: number): string => {
+    if (mood === 0) return "";
+    else if (mood === 1) return "Muito triste";
+    else if (mood <= 3) return "Triste";
+    else if (mood === 4) return "Mais ou menos";
+    else if (mood <= 6) return "Normal";
+    else if (mood < 9) return "Feliz";
+    else return "Extremamente feliz";
+  };
+
+  const UserComments = ({
+    from,
+    until,
+  }: {
+    from: number;
+    until: number;
+  }): JSX.Element => {
     const dailyHumor = (index: number): number | null => {
       let humorValue: number = 0;
       if (!mySpan[index].values.length) return null;
       mySpan
-        .slice(period)
+        .slice(from, until)
         [index].values.forEach((value) => (humorValue += value));
       const humorAvg = (humorValue / mySpan[index].values.length).toFixed(1);
       return Number(humorAvg);
@@ -106,7 +122,7 @@ function UserStats({
       let allValues: number[] = [];
       let valueSum = 0;
 
-      mySpan.slice(period).forEach((item) => {
+      mySpan.slice(from, until).forEach((item) => {
         allValues = allValues.concat(item.values);
       });
 
@@ -117,11 +133,21 @@ function UserStats({
       return Number(finalAverage);
     };
 
+    const taskStats = (): number[] => {
+      let totalTasks = 0;
+      let completedTasks = 0;
+      mySpan.slice(from, until).forEach((item) => {
+        totalTasks += item.tasks.total;
+        completedTasks += item.tasks.completed;
+      });
+
+      return [totalTasks, completedTasks];
+    };
+
     const completitionPercentage = (): number => {
       let totalTasks = 0;
       let completedTasks = 0;
-
-      mySpan.slice(period).forEach((item) => {
+      mySpan.slice(from, until).forEach((item) => {
         totalTasks += item.tasks.total;
         completedTasks += item.tasks.completed;
       });
@@ -134,7 +160,7 @@ function UserStats({
 
     const spanEvaluation = (): number => {
       let total = 0;
-      const evaluationAvg = mySpan.slice(period).reduce((acc, curr) => {
+      const evaluationAvg = mySpan.slice(from, until).reduce((acc, curr) => {
         if (curr.evaluation > 0) {
           total++;
           acc += curr.evaluation;
@@ -146,31 +172,101 @@ function UserStats({
     };
 
     const whichDay = () => {
-      switch (period) {
+      switch (from) {
         case 30:
           return "Hoje";
 
         case 27:
           return "Três dias atrás";
 
+        case 23:
+          return "Uma semana atrás";
+
+        case 0:
+          return "Um mês atrás";
         default:
           break;
       }
     };
 
-    console.log(period);
-
     return (
-      <div className="bg-green-300 p-2 rounded-md">
+      <div className="bg-gray-100 p-2 rounded-md shadow-lg shadow-gray-500">
         {mySpan.length > 0 ? (
-          <div className="flex justify-around items-center">
-            {mySpan.slice(period).map((item, index) => (
+          <div className="p-2">
+            <p className="font-semibold text-2xl text-center">{whichDay()}</p>
+            {from != 30 ? (
+              <p className="text-center italic text-sm">
+                {mySpan.slice(from, until)[0].date} ~{" "}
+                {mySpan.slice(from, until).slice(-1)[0].date}
+              </p>
+            ) : (
+              <p className="text-center italic text-sm">
+                {mySpan.slice(from, until)[0].date}
+              </p>
+            )}
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col justify-center items-center">
+                <p>HUMOR</p>
+                <div className="w-36">
+                  <Semicircle
+                    children={
+                      <div className="flex justify-center w-20">
+                        <div className="w-10">
+                          <HumorIcon mood={humorSpanAverage()} />
+                        </div>
+                      </div>
+                    }
+                    percentage={humorSpanAverage() * 10}
+                  />
+                </div>
+                <p className="text-center uppercase">
+                  {humorSub(humorSpanAverage())}
+                </p>
+              </div>
+              <div className="flex flex-col justify-center items-center">
+                <p>TAREFAS</p>
+                <div className="w-36">
+                  <Semicircle
+                    children={
+                      <div className="w-20">
+                        <p className="text-center">
+                          {taskStats()[1]} de {taskStats()[0]}
+                        </p>
+                      </div>
+                    }
+                    percentage={completitionPercentage()}
+                  />
+                </div>
+                <p>{completitionPercentage()}% COMPLETAS</p>
+              </div>
+              <div className="flex flex-col justify-center items-center">
+                <p>AVALIAÇÃO DO DIA</p>
+                {spanEvaluation() ? (
+                  <div className="w-36">
+                    <Semicircle
+                      children={
+                        <div className="w-20">
+                          <p className="text-center text-2xl">
+                            {spanEvaluation().toFixed(1)}
+                          </p>
+                        </div>
+                      }
+                      percentage={completitionPercentage()}
+                    />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                <p className="text-center uppercase">
+                  {humorSub(spanEvaluation())}
+                </p>
+              </div>
+            </div>
+            {mySpan.slice(from, until).map((item, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md text-gray-200"
               >
-                <p>{whichDay()}</p>
-                <p>Dia: {item.date}</p>
                 <p>Comentários: {item.values.length}</p>
                 {dailyHumor(index) ? (
                   <p>Humor médio: {dailyHumor(index)}</p>
@@ -404,7 +500,7 @@ function UserStats({
           <HumorIcon mood={todayHumorAvg()} />
         </div>
       </div>
-      <div>
+      {/* <div>
         <div className="flex gap-10">
           <TimeSpan />
           <DateViewComponent
@@ -414,20 +510,12 @@ function UserStats({
         <p>
           {time.when} <span>({time.date})</span>
         </p>
+      </div> */}
+      <div className="w-5/6 m-auto flex flex-col gap-5">
+        <UserComments from={mySpan.length - 1} until={mySpan.length} />
+        <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
+        <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
       </div>
-      <UserComments period={mySpan.length - 1} />
-      <UserComments period={mySpan.length - 3} />
-      {/*  {mySpan.length > 0 ? (
-        <>
-          {mySpan.slice(-1)[0].date == today ? (
-            <UserComments period={mySpan.length - 1} />
-          ) : (
-            <>Carregando</>
-          )}
-        </>
-      ) : (
-        <></>
-      )} */}
     </div>
   );
 }
