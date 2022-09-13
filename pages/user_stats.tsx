@@ -63,8 +63,11 @@ function UserStats({
     return from;
   };
 
+  const thisDay = new Date();
+
   useEffect(() => {
-    handleDayChange(new Date(handleSubtract(33)));
+    const from = thisDay.setDate(thisDay.getDate() - 30);
+    handleDayChange(new Date(from));
   }, []);
 
   const todayHumorAvg = (): number => {
@@ -142,6 +145,21 @@ function UserStats({
       return total > 0 ? evaluationAvg / total : 0;
     };
 
+    const whichDay = () => {
+      switch (period) {
+        case 30:
+          return "Hoje";
+
+        case 27:
+          return "Três dias atrás";
+
+        default:
+          break;
+      }
+    };
+
+    console.log(period);
+
     return (
       <div className="bg-green-300 p-2 rounded-md">
         {mySpan.length > 0 ? (
@@ -151,6 +169,7 @@ function UserStats({
                 key={index}
                 className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md text-gray-200"
               >
+                <p>{whichDay()}</p>
                 <p>Dia: {item.date}</p>
                 <p>Comentários: {item.values.length}</p>
                 {dailyHumor(index) ? (
@@ -221,10 +240,10 @@ function UserStats({
       return;
     } */
 
-    const timeSpan = timeSpanStatistics(difference);
+    const timeSpan = timeSpanStatistics(difference, myvalue);
     getStatistics(timeSpan);
 
-    switch (difference) {
+    /*  switch (difference) {
       case 0:
         setTime({
           when: "Hoje",
@@ -272,10 +291,10 @@ function UserStats({
       default:
         setTime({ when: "Dia", date: currentDay, difference, onSpan: false });
         break;
-    }
+    } */
   };
 
-  const timeSpanStatistics = (dif: number): string[] => {
+  const timeSpanStatistics = (dif: number, myvalue: Date): string[] => {
     let span: string[] = [];
 
     /* if (dif === 0 || dif === 1) {
@@ -295,7 +314,7 @@ function UserStats({
     } */
 
     for (let i = 0; i <= dif; i++) {
-      const currDay = moment(value).startOf("day");
+      const currDay = moment(myvalue).startOf("day");
       const nextDay = currDay.add(i, "day").format("DD/MM/YY");
       span.push(nextDay);
     }
@@ -396,7 +415,19 @@ function UserStats({
           {time.when} <span>({time.date})</span>
         </p>
       </div>
-      <UserComments period={spanLength - 1} />
+      <UserComments period={mySpan.length - 1} />
+      <UserComments period={mySpan.length - 3} />
+      {/*  {mySpan.length > 0 ? (
+        <>
+          {mySpan.slice(-1)[0].date == today ? (
+            <UserComments period={mySpan.length - 1} />
+          ) : (
+            <>Carregando</>
+          )}
+        </>
+      ) : (
+        <></>
+      )} */}
     </div>
   );
 }
