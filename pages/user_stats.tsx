@@ -192,8 +192,10 @@ function UserStats({
     return (
       <div className="bg-gray-100 p-2 rounded-md shadow-lg shadow-gray-500">
         {mySpan.length > 0 ? (
-          <div className="p-2">
-            <p className="font-semibold text-2xl text-center">{whichDay()}</p>
+          <div className="p-2 pt-0">
+            <p className="font-semibold shadow-lg shadow-gray-600 -translate-y-6 -translate-x-10 text-2xl rounded-md bg-shark text-gray-100 py-1 px-6 w-fit">
+              {whichDay()}
+            </p>
             {from != 30 ? (
               <p className="text-center italic text-sm">
                 {mySpan.slice(from, until)[0].date} ~{" "}
@@ -262,51 +264,10 @@ function UserStats({
                 </p>
               </div>
             </div>
-            {mySpan.slice(from, until).map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md text-gray-200"
-              >
-                <p>Comentários: {item.values.length}</p>
-                {dailyHumor(index) ? (
-                  <p>Humor médio: {dailyHumor(index)}</p>
-                ) : (
-                  <p>Sem registros para este dia</p>
-                )}
-                <div>
-                  {item.tasks.total !== 0 ? (
-                    <p>
-                      Tarefas completas: {item.tasks.completed} de{" "}
-                      {item.tasks.total}
-                    </p>
-                  ) : (
-                    <p>Sem tarefas para este dia</p>
-                  )}
-                </div>
-                <div>
-                  {item.evaluation >= 0 ? (
-                    <p>Avaliação do dia: {item.evaluation}</p>
-                  ) : (
-                    <p>Sem avaliação para este dia</p>
-                  )}
-                </div>
-              </div>
-            ))}
           </div>
         ) : (
           <div></div>
         )}
-        <div>
-          {completitionPercentage() !== NaN ? (
-            <p>
-              Você completou {completitionPercentage()}% das tarefas propostas
-            </p>
-          ) : (
-            <p>Sem tarefas para este período</p>
-          )}
-        </div>
-        <div>Média de humor deste período: {humorSpanAverage()}</div>
-        <div>Média de avaliação diária neste período: {spanEvaluation()}</div>
       </div>
     );
   };
@@ -471,7 +432,7 @@ function UserStats({
   };
 
   return (
-    <div className="h-screen bg-shark-100 pt-10">
+    <div className="h-full bg-shark-100 pt-10">
       <div className="w-2/3 m-auto">
         <button
           onClick={() => router.back()}
@@ -511,10 +472,11 @@ function UserStats({
           {time.when} <span>({time.date})</span>
         </p>
       </div> */}
-      <div className="w-5/6 m-auto flex flex-col gap-5">
+      <div className="w-5/6 m-auto flex flex-col gap-16">
         <UserComments from={mySpan.length - 1} until={mySpan.length} />
         <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
         <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
+        <UserComments from={0} until={mySpan.length} />
       </div>
     </div>
   );
