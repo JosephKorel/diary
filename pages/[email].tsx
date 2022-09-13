@@ -230,7 +230,11 @@ function Today({
           <div className="w-5/6 m-auto">
             <div className="flex justify-center">
               <div className="border border-stone-800 rounded-full">
-                <img src={user.avatar} className="rounded-full"></img>
+                <img
+                  src={user.avatar}
+                  className="rounded-full"
+                  referrerPolicy="no-referrer"
+                ></img>
               </div>
             </div>
             {text ? (

@@ -13,6 +13,16 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import DateViewComponent from "./components/dateView";
 import { BsArrowReturnLeft } from "react-icons/bs";
+import Semicircle from "./components/semicircle";
+import {
+  ImCrying2,
+  ImSad2,
+  ImConfused2,
+  ImNeutral2,
+  ImSmile2,
+  ImHappy2,
+} from "react-icons/im";
+import { GiDualityMask } from "react-icons/gi";
 
 function UserStats({
   user,
@@ -38,25 +48,53 @@ function UserStats({
   const [mySpan, setMySpan] = useState<DayStats[]>([]);
 
   const router = useRouter();
+  const spanLength = mySpan.length;
 
   const currentDay = moment(value).format("DD/MM/YY");
 
-  const handleSubtract = (amount: number): void => {
+  const handleSubtract = (amount: number): number => {
     setTime({ ...time, onSpan: true });
     const today = new Date();
+    const tomorrow = today.setDate(today.getDate() + 2);
+    const fromTomorrow = new Date(tomorrow);
     const from = today.setDate(today.getDate() - amount);
     onChange(new Date(from));
+
+    return from;
   };
 
   useEffect(() => {
-    handleDayChange();
-  }, [value]);
+    handleDayChange(new Date(handleSubtract(33)));
+  }, []);
 
-  const UserComments = (): JSX.Element => {
+  const todayHumorAvg = (): number => {
+    let total = 0;
+    const evaluationAvg = comments.reduce((acc, curr) => {
+      total++;
+      acc += curr.mood;
+      return acc;
+    }, 0);
+
+    return total > 0 ? evaluationAvg / total : 0;
+  };
+
+  const HumorIcon = ({ mood }: { mood: number }): JSX.Element => {
+    if (mood === 0) return <GiDualityMask size="full" />;
+    else if (mood === 1) return <ImCrying2 size="full" />;
+    else if (mood <= 3) return <ImSad2 size="full" />;
+    else if (mood === 4) return <ImConfused2 size="full" />;
+    else if (mood <= 6) return <ImNeutral2 size="full" />;
+    else if (mood < 9) return <ImSmile2 size="full" />;
+    else return <ImHappy2 size="full" />;
+  };
+
+  const UserComments = ({ period }: { period: number }): JSX.Element => {
     const dailyHumor = (index: number): number | null => {
       let humorValue: number = 0;
       if (!mySpan[index].values.length) return null;
-      mySpan[index].values.forEach((value) => (humorValue += value));
+      mySpan
+        .slice(period)
+        [index].values.forEach((value) => (humorValue += value));
       const humorAvg = (humorValue / mySpan[index].values.length).toFixed(1);
       return Number(humorAvg);
     };
@@ -65,7 +103,7 @@ function UserStats({
       let allValues: number[] = [];
       let valueSum = 0;
 
-      mySpan.forEach((item) => {
+      mySpan.slice(period).forEach((item) => {
         allValues = allValues.concat(item.values);
       });
 
@@ -80,7 +118,7 @@ function UserStats({
       let totalTasks = 0;
       let completedTasks = 0;
 
-      mySpan.forEach((item) => {
+      mySpan.slice(period).forEach((item) => {
         totalTasks += item.tasks.total;
         completedTasks += item.tasks.completed;
       });
@@ -93,7 +131,7 @@ function UserStats({
 
     const spanEvaluation = (): number => {
       let total = 0;
-      const evaluationAvg = mySpan.reduce((acc, curr) => {
+      const evaluationAvg = mySpan.slice(period).reduce((acc, curr) => {
         if (curr.evaluation > 0) {
           total++;
           acc += curr.evaluation;
@@ -108,7 +146,7 @@ function UserStats({
       <div className="bg-green-300 p-2 rounded-md">
         {mySpan.length > 0 ? (
           <div className="flex justify-around items-center">
-            {mySpan.map((item, index) => (
+            {mySpan.slice(period).map((item, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-center p-5 bg-indigo-700 rounded-md text-gray-200"
@@ -143,7 +181,6 @@ function UserStats({
         ) : (
           <div></div>
         )}
-
         <div>
           {completitionPercentage() !== NaN ? (
             <p>
@@ -174,15 +211,15 @@ function UserStats({
     );
   };
 
-  const handleDayChange = (): void => {
+  const handleDayChange = (myvalue: Date): void => {
     const now = moment().startOf("day");
-    const difference = now.diff(moment(value).startOf("day"), "days");
+    const difference = now.diff(moment(myvalue).startOf("day"), "days");
     const date = currentDay;
 
-    if (!time.onSpan) {
+    /* if (!time.onSpan) {
       getStatistics([time.date]);
       return;
-    }
+    } */
 
     const timeSpan = timeSpanStatistics(difference);
     getStatistics(timeSpan);
@@ -241,7 +278,7 @@ function UserStats({
   const timeSpanStatistics = (dif: number): string[] => {
     let span: string[] = [];
 
-    if (dif === 0 || dif === 1) {
+    /* if (dif === 0 || dif === 1) {
       for (let i = 0; i <= dif; i++) {
         const currDay = moment(value).startOf("day");
         const nextDay = currDay.add(i, "day").format("DD/MM/YY");
@@ -255,7 +292,15 @@ function UserStats({
         span.push(nextDay);
       }
       return span;
+    } */
+
+    for (let i = 0; i <= dif; i++) {
+      const currDay = moment(value).startOf("day");
+      const nextDay = currDay.add(i, "day").format("DD/MM/YY");
+      span.push(nextDay);
     }
+
+    return span;
   };
 
   const getStatistics = (span: string[]) => {
@@ -321,10 +366,23 @@ function UserStats({
           <BsArrowReturnLeft />
         </button>
       </div>
-
-      <div className="">
-        <div className="">
-          <img src={user.avatar}></img>
+      <div className="flex flex-col justify-center items-center">
+        <div className="w-36 m-auto">
+          <Semicircle
+            children={
+              <div className="rounded-full">
+                <img
+                  src={user.avatar}
+                  referrerPolicy="no-referrer"
+                  className="rounded-full"
+                ></img>
+              </div>
+            }
+            percentage={todayHumorAvg() * 10}
+          />
+        </div>
+        <div className="w-10">
+          <HumorIcon mood={todayHumorAvg()} />
         </div>
       </div>
       <div>
@@ -338,7 +396,7 @@ function UserStats({
           {time.when} <span>({time.date})</span>
         </p>
       </div>
-      <UserComments />
+      <UserComments period={spanLength - 1} />
     </div>
   );
 }
