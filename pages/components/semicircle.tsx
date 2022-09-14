@@ -9,9 +9,11 @@ import "react-circular-progressbar/dist/styles.css";
 function Semicircle({
   children,
   percentage,
+  strokeColor,
 }: {
   children: JSX.Element;
   percentage: number;
+  strokeColor: string;
 }) {
   return (
     <div>
@@ -20,15 +22,15 @@ function Semicircle({
         circleRatio={0.7}
         styles={{
           trail: {
-            strokeLinecap: "butt",
+            strokeLinecap: "round",
             transform: "rotate(-126deg)",
             transformOrigin: "center center",
           },
           path: {
-            strokeLinecap: "butt",
+            strokeLinecap: "round",
             transform: "rotate(-126deg)",
             transformOrigin: "center center",
-            stroke: "#000",
+            stroke: `rgba(${strokeColor}, ${percentage / 100})`,
           },
           text: {
             fill: "#ddd",

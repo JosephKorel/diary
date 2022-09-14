@@ -190,13 +190,13 @@ function UserStats({
     };
 
     return (
-      <div className="bg-gray-100 p-2 rounded-md shadow-lg shadow-gray-500">
+      <div className="bg-gray-100 p-2 rounded-md shadow-sm shadow-gray-500">
         {mySpan.length > 0 ? (
           <div className="p-2 pt-0">
             <p className="font-semibold shadow-lg shadow-gray-600 -translate-y-6 -translate-x-10 text-2xl rounded-md bg-shark text-gray-100 py-1 px-6 w-fit">
               {whichDay()}
             </p>
-            {from != 30 ? (
+            {/* {from != 30 ? (
               <p className="text-center italic text-sm">
                 {mySpan.slice(from, until)[0].date} ~{" "}
                 {mySpan.slice(from, until).slice(-1)[0].date}
@@ -205,7 +205,7 @@ function UserStats({
               <p className="text-center italic text-sm">
                 {mySpan.slice(from, until)[0].date}
               </p>
-            )}
+            )} */}
             <div className="flex justify-between items-center">
               <div className="flex flex-col justify-center items-center">
                 <p>HUMOR</p>
@@ -219,6 +219,7 @@ function UserStats({
                       </div>
                     }
                     percentage={humorSpanAverage() * 10}
+                    strokeColor="238, 68, 99"
                   />
                 </div>
                 <p className="text-center uppercase">
@@ -237,6 +238,7 @@ function UserStats({
                       </div>
                     }
                     percentage={completitionPercentage()}
+                    strokeColor="67, 97, 238"
                   />
                 </div>
                 <p>{completitionPercentage()}% COMPLETAS</p>
@@ -253,7 +255,8 @@ function UserStats({
                           </p>
                         </div>
                       }
-                      percentage={completitionPercentage()}
+                      percentage={spanEvaluation() * 10}
+                      strokeColor="1, 142, 66"
                     />
                   </div>
                 ) : (
@@ -433,7 +436,7 @@ function UserStats({
 
   return (
     <div className="h-full bg-shark-100 pt-10">
-      <div className="w-2/3 m-auto">
+      <div className="w-5/6 m-auto">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
@@ -442,23 +445,13 @@ function UserStats({
           <BsArrowReturnLeft />
         </button>
       </div>
-      <div className="flex flex-col justify-center items-center">
-        <div className="w-36 m-auto">
-          <Semicircle
-            children={
-              <div className="rounded-full">
-                <img
-                  src={user.avatar}
-                  referrerPolicy="no-referrer"
-                  className="rounded-full"
-                ></img>
-              </div>
-            }
-            percentage={todayHumorAvg() * 10}
-          />
-        </div>
-        <div className="w-10">
-          <HumorIcon mood={todayHumorAvg()} />
+      <div className="flex justify-center p-1">
+        <div className="rounded-full">
+          <img
+            src={user.avatar}
+            referrerPolicy="no-referrer"
+            className="rounded-full"
+          ></img>
         </div>
       </div>
       {/* <div>
