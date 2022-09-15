@@ -496,20 +496,16 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           >
             <h2 className="text-xl font-bold">TAREFAS</h2>
             <p className="text-3xl p-2">{currentDayTasks.length}</p>
-            {dayDiff <= 0 ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setElement(<AddNewTask />);
-                  setShow(true);
-                }}
-                className="w-8 duration-200 p-1 rounded-md hover:bg-gray-100 hover:text-amaranth"
-              >
-                <MdLibraryAdd size="full" />
-              </button>
-            ) : (
-              <div className="p-2"></div>
-            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setElement(<AddNewTask />);
+                setShow(true);
+              }}
+              className="w-8 duration-200 p-1 rounded-md hover:bg-gray-100 hover:text-amaranth"
+            >
+              <MdLibraryAdd size="full" />
+            </button>
           </div>
         </>
       )}

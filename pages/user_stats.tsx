@@ -177,23 +177,23 @@ function UserStats({
           return "Hoje";
 
         case 27:
-          return "Três dias atrás";
+          return "Últimos três dias";
 
         case 23:
-          return "Uma semana atrás";
+          return "Última semana";
 
         case 0:
-          return "Um mês atrás";
+          return "Último mês";
         default:
           break;
       }
     };
 
     return (
-      <div className="bg-gray-100 p-2 rounded-md shadow-sm shadow-gray-500">
+      <div className="bg-gradient-to-b from-shark-100 to-gray-100 p-2 rounded-md shadow-sm shadow-gray-500">
         {mySpan.length > 0 ? (
           <div className="p-2 pt-0">
-            <p className="font-semibold shadow-lg shadow-gray-600 -translate-y-6 -translate-x-10 text-2xl rounded-md bg-shark text-gray-100 py-1 px-6 w-fit">
+            <p className="font-semibold shadow-lg shadow-gray-600 -translate-y-6 -translate-x-8 text-2xl rounded-md bg-shark text-gray-100 py-1 px-6 w-fit">
               {whichDay()}
             </p>
             {/* {from != 30 ? (
@@ -206,9 +206,11 @@ function UserStats({
                 {mySpan.slice(from, until)[0].date}
               </p>
             )} */}
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col justify-center items-center">
-                <p>HUMOR</p>
+            <div className="flex justify-around items-center">
+              <div className="flex flex-col justify-center items-center text-amaranth">
+                <p className="text-xl font-semibold mb-1 bg-amaranth rounded-full p-1 px-3 text-gray-100">
+                  HUMOR
+                </p>
                 <div className="w-36">
                   <Semicircle
                     children={
@@ -222,12 +224,14 @@ function UserStats({
                     strokeColor="238, 68, 99"
                   />
                 </div>
-                <p className="text-center uppercase">
+                <p className="text-center uppercase text-gray-800">
                   {humorSub(humorSpanAverage())}
                 </p>
               </div>
               <div className="flex flex-col justify-center items-center">
-                <p>TAREFAS</p>
+                <p className="text-xl font-semibold mb-1 bg-shark rounded-full p-1 px-3 text-gray-100">
+                  TAREFAS
+                </p>
                 <div className="w-36">
                   <Semicircle
                     children={
@@ -243,29 +247,39 @@ function UserStats({
                 </div>
                 <p>{completitionPercentage()}% COMPLETAS</p>
               </div>
-              <div className="flex flex-col justify-center items-center">
-                <p>AVALIAÇÃO DO DIA</p>
-                {spanEvaluation() ? (
-                  <div className="w-36">
-                    <Semicircle
-                      children={
-                        <div className="w-20">
-                          <p className="text-center text-2xl">
-                            {spanEvaluation().toFixed(1)}
-                          </p>
-                        </div>
-                      }
-                      percentage={spanEvaluation() * 10}
-                      strokeColor="1, 142, 66"
-                    />
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-                <p className="text-center uppercase">
-                  {humorSub(spanEvaluation())}
-                </p>
-              </div>
+              {spanEvaluation() ? (
+                <div className="flex flex-col justify-center items-center">
+                  <p className="text-lg text-center font-semibold mb-1 bg-greeny rounded-full p-1 px-3 text-gray-100">
+                    NOTA DO DIA
+                  </p>
+                  {spanEvaluation() ? (
+                    <div className="w-36">
+                      <Semicircle
+                        children={
+                          <div className="w-20">
+                            <p className="text-center text-2xl">
+                              {spanEvaluation().toFixed(1)}
+                            </p>
+                          </div>
+                        }
+                        percentage={spanEvaluation() * 10}
+                        strokeColor="1, 142, 66"
+                      />
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  <p className="text-center uppercase">
+                    {humorSub(spanEvaluation())}
+                  </p>
+                </div>
+              ) : (
+                <div className="absolute">
+                  {/* <p className="text-lg text-center font-semibold mb-1 bg-greeny rounded-full p-1 px-3 text-gray-100">
+                    NOTA DO DIA
+                  </p> */}
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -435,24 +449,20 @@ function UserStats({
   };
 
   return (
-    <div className="h-full bg-shark-100 pt-10">
-      <div className="w-5/6 m-auto">
+    <div className="h-full bg-gradient-to-b from-shark-100 to-shark-200 py-10">
+      <div className="w-2/3 m-auto flex items-center justify-center relative">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
+          className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600 absolute left-0 top-0"
         >
           <p className="font-semibold">VOLTAR</p>
           <BsArrowReturnLeft />
         </button>
-      </div>
-      <div className="flex justify-center p-1">
-        <div className="rounded-full">
-          <img
-            src={user.avatar}
-            referrerPolicy="no-referrer"
-            className="rounded-full"
-          ></img>
-        </div>
+        <img
+          src={user.avatar}
+          referrerPolicy="no-referrer"
+          className="rounded-full"
+        ></img>
       </div>
       {/* <div>
         <div className="flex gap-10">
@@ -465,7 +475,7 @@ function UserStats({
           {time.when} <span>({time.date})</span>
         </p>
       </div> */}
-      <div className="w-5/6 m-auto flex flex-col gap-16">
+      <div className="w-2/3 m-auto flex flex-col gap-16 mt-5">
         <UserComments from={mySpan.length - 1} until={mySpan.length} />
         <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
         <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
