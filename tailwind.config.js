@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serrat: ["Montserrat", "sans-serif"],
+      },
       colors: {
         shark: {
           DEFAULT: "#4361EE",

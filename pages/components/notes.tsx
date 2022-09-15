@@ -310,7 +310,7 @@ export default function MyNotesComponent({
       {card === 3 ? (
         <div className="w-full">
           <div className="flex justify-between items-center text-stone-800 mb-4">
-            <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
+            <h2 className="text-xl font-medium">ANOTAÇÕES</h2>
             <button
               className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
@@ -324,10 +324,10 @@ export default function MyNotesComponent({
           {myNotes.map((item, index) => (
             <div
               onClick={() => setShowNote(index)}
-              className={`p-2 mt-2 border shadow-sm duration-200 hover:rounded-md hover:border  ${
+              className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
                 showNote === index
                   ? "border-stone-900 rounded-md"
-                  : "border-transparent border-b-stone-900 cursor-pointer hover:border-stone-800 hover:bg-gray-200"
+                  : "cursor-pointer hover:bg-gray-200"
               }`}
             >
               <div className="flex justify-between items-center">
@@ -335,7 +335,7 @@ export default function MyNotesComponent({
                   <div className="w-3 h-3 bg-shark rounded-full"></div>
                   <h3
                     key={index}
-                    className="italic font-semibold text-lg text-stone-900"
+                    className="italic font-medium text-lg text-stone-900"
                   >
                     {item.title}
                   </h3>
@@ -407,8 +407,8 @@ export default function MyNotesComponent({
             setCard(3);
           }}
         >
-          <h2 className="text-xl font-bold">ANOTAÇÕES</h2>
-          <p className="text-3xl p-2">{myNotes.length}</p>
+          <h2 className="text-xl font-medium">ANOTAÇÕES</h2>
+          <p className="text-4xl font-thin">{myNotes.length}</p>
           <button
             onClick={(e) => {
               e.stopPropagation();

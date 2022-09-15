@@ -29,6 +29,7 @@ import { GiDualityMask } from "react-icons/gi";
 import MyModal from "./components/modal";
 import { AiOutlineClose } from "react-icons/ai";
 import Alert from "./components/alert";
+import Head from "next/head";
 
 function Today({
   user,
@@ -200,15 +201,17 @@ function Today({
 
   return (
     <>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div
-        className={`${
-          card !== 0 ? "bg-shark-100" : "bg-shark-100"
-        } h-screen pt-10`}
-      >
-        <div className="w-2/3 m-auto flex justify-between items-center">
+      <div className="bg-shark-100 h-screen pt-10">
+        <div className="w-2/3 m-auto flex justify-between items-center font-serrat">
           <div className="py-1 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">
-            <h1 className="text-xl font-semibold">{dayView()}</h1>
+            <h1 className="text-xl font-light">{dayView()}</h1>
             <DateViewComponent
               dateProps={{ user, value, onChange, reminders }}
             />
@@ -217,7 +220,7 @@ function Today({
             <DayEvaluation
               dayProps={{ user, dayVal, setDayVal, value, setMsg, setErrorMsg }}
             />
-            <button className="py-1 px-3 rounded-full bg-shark text-gray-100 text-base font-semibold self-start">
+            <button className="py-1 px-3 rounded-full bg-shark text-gray-100 text-base font-light self-start duration-200 hover:bg-shark-600">
               <Link
                 href={{ pathname: "/user_stats", query: { email: user.email } }}
               >
@@ -263,9 +266,10 @@ function Today({
                   <div className="w-1/2">
                     {dayDiff == 0 && (
                       <div>
-                        <div className="text-center mb-1 text-2xl font-semibold">
-                          <h1>
-                            {greetingMsg()}, {user.name}
+                        <div className="text-center mb-1 text-2xl font-light font-serrat">
+                          <h1 className="italic">
+                            {greetingMsg()},{" "}
+                            <span className="font-medium">{user.name}</span>
                           </h1>
                           <h1 className="ml-2">
                             Gostaria de compartilhar algo?
@@ -281,19 +285,19 @@ function Today({
                     )}
                   </div>
                 </div>
-                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade mt-5">
+                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade mt-5 font-serrat">
                   <div
                     onClick={() => setCard(1)}
-                    className={`w-[10%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
+                    className={`w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                       card === 1
                         ? "flex-1 bg-gray-100"
-                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
+                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
                     }`}
                   >
                     {card === 1 ? (
                       <div className="w-full">
                         <div className="flex justify-between items-center text-stone-800 mb-4">
-                          <h2 className="text-xl font-bold">COMENTÁRIOS</h2>
+                          <h2 className="text-xl font-medium">COMENTÁRIOS</h2>
                           <button
                             className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
                             onClick={(e) => {
@@ -309,15 +313,15 @@ function Today({
                             key={index}
                             className="flex flex-col p-1 rounded-md text-stone-800"
                           >
-                            <div className="flex flex-col">
-                              <p className="italic text-center text-lg rounded-md bg-gray-200 border border-stone-900 p-2 text-stone-900">
+                            <div className="flex flex-col ">
+                              <p className="italic text-center text-base p-2 text-stone-900 shadow-sm shadow-gray-600 rounded-md">
                                 {item.comment}
                               </p>
-                              <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-5 rounded-l-sm rounded-br-md mr-2">
+                              <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-4 rounded-l-sm rounded-br-md mr-2">
                                 <div className="bg-shark p-1 rounded-md w-8">
                                   <HumorIcon mood={item.mood} />
                                 </div>
-                                <p className="font-bold text-xs p-2 bg-shark rounded-md">
+                                <p className="font-light text-xs p-2 bg-shark rounded-md">
                                   {item.time}
                                 </p>
                               </div>
@@ -327,7 +331,7 @@ function Today({
                       </div>
                     ) : (
                       <div className="flex flex-col justify-around items-center h-full">
-                        <p className="text-xl font-bold text-white">
+                        <p className="text-xl font-medium text-white">
                           COMENTÁRIOS
                         </p>
                         <div className="w-12 h-16">
@@ -356,10 +360,10 @@ function Today({
                     )}
                   </div>
                   <div
-                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                       card === 2
                         ? "flex-1 bg-gray-100"
-                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
+                        : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
                     }`}
                   >
                     <MyTasksComp
@@ -378,11 +382,11 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
+                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
-                  : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 text-white cursor-pointer"
+                  : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 text-white cursor-pointer"
               }`}
                   >
                     <MyNotesComponent
@@ -400,11 +404,11 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-[10%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
+                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
               ${
                 card === 4
                   ? "flex-1 bg-gray-100"
-                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-40 cursor-pointer"
+                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
               }`}
                   >
                     <RemindComponent

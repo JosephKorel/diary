@@ -358,7 +358,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
       {card === 2 ? (
         <div className="w-full">
           <div className="flex justify-between items-center text-stone-800 mb-4">
-            <h2 className="text-xl font-bold">TAREFAS</h2>
+            <h2 className="text-xl font-medium">TAREFAS</h2>
             <button
               className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
@@ -380,7 +380,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                           e.preventDefault();
                           editTask(item._id);
                         }}
-                        className="w-full p-1 text-stone-800 font-semibold text-lg italic shadow-sm shadow-black rounded-md"
+                        className="w-full p-1 text-stone-800 font-medium text-lg italic shadow-sm shadow-gray-600 rounded-md"
                       >
                         <input
                           value={taskEdit}
@@ -406,10 +406,10 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
                   ) : (
                     <>
                       <div
-                        className={`p-2 shadow-sm shadow-black font-semibold text-lg italic rounded-md flex items-center border border-gray-600 gap-2 ${
+                        className={`p-2 shadow-sm shadow-gray-600 text-lg italic rounded-md flex items-center gap-2 ${
                           item.done
-                            ? "line-through text-gray-100 bg-stone-800"
-                            : "bg-gray-100 text-stone-800"
+                            ? "line-through text-gray-100 bg-stone-800 font-light"
+                            : "bg-gray-100 text-stone-800 font-normal"
                         }`}
                       >
                         <DegreeFlag degree={item.degree} />
@@ -494,8 +494,8 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               setCard(2);
             }}
           >
-            <h2 className="text-xl font-bold">TAREFAS</h2>
-            <p className="text-3xl p-2">{currentDayTasks.length}</p>
+            <h2 className="text-xl font-medium">TAREFAS</h2>
+            <p className="text-4xl font-thin">{currentDayTasks.length}</p>
             <button
               onClick={(e) => {
                 e.stopPropagation();

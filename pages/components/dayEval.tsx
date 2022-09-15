@@ -232,9 +232,9 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
             </div>
           ) : (
             <div className="py-1 px-3 bg-amaranth shadow-lg rounded-full text-stone-100">
-              <p className="font-semibold text-base">
+              <p className="font-light text-base">
                 ONTEM FOI UM DIA:{" "}
-                <span className="uppercase">
+                <span className="uppercase font-medium">
                   {humorSub(yesterdayVal[0].value)}
                 </span>
               </p>
@@ -250,9 +250,11 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
             <div className="py-1 px-3 text-center bg-shark shadow-lg rounded-full text-stone-100 flex items-center gap-4">
               <div className="flex flex-col gap-1">
                 <EvalIcons />
-                <p className="font-semibold text-sm self-start ml-2">
+                <p className="font-light text-sm self-start ml-2">
                   ONTEM FOI UM DIA:{" "}
-                  <span className="uppercase">{humorSub(iconValue)}</span>
+                  <span className="uppercase font-medium">
+                    {humorSub(iconValue)}
+                  </span>
                 </p>
               </div>
               <div className="flex items-center gap-1">

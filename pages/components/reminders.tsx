@@ -301,7 +301,7 @@ export default function RemindComponent({
       {card === 4 ? (
         <div className="w-full">
           <div className="flex justify-between items-center text-stone-800 mb-4">
-            <h2 className="text-xl font-bold">LEMBRETES</h2>
+            <h2 className="text-xl font-medium">LEMBRETES</h2>
             <button
               className="rounded-md duration-200 p-1 text-stone-800 hover:bg-shark hover:text-gray-100"
               onClick={(e) => {
@@ -322,7 +322,7 @@ export default function RemindComponent({
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <RemindFlag degree={rmd.degree} />
-                  <p className={`text-lg font-semibold text-stone-800`}>
+                  <p className={`text-lg font-medium text-stone-800`}>
                     {rmd.title}
                   </p>
                   {hasPassed(rmd.when) && (
@@ -347,7 +347,7 @@ export default function RemindComponent({
               </div>
               {showRemind === index && (
                 <div className="fade">
-                  <p className="text-lg text-center mb-2 font-bold text-stone-800">
+                  <p className="text-lg text-center mb-2 text-stone-800">
                     {rmd.content}
                   </p>
                   <div className="w-full p-[2px] rounded-full bg-stone-800 my-2"></div>
@@ -358,11 +358,11 @@ export default function RemindComponent({
                       }`}
                     >
                       <BsFillCalendarEventFill />
-                      <p className="font-semibold">{rmd.when}</p>
+                      <p className="font-light">{rmd.when}</p>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded-md bg-shark text-gray-200">
                       <BsFillClockFill />
-                      <p className="font-semibold">{rmd.time}</p>
+                      <p className="font-light">{rmd.time}</p>
                     </div>
                   </div>
                   <div className="flex flex-row-reverse">
@@ -416,8 +416,8 @@ export default function RemindComponent({
             setCard(4);
           }}
         >
-          <h2 className="text-xl font-bold">LEMBRETES</h2>
-          <p className="text-3xl p-2">{myReminders.length}</p>
+          <h2 className="text-xl font-medium">LEMBRETES</h2>
+          <p className="text-4xl font-thin">{myReminders.length}</p>
           <button
             onClick={(e) => {
               e.stopPropagation();

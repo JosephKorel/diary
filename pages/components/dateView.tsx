@@ -59,7 +59,7 @@ export default function DateViewComponent({
     <div className="flex">
       <button
         onClick={() => setShow(!show)}
-        className="p-1 text-stone-800 duration-200 rounded-md hover:bg-shark hover:text-gray-100"
+        className="p-1 text-shark duration-200 rounded-md hover:bg-shark hover:text-gray-100"
       >
         <BsFillCalendarDateFill />
       </button>
