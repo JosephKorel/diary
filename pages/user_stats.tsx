@@ -23,6 +23,7 @@ import {
   ImHappy2,
 } from "react-icons/im";
 import { GiDualityMask } from "react-icons/gi";
+import Head from "next/head";
 
 function UserStats({
   user,
@@ -108,21 +109,42 @@ function UserStats({
 
     let total = 0;
     Object.values(commentStats).forEach((val: number) => (total += val));
-    Object.keys(commentStats).sort((a, b) => {
-      return commentStats[b] - commentStats[a];
-    });
 
-    const comments = Object.entries(commentStats).sort((a, b) => {
+    const commentsSort = Object.entries(commentStats).sort((a, b) => {
       return b[1] - a[1];
     });
 
+    let commentObj = {} as { [humor: string]: number };
+
+    commentsSort.forEach((item) => {
+      let humor = humorSub(Number(item[0]));
+      if (commentObj[humor]) {
+        commentObj = { ...commentObj, [humor]: commentObj[humor] + item[1] };
+      } else commentObj = { ...commentObj, [humor]: item[1] };
+    });
+
+    const comments = Object.entries(commentObj).sort((a, b) => {
+      return b[1] - a[1];
+    });
+
+    const commentPercentage = (value: number): number => {
+      return +((value * 100) / total).toFixed(1);
+    };
+
     return (
-      <div className="bg-scampi rounded-md">
-        <h1>User stats</h1>
+      <div className="bg-scampi-600 rounded-md shadow-sm shadow-scampi-400 p-3 text-gray-100 self-start">
         <div className="flex flex-col gap-2">
-          {comments.map((item) => (
-            <p>
-              Comentários nota {item[0]}: {item[1]}
+          {comments.slice(0, 3).map((item, index) => (
+            <p
+              key={index}
+              className="text-lg text-center rounded-md py-4 px-6 bg-gray-100 text-stone-800 shadow-md shadow-gray-600"
+            >
+              {index === 2 && "Apenas"}{" "}
+              <span className="font-semibold italic">
+                {commentPercentage(item[1])}%
+              </span>{" "}
+              dos seus comentários são do tipo:{" "}
+              <span className="font-bold">{item[0]}</span>
             </p>
           ))}
         </div>
@@ -219,12 +241,14 @@ function UserStats({
     };
 
     return (
-      <div className="bg-gradient-to-b from-gray-100 to-gray-200 p-2 rounded-md shadow-sm shadow-gray-600">
+      <div className="bg-gradient-to-b from-scampi-300 to-scampi p-2 rounded-md shadow-md shadow-scampi-600">
         {mySpan.length > 0 ? (
           <div className="p-2 pt-0">
-            <p className="font-light italic uppercase shadow-md shadow-gray-600 -translate-y-6 -translate-x-8 text-3xl font-serrat rounded-full bg-shark text-gray-200 py-1 px-4 w-fit">
-              {whichDay()}
-            </p>
+            <div className="flex justify-center">
+              <p className="font-bold uppercase shadow-md shadow-gray-600 -translate-y-6 text-2xl rounded-md bg-gray-200 text-stone-800 py-1 px-4 w-fit">
+                {whichDay()}
+              </p>
+            </div>
             {/* {from != 30 ? (
               <p className="text-center italic text-sm">
                 {mySpan.slice(from, until)[0].date} ~{" "}
@@ -236,85 +260,52 @@ function UserStats({
               </p>
             )} */}
             <div className="flex flex-col justify-around">
-              <div className="flex flex-col justify-center items-center text-amaranth">
-                {/*  <div className="w-36">
-                  <Semicircle
-                    children={
-                      <div className="flex justify-center w-20">
-                        <div className="w-10">
-                          <HumorIcon mood={humorSpanAverage()} />
-                        </div>
-                      </div>
-                    }
-                    percentage={humorSpanAverage() * 10}
-                    strokeColor="238, 68, 99"
-                  />
-                </div> */}
+              <div className="flex flex-col gap-4 items-center text-amaranth">
                 <div className="w-full flex flex-col justify-center relative bg-amaranth-300 rounded-md">
                   <div
-                    className={`p-1 h-full rounded-r-full rounded-l-md bg-amaranth absolute`}
+                    className={`p-1 h-full rounded-md bg-amaranth absolute`}
                     style={{ width: `${humorSpanAverage() * 10}%` }}
                   ></div>
-                  <p className="text-xl self-center font-medium mb-1 rounded-md py-1 px-2 text-gray-200 relative z-10 bg-stone-800 -translate-y-2">
+                  <p className="text-xl self-center mb-1 rounded-md py-1 px-2 text-gray-200 relative z-10">
                     HUMOR
                   </p>
-                  <p className="text-center uppercase text-lg text-gray-100 py-1 px-3 rounded-full font-light">
+                  <p className="text-center uppercase text-lg text-gray-100 py-1 px-3 rounded-full font-light italic relative z-10">
                     {humorSub(humorSpanAverage())}
                   </p>
                 </div>
-              </div>
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-xl font-medium mb-1 rounded-full p-1 px-3 text-gray-100">
-                  TAREFAS
-                </p>
-                <div className="w-36">
-                  <Semicircle
-                    children={
-                      <div className="w-20">
-                        <p className="text-center">
-                          {taskStats()[1]} de {taskStats()[0]}
-                        </p>
-                      </div>
-                    }
-                    percentage={completitionPercentage()}
-                    strokeColor="67, 97, 238"
-                  />
-                </div>
-                <p>{completitionPercentage()}% COMPLETAS</p>
-              </div>
-              {spanEvaluation() ? (
-                <div className="flex flex-col justify-center items-center">
-                  <p className="text-lg text-center font-semibold mb-1 bg-greeny rounded-full p-1 px-3 text-gray-100">
-                    NOTA DO DIA
+                <div className="w-full flex flex-col justify-center relative bg-shark-300 rounded-md">
+                  <div
+                    className={`p-1 h-full rounded-md bg-shark absolute`}
+                    style={{ width: `${completitionPercentage()}%` }}
+                  ></div>
+                  <p className="text-xl self-center font-semibold mb-1 rounded-md py-1 px-2 text-gray-200 relative z-10">
+                    TAREFAS
                   </p>
-                  {spanEvaluation() ? (
-                    <div className="w-36">
-                      <Semicircle
-                        children={
-                          <div className="w-20">
-                            <p className="text-center text-2xl">
-                              {spanEvaluation().toFixed(1)}
-                            </p>
-                          </div>
-                        }
-                        percentage={spanEvaluation() * 10}
-                        strokeColor="1, 142, 66"
-                      />
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
-                  <p className="text-center uppercase">
-                    {humorSub(spanEvaluation())}
+                  <p className="text-center uppercase text-lg text-gray-100 py-1 px-3 rounded-full font-light relative z-10 italic">
+                    {completitionPercentage()}% COMPLETAS
                   </p>
                 </div>
-              ) : (
-                <div className="absolute">
-                  {/* <p className="text-lg text-center font-semibold mb-1 bg-greeny rounded-full p-1 px-3 text-gray-100">
+                {spanEvaluation() ? (
+                  <div className="w-full flex flex-col justify-center relative bg-greeny-300 rounded-md">
+                    <div
+                      className={`p-1 h-full rounded-md bg-greeny absolute`}
+                      style={{ width: `${spanEvaluation() * 10}%` }}
+                    ></div>
+                    <p className="text-xl self-center font-semibold mb-1 rounded-md py-1 px-2 text-gray-200 relative z-10">
+                      NOTA DO DIA
+                    </p>
+                    <p className="text-center uppercase text-lg text-gray-100 py-1 px-3 rounded-full font-light relative z-10 italic">
+                      {spanEvaluation().toFixed(1)}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="absolute">
+                    {/* <p className="text-lg text-center font-semibold mb-1 bg-greeny rounded-full p-1 px-3 text-gray-100">
                     NOTA DO DIA
                   </p> */}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : (
@@ -344,63 +335,8 @@ function UserStats({
     const difference = now.diff(moment(myvalue).startOf("day"), "days");
     const date = currentDay;
 
-    /* if (!time.onSpan) {
-      getStatistics([time.date]);
-      return;
-    } */
-
     const timeSpan = timeSpanStatistics(difference, myvalue);
     getStatistics(timeSpan);
-
-    /*  switch (difference) {
-      case 0:
-        setTime({
-          when: "Hoje",
-          date,
-          difference,
-          onSpan: false,
-        });
-        break;
-
-      case 1:
-        setTime({
-          when: "Ontem",
-          date,
-          difference,
-          onSpan: true,
-        });
-        break;
-
-      case 3:
-        setTime({
-          when: "3 dias atrás",
-          date,
-          difference,
-          onSpan: true,
-        });
-        break;
-
-      case 7:
-        setTime({
-          when: "1 semana atrás",
-          date,
-          difference,
-          onSpan: true,
-        });
-        break;
-
-      case 30:
-        setTime({
-          when: "1 mês atrás",
-          date,
-          difference,
-          onSpan: true,
-        });
-        break;
-      default:
-        setTime({ when: "Dia", date: currentDay, difference, onSpan: false });
-        break;
-    } */
   };
 
   const timeSpanStatistics = (dif: number, myvalue: Date): string[] => {
@@ -484,7 +420,13 @@ function UserStats({
   };
 
   return (
-    <div className="h-full bg-shark-100 py-10 font-serrat">
+    <div className="h-screen bg-shark-100 py-10 font-serrat">
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <div className="w-2/3 m-auto flex items-center justify-center relative">
         <button
           onClick={() => router.back()}
@@ -510,8 +452,8 @@ function UserStats({
           {time.when} <span>({time.date})</span>
         </p>
       </div> */}
-      <div className="w-2/3 m-auto flex justify-between mt-5">
-        <div className="grid grid-cols-2 grid-rows-2">
+      <div className="w-[70%] m-auto flex justify-between items-center mt-5">
+        <div className="grid grid-cols-2 grid-rows-2 gap-8">
           <UserComments from={mySpan.length - 1} until={mySpan.length} />
           <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
           <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
