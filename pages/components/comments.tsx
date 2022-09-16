@@ -114,7 +114,7 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
   };
   return (
     <>
-      <div className="p-3 text-stone-800">
+      <div className="p-3 text-stone-800 font-serrat">
         {seingToday ? (
           <div className="bg-gray-100 p-5 rounded-md shadow-lg shadow-stone-800">
             <input

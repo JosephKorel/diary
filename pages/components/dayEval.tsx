@@ -274,7 +274,7 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
             </div>
           ) : (
             <button
-              className="py-1 px-3 text-center text-gray-100 bg-amaranth shadow-lg rounded-full font-semibold text-base duration-200 hover:bg-amaranth-600"
+              className="py-1 px-3 text-center text-gray-100 bg-amaranth shadow-lg rounded-full text-base duration-200 hover:bg-amaranth-600"
               onClick={() => setIsEvaluating(true)}
             >
               AVALIE O DIA DE ONTEM
