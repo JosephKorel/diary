@@ -21,8 +21,10 @@ export interface MyNotes {
   email: string;
   title: string;
   note: string;
+  folder: string;
   media: { name: string; url: string }[];
   date: string;
+  folders: string[];
 }
 
 export interface MyComments {

@@ -11,7 +11,13 @@ import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
 import { MdLibraryAdd, MdEdit, MdEditNote } from "react-icons/md";
 import { BsEraserFill } from "react-icons/bs";
-import { AiOutlineClose, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import {
+  AiOutlineClose,
+  AiFillCaretDown,
+  AiFillCaretUp,
+  AiFillFolderOpen,
+  AiFillFolder,
+} from "react-icons/ai";
 
 interface NoteComponent {
   noteProps: {
@@ -32,6 +38,8 @@ export default function MyNotesComponent({
 }: NoteComponent): JSX.Element {
   const [edit, setEdit] = useState<boolean | number>(false);
   const [showNote, setShowNote] = useState<boolean | number>(false);
+  const [onFolder, setOnFolder] = useState(-1);
+  const [showFolder, setShowFolder] = useState("");
 
   const {
     currentNotes,
@@ -44,6 +52,10 @@ export default function MyNotesComponent({
     setMsg,
     setErrorMsg,
   } = noteProps;
+
+  const myFolders = myNotes.filter((item) => item.folders);
+
+  const userNotes = myNotes.filter((item) => item.folder === "");
 
   const addPhoto = async (
     file: any
@@ -128,6 +140,7 @@ export default function MyNotesComponent({
         email: user.email,
         title,
         note: html,
+        folder: "",
         media: userUpload,
         date: today,
       };
@@ -305,6 +318,64 @@ export default function MyNotesComponent({
     );
   };
 
+  const AddNewFolder = (): JSX.Element => {
+    const [name, setName] = useState("");
+
+    const newFolder = async () => {
+      const folder = {
+        email: user.email,
+        folders: [name],
+      };
+
+      //Adiciona uma nova nota
+      const insert = await fetch(`/api/notes/${user.email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(folder),
+      });
+
+      try {
+        if (insert.ok) {
+          currentNotes(user);
+          setMsg("Pasta criada");
+        }
+      } catch (error) {
+        setErrorMsg("Houve algum erro, tente novamente");
+      }
+    };
+
+    return (
+      <div
+        className="bg-gray-100 p-10 py-5 scaleup rounded-md w-2/3 m-auto font-serrat"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2">
+          <AiFillFolderOpen className="text-shark" size={30} />
+          <h1 className="text-2xl">{name ? name : "Nova pasta"}</h1>
+        </div>
+        <input
+          placeholder="Nome da pasta"
+          value={name}
+          onChange={(e) => setName(e.currentTarget.value)}
+          className="p-2 px-4 mt-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+        />
+        <button
+          className="p-1 px-2 mt-6 rounded-md duration-200 text-base font-semibold bg-shark text-gray-100 hover:bg-shark-600"
+          onClick={newFolder}
+        >
+          CONFIRMAR
+        </button>
+      </div>
+    );
+  };
+
+  const folderNotes = (): MyNotes[] => {
+    const filter = myNotes.filter((item) => item.folder === showFolder);
+    return filter;
+  };
+
   return (
     <>
       {card === 3 ? (
@@ -321,74 +392,183 @@ export default function MyNotesComponent({
               <AiOutlineClose />
             </button>
           </div>
-          {myNotes.map((item, index) => (
-            <div
-              onClick={() => setShowNote(index)}
-              className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
-                showNote === index
-                  ? "border-stone-900 rounded-md"
-                  : "cursor-pointer hover:bg-gray-200"
-              }`}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-shark rounded-full"></div>
-                  <h3
-                    key={index}
-                    className="italic font-medium text-lg text-stone-900"
+          <div>
+            {myFolders.length > 0 ? (
+              <div>
+                {myFolders[0].folders.map((folder, index) => (
+                  <div
+                    className="w-fit uppercase font-semibold py-1 px-3 flex items-center gap-2 rounded-full bg-ronchi text-stone-800 duration-200 hover:bg-ronchi-600 cursor-pointer"
+                    onMouseEnter={() => setOnFolder(index)}
+                    onMouseLeave={() => {
+                      !showFolder && setOnFolder(-1);
+                    }}
+                    onClick={() => setShowFolder(folder)}
                   >
-                    {item.title}
-                  </h3>
-                </div>
-                <div className="text-shark">
-                  {showNote === index ? (
-                    <button className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100">
-                      <AiFillCaretUp
-                        size={20}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowNote(false);
-                        }}
-                      />
-                    </button>
-                  ) : (
-                    <AiFillCaretDown size={20} />
+                    {onFolder === index ? (
+                      <AiFillFolderOpen />
+                    ) : (
+                      <AiFillFolder />
+                    )}
+
+                    <p>{folder}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </div>
+          {showFolder ? (
+            <div>
+              <h2 className="text-xl font-semibold">{showFolder}</h2>
+              {folderNotes().map((item, index) => (
+                <div
+                  onClick={() => setShowNote(index)}
+                  className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
+                    showNote === index
+                      ? "border-stone-900 rounded-md"
+                      : "cursor-pointer hover:bg-gray-200"
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-shark rounded-full"></div>
+                      <h3
+                        key={index}
+                        className="italic font-medium text-lg text-stone-900"
+                      >
+                        {item.title}
+                      </h3>
+                    </div>
+                    <div className="text-shark">
+                      {showNote === index ? (
+                        <button className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100">
+                          <AiFillCaretUp
+                            size={20}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowNote(false);
+                            }}
+                          />
+                        </button>
+                      ) : (
+                        <AiFillCaretDown size={20} />
+                      )}
+                    </div>
+                  </div>
+                  {showNote === index && (
+                    <div className="prose lg:prose-lg max-w-none mt-4 w-full fade flex flex-col">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.note }}
+                        className="p-2 indent-2 lg:max-h-80 overflow-y-auto"
+                      ></div>
+                      <div className="flex items-center gap-2 self-end">
+                        <button
+                          onClick={() => {
+                            setShow(true);
+                            setElement(<NoteEditComponent targetNote={item} />);
+                          }}
+                          className="p-1 duration-200 hover:bg-shark hover:text-gray-100 rounded-md"
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShow(true);
+                            setElement(<NotePopup note={item} />);
+                          }}
+                          className="p-1 duration-200 hover:bg-amaranth-600 hover:text-gray-100 rounded-md"
+                        >
+                          <BsEraserFill />
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
-              {showNote === index && (
-                <div className="prose lg:prose-lg max-w-none mt-4 w-full fade flex flex-col">
-                  <div
-                    dangerouslySetInnerHTML={{ __html: item.note }}
-                    className="p-2 indent-2 lg:max-h-80 overflow-y-auto"
-                  ></div>
-                  <div className="flex items-center gap-2 self-end">
-                    <button
-                      onClick={() => {
-                        setShow(true);
-                        setElement(<NoteEditComponent targetNote={item} />);
-                      }}
-                      className="p-1 duration-200 hover:bg-shark hover:text-gray-100 rounded-md"
-                    >
-                      <MdEdit />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShow(true);
-                        setElement(<NotePopup note={item} />);
-                      }}
-                      className="p-1 duration-200 hover:bg-amaranth-600 hover:text-gray-100 rounded-md"
-                    >
-                      <BsEraserFill />
-                    </button>
-                  </div>
-                </div>
-              )}
+              ))}
+              <button
+                className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100"
+                onClick={() => {
+                  setShowFolder("");
+                  setOnFolder(-1);
+                }}
+              >
+                VER TODAS NOTAS
+              </button>
             </div>
-          ))}
-          <div className="float-right mt-4">
+          ) : (
+            <>
+              {userNotes.map((item, index) => (
+                <div
+                  onClick={() => setShowNote(index)}
+                  className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
+                    showNote === index
+                      ? "border-stone-900 rounded-md"
+                      : "cursor-pointer hover:bg-gray-200"
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-shark rounded-full"></div>
+                      <h3
+                        key={index}
+                        className="italic font-medium text-lg text-stone-900"
+                      >
+                        {item.title}
+                      </h3>
+                    </div>
+                    <div className="text-shark">
+                      {showNote === index ? (
+                        <button className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100">
+                          <AiFillCaretUp
+                            size={20}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowNote(false);
+                            }}
+                          />
+                        </button>
+                      ) : (
+                        <AiFillCaretDown size={20} />
+                      )}
+                    </div>
+                  </div>
+                  {showNote === index && (
+                    <div className="prose lg:prose-lg max-w-none mt-4 w-full fade flex flex-col">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.note }}
+                        className="p-2 indent-2 lg:max-h-80 overflow-y-auto"
+                      ></div>
+                      <div className="flex items-center gap-2 self-end">
+                        <button
+                          onClick={() => {
+                            setShow(true);
+                            setElement(<NoteEditComponent targetNote={item} />);
+                          }}
+                          className="p-1 duration-200 hover:bg-shark hover:text-gray-100 rounded-md"
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShow(true);
+                            setElement(<NotePopup note={item} />);
+                          }}
+                          className="p-1 duration-200 hover:bg-amaranth-600 hover:text-gray-100 rounded-md"
+                        >
+                          <BsEraserFill />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+
+          <div className="float-right mt-4 flex items-center gap-2">
             <button
-              className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-3 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
+              className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
               onClick={(e) => {
                 e.stopPropagation();
                 setElement(<AddNewNote />);
@@ -396,6 +576,17 @@ export default function MyNotesComponent({
               }}
             >
               <p>NOVA</p>
+              <MdLibraryAdd />
+            </button>
+            <button
+              className="flex items-center gap-1 text-stone-800 font-semibold p-1 rounded-full px-4 bg-ronchi duration-200 hover:text-black hover:bg-ronchi-600"
+              onClick={(e) => {
+                e.stopPropagation();
+                setElement(<AddNewFolder />);
+                setShow(true);
+              }}
+            >
+              <p>NOVA PASTA</p>
               <MdLibraryAdd />
             </button>
           </div>
