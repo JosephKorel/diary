@@ -10,7 +10,7 @@ import { storage } from "../../firebase.config";
 import { FileInt, MyNotes, User } from "../../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
 import { MdLibraryAdd, MdEdit, MdEditNote } from "react-icons/md";
-import { BsEraserFill } from "react-icons/bs";
+import { BsArrowReturnLeft, BsEraserFill } from "react-icons/bs";
 import {
   AiOutlineClose,
   AiFillCaretDown,
@@ -140,7 +140,7 @@ export default function MyNotesComponent({
         email: user.email,
         title,
         note: html,
-        folder: "",
+        folder: showFolder,
         media: userUpload,
         date: today,
       };
@@ -308,7 +308,10 @@ export default function MyNotesComponent({
             SALVAR
           </button>
           <button
-            onClick={() => setEdit(false)}
+            onClick={() => {
+              setEdit(false);
+              setShow(false);
+            }}
             className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
             CANCELAR
@@ -420,7 +423,9 @@ export default function MyNotesComponent({
           </div>
           {showFolder ? (
             <div>
-              <h2 className="text-xl font-semibold">{showFolder}</h2>
+              <h2 className="text-xl font-semibold text-center border-b-2 border-gray-600 w-fit m-auto">
+                {showFolder}
+              </h2>
               {folderNotes().map((item, index) => (
                 <div
                   onClick={() => setShowNote(index)}
@@ -486,15 +491,29 @@ export default function MyNotesComponent({
                   )}
                 </div>
               ))}
-              <button
-                className="p-1 rounded-md cursor-pointer duration-200 hover:bg-shark hover:text-gray-100"
-                onClick={() => {
-                  setShowFolder("");
-                  setOnFolder(-1);
-                }}
-              >
-                VER TODAS NOTAS
-              </button>
+              <div className="flex justify-between items-center mt-4">
+                <button
+                  className="p-1 text-sm rounded-md py-1 px-3 border border-gray-600 flex items-center gap-2 cursor-pointer duration-200 hover:bg-shark hover:text-gray-100"
+                  onClick={() => {
+                    setShowFolder("");
+                    setOnFolder(-1);
+                  }}
+                >
+                  <BsArrowReturnLeft />
+                  <p>VER TODAS NOTAS</p>
+                </button>
+                <button
+                  className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setElement(<AddNewNote />);
+                    setShow(true);
+                  }}
+                >
+                  <p>NOVA</p>
+                  <MdLibraryAdd />
+                </button>
+              </div>
             </div>
           ) : (
             <>
@@ -565,31 +584,32 @@ export default function MyNotesComponent({
               ))}
             </>
           )}
-
-          <div className="float-right mt-4 flex items-center gap-2">
-            <button
-              className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
-              onClick={(e) => {
-                e.stopPropagation();
-                setElement(<AddNewNote />);
-                setShow(true);
-              }}
-            >
-              <p>NOVA</p>
-              <MdLibraryAdd />
-            </button>
-            <button
-              className="flex items-center gap-1 text-stone-800 font-semibold p-1 rounded-full px-4 bg-ronchi duration-200 hover:text-black hover:bg-ronchi-600"
-              onClick={(e) => {
-                e.stopPropagation();
-                setElement(<AddNewFolder />);
-                setShow(true);
-              }}
-            >
-              <p>NOVA PASTA</p>
-              <MdLibraryAdd />
-            </button>
-          </div>
+          {!showFolder && (
+            <div className="float-right mt-4 flex items-center gap-2">
+              <button
+                className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setElement(<AddNewNote />);
+                  setShow(true);
+                }}
+              >
+                <p>NOVA</p>
+                <MdLibraryAdd />
+              </button>
+              <button
+                className="flex items-center gap-1 text-stone-800 font-semibold p-1 rounded-full px-4 bg-ronchi duration-200 hover:text-black hover:bg-ronchi-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setElement(<AddNewFolder />);
+                  setShow(true);
+                }}
+              >
+                <p>NOVA PASTA</p>
+                <MdLibraryAdd />
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div
