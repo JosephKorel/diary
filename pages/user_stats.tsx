@@ -422,55 +422,71 @@ function UserStats({
   };
 
   const SelectSpan = (): JSX.Element => {
-    const [spanDate, setSpanDate] = useState<string[]>([]);
+    const [spanDate, setSpanDate] = useState<string[]>(["", ""]);
 
     const spanChange = (
       e: React.ChangeEvent<HTMLInputElement>,
       index: number
     ) => {
-      const { value } = e.currentTarget;
+      const value = e.currentTarget.value;
 
       const pattern = /^(\d{2})(\d{2})(\d{2})/;
       const replace = "$1/$2/$3";
       const onFormat = value.replace(pattern, replace);
-      console.log(onFormat);
+      console.log(value);
       console.log(spanDate);
       setSpanDate((prev) =>
-        prev.map((item, i) => (index == i ? onFormat : item))
+        prev.map((item, i) => {
+          return index == i ? onFormat : item;
+        })
       );
     };
 
+    const fullDate =
+      spanDate[0].length == 8 && spanDate[1].length == 8 ? false : true;
+
     return (
-      <div className="bg-gray-100 py-1 px-3 z-20">
-        <button
-          className="p-1 bg-gray-100 text-stone-800 rounded-md hover:bg-stone-800 hover:text-gray-100 float-right"
-          onClick={() => setOnSpan(false)}
-        >
-          <AiOutlineClose />
-        </button>
-        <div className="flex flex-col justify-center items-center gap-4">
-          <p>DE</p>
+      <div className="bg-gray-100 z-20 rounded-md">
+        <div className="text-right p-1">
+          <button
+            className="p-1 bg-gray-100 text-stone-800 rounded-md hover:bg-stone-800 hover:text-gray-100"
+            onClick={() => setOnSpan(false)}
+          >
+            <AiOutlineClose />
+          </button>
+        </div>
+
+        <div className="flex flex-col justify-center items-center gap-4 pb-3 px-4">
           <input
             value={spanDate[0]}
             onChange={(e) => spanChange(e, 0)}
+            maxLength={8}
             placeholder="Ex:22/09/22"
-            className="py-1 px-2 rounded-lg w-full block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+            className="py-1 px-2 rounded-lg w-full border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
           />
-          <p>ATÉ</p>
+
           <input
             value={spanDate[1]}
             onChange={(e) => spanChange(e, 1)}
+            maxLength={8}
             placeholder="Ex:22/10/22"
-            className="py-1 px-2 rounded-lg w-full block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+            className="py-1 px-2 rounded-lg w-full border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
           />
         </div>
-        <div>
-          {spanDate[0] && (
-            <p>
-              {spanDate[0]} ~ {spanDate[1]}
+        {spanDate[0].length == 8 && (
+          <div className="flex flex-col gap-2 mt-5">
+            <p className=" text-center text-stone-800">
+              DE <span className="italic font-medium">{spanDate[0]}</span> ATÉ{" "}
+              <span className="italic font-medium">{spanDate[1]}</span>
             </p>
-          )}
-        </div>
+            <button
+              className="bg-shark py-1 px-3 rounded-md text-gray-100 font-semibold duration-200 hover:bg-shark-600 disabled:bg-gray-300 disabled:text-gray-600"
+              disabled={fullDate}
+            >
+              CONFIRMAR
+            </button>
+          </div>
+        )}
       </div>
     );
   };
