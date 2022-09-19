@@ -73,7 +73,6 @@ export default function DateViewComponent({
         <Calendar
           value={value}
           className="bg-gray-100 border-gray-100"
-          navigationAriaLabel="Go up"
           onChange={(value: Date) => {
             let date = moment(value).format("DD/MM/YY");
             const now = moment().startOf("day");

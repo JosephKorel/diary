@@ -398,9 +398,9 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
               </p>
             </div>
           ) : (
-            <>
-              <p>Não há registros para este dia</p>
-            </>
+            <div className="py-1 px-3 rounded-full bg-amaranth text-gray-100">
+              <p>NÃO HÁ REGISTROS PARA ESTE DIA</p>
+            </div>
           )}
         </>
       )}

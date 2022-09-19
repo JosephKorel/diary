@@ -24,6 +24,8 @@ import {
 } from "react-icons/im";
 import { GiDualityMask } from "react-icons/gi";
 import Head from "next/head";
+import { Calendar } from "react-calendar";
+import { AiOutlineClose } from "react-icons/ai";
 
 function UserStats({
   user,
@@ -47,9 +49,9 @@ function UserStats({
     onSpan: false,
   });
   const [mySpan, setMySpan] = useState<DayStats[]>([]);
+  const [onSpan, setOnSpan] = useState(false);
 
   const router = useRouter();
-  const spanLength = mySpan.length;
 
   const currentDay = moment(value).format("DD/MM/YY");
 
@@ -241,7 +243,7 @@ function UserStats({
     };
 
     return (
-      <div className="bg-gradient-to-b from-scampi-300 to-scampi p-2 rounded-md shadow-md shadow-scampi-600">
+      <div className="bg-stone-700 p-2 rounded-md shadow-md shadow-stone-700">
         {mySpan.length > 0 ? (
           <div className="p-2 pt-0">
             <div className="flex justify-center">
@@ -419,6 +421,60 @@ function UserStats({
     setMySpan(dayStats);
   };
 
+  const SelectSpan = (): JSX.Element => {
+    const [spanDate, setSpanDate] = useState<string[]>([]);
+
+    const spanChange = (
+      e: React.ChangeEvent<HTMLInputElement>,
+      index: number
+    ) => {
+      const { value } = e.currentTarget;
+
+      const pattern = /^(\d{2})(\d{2})(\d{2})/;
+      const replace = "$1/$2/$3";
+      const onFormat = value.replace(pattern, replace);
+      console.log(onFormat);
+      console.log(spanDate);
+      setSpanDate((prev) =>
+        prev.map((item, i) => (index == i ? onFormat : item))
+      );
+    };
+
+    return (
+      <div className="bg-gray-100 py-1 px-3 z-20">
+        <button
+          className="p-1 bg-gray-100 text-stone-800 rounded-md hover:bg-stone-800 hover:text-gray-100 float-right"
+          onClick={() => setOnSpan(false)}
+        >
+          <AiOutlineClose />
+        </button>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <p>DE</p>
+          <input
+            value={spanDate[0]}
+            onChange={(e) => spanChange(e, 0)}
+            placeholder="Ex:22/09/22"
+            className="py-1 px-2 rounded-lg w-full block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+          />
+          <p>ATÉ</p>
+          <input
+            value={spanDate[1]}
+            onChange={(e) => spanChange(e, 1)}
+            placeholder="Ex:22/10/22"
+            className="py-1 px-2 rounded-lg w-full block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+          />
+        </div>
+        <div>
+          {spanDate[0] && (
+            <p>
+              {spanDate[0]} ~ {spanDate[1]}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="h-screen bg-shark-100 py-10 font-serrat">
       <Head>
@@ -427,14 +483,26 @@ function UserStats({
           rel="stylesheet"
         />
       </Head>
-      <div className="w-2/3 m-auto flex items-center justify-center relative">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600 absolute left-0 top-0"
-        >
-          <p className="font-semibold">VOLTAR</p>
-          <BsArrowReturnLeft />
-        </button>
+      <div className="w-[70%] m-auto flex items-center justify-center relative">
+        <div className="absolute left-0 top-0 flex flex-col gap-2">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600 self-start"
+          >
+            <p className="font-semibold">VOLTAR</p>
+            <BsArrowReturnLeft />
+          </button>
+          {onSpan ? (
+            <SelectSpan />
+          ) : (
+            <button
+              className="p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
+              onClick={() => setOnSpan(true)}
+            >
+              ESCOLHER PERÍODO
+            </button>
+          )}
+        </div>
         <img
           src={user.avatar}
           referrerPolicy="no-referrer"

@@ -285,7 +285,7 @@ export default function MyNotesComponent({
     return (
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-gray-100 p-10 py-5 rounded-md scaleup w-2/3 m-auto"
+        className="bg-gray-100 p-10 py-5 rounded-md scaleup w-2/3 m-auto font-serrat"
       >
         <div className="">
           <TextEditor
