@@ -50,6 +50,7 @@ function UserStats({
   });
   const [mySpan, setMySpan] = useState<DayStats[]>([]);
   const [onSpan, setOnSpan] = useState(false);
+  const [customSpan, setCustomSpan] = useState(false);
 
   const router = useRouter();
 
@@ -247,9 +248,16 @@ function UserStats({
         {mySpan.length > 0 ? (
           <div className="p-2 pt-0">
             <div className="flex justify-center">
-              <p className="font-bold uppercase shadow-md shadow-gray-600 -translate-y-6 text-2xl rounded-md bg-gray-200 text-stone-800 py-1 px-4 w-fit">
-                {whichDay()}
-              </p>
+              {customSpan ? (
+                <p className="font-bold uppercase shadow-md shadow-gray-600 -translate-y-6 text-2xl rounded-md bg-gray-200 text-stone-800 py-1 px-4 w-fit">
+                  {mySpan.slice(from, until)[0].date} ~{" "}
+                  {mySpan.slice(from, until).slice(-1)[0].date}
+                </p>
+              ) : (
+                <p className="font-bold uppercase shadow-md shadow-gray-600 -translate-y-6 text-2xl rounded-md bg-gray-200 text-stone-800 py-1 px-4 w-fit">
+                  {whichDay()}
+                </p>
+              )}
             </div>
             {/* {from != 30 ? (
               <p className="text-center italic text-sm">
@@ -335,7 +343,6 @@ function UserStats({
   const handleDayChange = (myvalue: Date): void => {
     const now = moment().startOf("day");
     const difference = now.diff(moment(myvalue).startOf("day"), "days");
-    const date = currentDay;
 
     const timeSpan = timeSpanStatistics(difference, myvalue);
     getStatistics(timeSpan);
@@ -343,22 +350,6 @@ function UserStats({
 
   const timeSpanStatistics = (dif: number, myvalue: Date): string[] => {
     let span: string[] = [];
-
-    /* if (dif === 0 || dif === 1) {
-      for (let i = 0; i <= dif; i++) {
-        const currDay = moment(value).startOf("day");
-        const nextDay = currDay.add(i, "day").format("DD/MM/YY");
-        span.push(nextDay);
-      }
-      return span;
-    } else {
-      for (let i = 0; i < dif; i++) {
-        const currDay = moment(value).startOf("day");
-        const nextDay = currDay.add(i, "day").format("DD/MM/YY");
-        span.push(nextDay);
-      }
-      return span;
-    } */
 
     for (let i = 0; i <= dif; i++) {
       const currDay = moment(myvalue).startOf("day");
@@ -422,7 +413,10 @@ function UserStats({
   };
 
   const SelectSpan = (): JSX.Element => {
-    const [spanDate, setSpanDate] = useState<string[]>(["", ""]);
+    const [spanDate, setSpanDate] = useState<string[]>([
+      "12/09/22",
+      "20/09/22",
+    ]);
 
     const spanChange = (
       e: React.ChangeEvent<HTMLInputElement>,
@@ -433,8 +427,6 @@ function UserStats({
       const pattern = /^(\d{2})(\d{2})(\d{2})/;
       const replace = "$1/$2/$3";
       const onFormat = value.replace(pattern, replace);
-      console.log(value);
-      console.log(spanDate);
       setSpanDate((prev) =>
         prev.map((item, i) => {
           return index == i ? onFormat : item;
@@ -445,8 +437,20 @@ function UserStats({
     const fullDate =
       spanDate[0].length == 8 && spanDate[1].length == 8 ? false : true;
 
+    const handleCustomSpan = () => {
+      const start = moment(spanDate[0], "DD/MM/YY");
+      const end = moment(spanDate[1], "DD/MM/YY");
+      const from = start.startOf("day");
+      const until = end.startOf("day");
+      const difference = until.diff(from, "days");
+      const span = timeSpanStatistics(difference, start.toDate());
+      getStatistics(span);
+      setCustomSpan(true);
+      setOnSpan(false);
+    };
+
     return (
-      <div className="bg-gray-100 z-20 rounded-md">
+      <div className="bg-gray-100 z-20 rounded-md fade">
         <div className="text-right p-1">
           <button
             className="p-1 bg-gray-100 text-stone-800 rounded-md hover:bg-stone-800 hover:text-gray-100"
@@ -474,7 +478,7 @@ function UserStats({
           />
         </div>
         {spanDate[0].length == 8 && (
-          <div className="flex flex-col gap-2 mt-5">
+          <div className="flex flex-col gap-2 mt-5 p-2">
             <p className=" text-center text-stone-800">
               DE <span className="italic font-medium">{spanDate[0]}</span> ATÉ{" "}
               <span className="italic font-medium">{spanDate[1]}</span>
@@ -482,6 +486,7 @@ function UserStats({
             <button
               className="bg-shark py-1 px-3 rounded-md text-gray-100 font-semibold duration-200 hover:bg-shark-600 disabled:bg-gray-300 disabled:text-gray-600"
               disabled={fullDate}
+              onClick={handleCustomSpan}
             >
               CONFIRMAR
             </button>
@@ -511,12 +516,27 @@ function UserStats({
           {onSpan ? (
             <SelectSpan />
           ) : (
-            <button
-              className="p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
-              onClick={() => setOnSpan(true)}
-            >
-              ESCOLHER PERÍODO
-            </button>
+            <>
+              {customSpan ? (
+                <button
+                  className="p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
+                  onClick={() => {
+                    setCustomSpan(false);
+                    const from = thisDay.setDate(thisDay.getDate() - 30);
+                    handleDayChange(new Date(from));
+                  }}
+                >
+                  LIMPAR INTERVALO
+                </button>
+              ) : (
+                <button
+                  className="p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
+                  onClick={() => setOnSpan(true)}
+                >
+                  ESCOLHER PERÍODO
+                </button>
+              )}
+            </>
           )}
         </div>
         <img
@@ -525,26 +545,24 @@ function UserStats({
           className="rounded-full"
         ></img>
       </div>
-      {/* <div>
-        <div className="flex gap-10">
-          <TimeSpan />
-          <DateViewComponent
-            dateProps={{ user, value, onChange, setTime, reminders }}
-          />
+      {customSpan ? (
+        <div className="w-[70%] m-auto flex justify-between items-center mt-5 gap-2">
+          <div className="flex-1">
+            <UserComments from={0} until={mySpan.length} />
+          </div>
+          <CommentAndTaskStats />
         </div>
-        <p>
-          {time.when} <span>({time.date})</span>
-        </p>
-      </div> */}
-      <div className="w-[70%] m-auto flex justify-between items-center mt-5">
-        <div className="grid grid-cols-2 grid-rows-2 gap-8">
-          <UserComments from={mySpan.length - 1} until={mySpan.length} />
-          <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
-          <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
-          <UserComments from={0} until={mySpan.length} />
+      ) : (
+        <div className="w-[70%] m-auto flex justify-between items-center mt-5">
+          <div className="grid grid-cols-2 grid-rows-2 gap-8">
+            <UserComments from={mySpan.length - 1} until={mySpan.length} />
+            <UserComments from={mySpan.length - 4} until={mySpan.length - 1} />
+            <UserComments from={mySpan.length - 8} until={mySpan.length - 1} />
+            <UserComments from={0} until={mySpan.length} />
+          </div>
+          <CommentAndTaskStats />
         </div>
-        <CommentAndTaskStats />
-      </div>
+      )}
     </div>
   );
 }

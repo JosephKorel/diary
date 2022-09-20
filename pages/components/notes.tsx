@@ -585,7 +585,7 @@ export default function MyNotesComponent({
             </>
           )}
           {!showFolder && (
-            <div className="float-right mt-4 flex items-center gap-2">
+            <div className="float-right mt-10 flex items-center gap-2">
               <button
                 className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
                 onClick={(e) => {
