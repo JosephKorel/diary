@@ -44,14 +44,6 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
 
   const seingToday = dayDiff === 0 ? true : false;
 
-  const greetingMsg = (): string => {
-    if (hour <= "12:00") {
-      return "Bom dia";
-    } else if (hour <= "18:00") {
-      return "Boa tarde";
-    } else return "Boa noite";
-  };
-
   const addComment = async () => {
     const today = moment().format("DD/MM/YY");
     const time = moment().format("HH:mm");
@@ -114,9 +106,9 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
   };
   return (
     <>
-      <div className="p-3 text-stone-800 font-serrat">
+      <div className="mt-1 lg:p-3 lg:mt-0 text-stone-800 font-serrat">
         {seingToday ? (
-          <div className="bg-gray-100 p-5 rounded-md shadow-lg shadow-stone-800">
+          <div className="bg-gray-100 p-2 lg:p-5 rounded-md shadow-lg shadow-stone-800">
             <input
               placeholder="Escreva aqui"
               value={text}
@@ -130,7 +122,7 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
               <ImQuotesRight className="self-end" />
             </div>
             <div className={!text.length ? "hidden" : "mt-1 p-2"}>
-              <p className="mt-2 text-2xl font-semibold text-center text-stone-800">
+              <p className="mt-2 text-xl lg:text-2xl font-semibold text-center text-stone-800">
                 Como você está se sentindo?
               </p>
               <div className="flex justify-center items-center mt-2">
@@ -256,14 +248,14 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
               <div className="flex justify-between items-center">
                 <button
                   onClick={() => setText("")}
-                  className="flex items-center gap-2 p-2 px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
+                  className="flex items-center gap-2 p-2 text-sm lg:text-base lg:p-2 lg:px-3 bg-amaranth rounded-full text-gray-100 duration-200 hover:bg-amaranth-600"
                 >
                   <p className="font-semibold">VOLTAR</p>
                   <BsArrowReturnLeft />
                 </button>
                 <button
                   onClick={addComment}
-                  className="flex items-center gap-2 p-2 px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
+                  className="flex items-center gap-2 p-2 text-sm lg:text-base lg:p-2 lg:px-3 bg-shark rounded-full text-gray-100 duration-200 hover:bg-shark-600"
                 >
                   <p className="font-semibold">CONFIRMAR</p>
                   <BsFillCheckCircleFill />

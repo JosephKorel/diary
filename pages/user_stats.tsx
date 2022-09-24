@@ -209,7 +209,7 @@ function UserStats({
       if (totalTasks > 0) {
         const percentage = (completedTasks * 100) / totalTasks;
         return Number(percentage.toFixed(1));
-      } else return NaN;
+      } else return 0;
     };
 
     const spanEvaluation = (): number => {
@@ -459,7 +459,6 @@ function UserStats({
             <AiOutlineClose />
           </button>
         </div>
-
         <div className="flex flex-col justify-center items-center gap-4 pb-3 px-4">
           <input
             value={spanDate[0]}

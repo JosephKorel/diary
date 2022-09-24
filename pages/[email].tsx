@@ -208,19 +208,19 @@ function Today({
         />
       </Head>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div className="bg-shark-100 h-screen pt-10">
-        <div className="w-2/3 m-auto flex justify-between items-center font-serrat">
-          <div className="py-1 px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">
-            <h1 className="text-xl font-light">{dayView()}</h1>
+      <div className="bg-shark-100 h-full lg:h-screen pt-5 lg:pt-10">
+        <div className="w-11/12 lg:w-2/3 m-auto flex flex-col lg:flex-row gap-2 lg:gap-0 justify-between items-center font-serrat">
+          <div className="p-2 lg:py-1 lg:px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">
+            <h1 className="text-base lg:text-xl font-light">{dayView()}</h1>
             <DateViewComponent
               dateProps={{ user, value, onChange, reminders }}
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row justify-between items-center lg:flex-col gap-2">
             <DayEvaluation
               dayProps={{ user, dayVal, setDayVal, value, setMsg, setErrorMsg }}
             />
-            <button className="py-1 px-3 rounded-full bg-shark text-gray-100 text-base font-light self-start duration-200 hover:bg-shark-600">
+            <button className="p-1 text-sm lg:py-1 lg:px-3 rounded-md lg:rounded-full bg-shark text-gray-100 lg:text-base font-light self-start duration-200 hover:bg-shark-600">
               <Link
                 href={{ pathname: "/user_stats", query: { email: user.email } }}
               >
@@ -230,8 +230,8 @@ function Today({
           </div>
         </div>
         {user && (
-          <div className="w-5/6 m-auto">
-            <div className="flex justify-center">
+          <div className="w-11/12 lg:w-5/6 m-auto">
+            <div className="flex justify-center mt-2">
               <div className="border border-stone-800 rounded-full">
                 <img
                   src={user.avatar}
@@ -243,7 +243,7 @@ function Today({
             {text ? (
               <div className="fade">
                 <div className="flex justify-center">
-                  <div className="w-1/2">
+                  <div className="w-full lg:w-1/2">
                     {presentOrPast && (
                       <CommentComponent
                         props={{
@@ -263,10 +263,10 @@ function Today({
             ) : (
               <>
                 <div className="flex justify-center fade">
-                  <div className="w-1/2">
+                  <div className="w-full lg:w-1/2">
                     {dayDiff == 0 && (
                       <div>
-                        <div className="text-center mb-1 text-2xl font-light font-serrat">
+                        <div className="text-center mb-1 text-lg lg:text-2xl font-light font-serrat">
                           <h1 className="italic">
                             {greetingMsg()},{" "}
                             <span className="font-medium">{user.name}</span>
@@ -285,10 +285,10 @@ function Today({
                     )}
                   </div>
                 </div>
-                <div className="flex justify-center gap-10 text-stone-800 relative z-0 fade mt-5 font-serrat">
+                <div className="lg:flex lg:justify-center lg:gap-10 grid grid-rows-2 grid-cols-2 gap-4 place-content-between place-items-center pb-2 text-stone-800 relative z-0 fade mt-5 font-serrat">
                   <div
                     onClick={() => setCard(1)}
-                    className={`w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
+                    className={`w-40 lg:w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                       card === 1
                         ? "flex-1 bg-gray-100"
                         : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
@@ -331,7 +331,7 @@ function Today({
                       </div>
                     ) : (
                       <div className="flex flex-col justify-around items-center h-full">
-                        <p className="text-xl font-medium text-white">
+                        <p className="text-lg lg:text-xl font-medium text-white">
                           COMENTÁRIOS
                         </p>
                         <div className="w-12 h-16">
@@ -360,7 +360,7 @@ function Today({
                     )}
                   </div>
                   <div
-                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                       card === 2
                         ? "flex-1 bg-gray-100"
                         : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
@@ -382,7 +382,7 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
+                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
               ${
                 card === 3
                   ? "flex-1 bg-gray-100"
@@ -404,7 +404,7 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
+                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
               ${
                 card === 4
                   ? "flex-1 bg-gray-100"

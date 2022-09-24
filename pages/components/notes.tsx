@@ -55,6 +55,9 @@ export default function MyNotesComponent({
 
   const myFolders = myNotes.filter((item) => item.folders);
 
+  const onlyNotes = myNotes.filter((item) => item.folder);
+  const noteLength = onlyNotes.length;
+
   const userNotes = myNotes.filter((item) => item.folder === "");
 
   const addPhoto = async (
@@ -618,8 +621,8 @@ export default function MyNotesComponent({
             setCard(3);
           }}
         >
-          <h2 className="text-xl font-medium">ANOTAÇÕES</h2>
-          <p className="text-4xl font-thin">{myNotes.length}</p>
+          <h2 className="text-lg lg:text-xl font-medium">ANOTAÇÕES</h2>
+          <p className="text-4xl font-thin">{noteLength}</p>
           <button
             onClick={(e) => {
               e.stopPropagation();

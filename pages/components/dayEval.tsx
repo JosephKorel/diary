@@ -231,8 +231,8 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
               <button onClick={() => setEdit(false)}>Cancelar</button>
             </div>
           ) : (
-            <div className="py-1 px-3 bg-amaranth shadow-lg rounded-full text-stone-100">
-              <p className="font-light text-base">
+            <div className="p-1 text-sm lg:py-1 lg:px-3 lg:text-base text-center bg-amaranth shadow-lg lg:rounded-full rounded-md text-stone-100">
+              <p className="font-light">
                 ONTEM FOI UM DIA:{" "}
                 <span className="uppercase font-medium">
                   {humorSub(yesterdayVal[0].value)}
@@ -379,8 +379,11 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
             <>
               {yesterdayVal[0] ? (
                 <div className="py-1 px-3 rounded-full bg-amaranth text-gray-100">
-                  <p className="uppercase font-semibold text-center">
-                    Seu dia foi: {humorSub(yesterdayVal[0].value)}
+                  <p className="uppercase text-center">
+                    Seu dia foi:{" "}
+                    <span className="font-semibold">
+                      {humorSub(yesterdayVal[0].value)}
+                    </span>
                   </p>
                 </div>
               ) : (
@@ -393,8 +396,11 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
         <>
           {currentDayVal[0] ? (
             <div className="py-1 px-3 rounded-full bg-amaranth text-gray-100">
-              <p className="uppercase font-semibold text-center">
-                Seu dia foi: {humorSub(currentDayVal[0].value)}
+              <p className="uppercase text-center">
+                Seu dia foi:{" "}
+                <span className="font-semibold">
+                  {humorSub(currentDayVal[0].value)}
+                </span>
               </p>
             </div>
           ) : (

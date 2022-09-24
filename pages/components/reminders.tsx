@@ -416,7 +416,7 @@ export default function RemindComponent({
             setCard(4);
           }}
         >
-          <h2 className="text-xl font-medium">LEMBRETES</h2>
+          <h2 className="text-lg lg:text-xl font-medium">LEMBRETES</h2>
           <p className="text-4xl font-thin">{myReminders.length}</p>
           <button
             onClick={(e) => {

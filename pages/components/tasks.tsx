@@ -494,7 +494,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               setCard(2);
             }}
           >
-            <h2 className="text-xl font-medium">TAREFAS</h2>
+            <h2 className="text-lg lg:text-xl font-medium">TAREFAS</h2>
             <p className="text-4xl font-thin">{currentDayTasks.length}</p>
             <button
               onClick={(e) => {
