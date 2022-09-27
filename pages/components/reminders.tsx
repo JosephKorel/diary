@@ -322,7 +322,7 @@ export default function RemindComponent({
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <RemindFlag degree={rmd.degree} />
-                  <p className={`text-lg font-medium text-stone-800`}>
+                  <p className={`lg:text-lg font-medium text-stone-800`}>
                     {rmd.title}
                   </p>
                   {hasPassed(rmd.when) && (
@@ -346,32 +346,32 @@ export default function RemindComponent({
                 </div>
               </div>
               {showRemind === index && (
-                <div className="fade">
-                  <p className="text-lg text-center mb-2 text-stone-800">
+                <div className="fade mt-2 lg:mt-0">
+                  <p className="lg:text-lg text-center mb-2 text-stone-800">
                     {rmd.content}
                   </p>
                   <div className="w-full p-[2px] rounded-full bg-stone-800 my-2"></div>
                   <div className="flex justify-center items-center gap-4">
                     <div
-                      className={`flex items-center gap-2 p-2 rounded-md  text-gray-200 ${
+                      className={`flex items-center text-sm lg:text-base gap-2 p-2 rounded-md text-gray-200 ${
                         hasPassed(rmd.when) ? "bg-stone-700" : "bg-amaranth"
                       }`}
                     >
                       <BsFillCalendarEventFill />
                       <p className="font-light">{rmd.when}</p>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-md bg-shark text-gray-200">
+                    <div className="flex items-center text-sm lg:text-base gap-2 p-2 rounded-md bg-shark text-gray-200">
                       <BsFillClockFill />
                       <p className="font-light">{rmd.time}</p>
                     </div>
                   </div>
-                  <div className="flex flex-row-reverse">
+                  <div className="flex flex-row-reverse mt-4 lg:mt-0">
                     <button
                       onClick={() => {
                         setShow(true);
                         setElement(<RemindPopup rmd={rmd} />);
                       }}
-                      className="p-1 rounded-md duration-200 text-stone-800 hover:text-gray-100 hover:bg-amaranth flex items-center gap-2 text-right"
+                      className="p-1 px-2 rounded-md duration-200 text-sm bg-amaranth lg:bg-none text-gray-100 lg:text-base lg:text-stone-800 hover:text-gray-100 hover:bg-amaranth flex items-center gap-2 text-right"
                     >
                       <BsEraserFill />
                       <p className="font-semibold">EXCLUIR</p>
@@ -381,23 +381,23 @@ export default function RemindComponent({
               )}
             </div>
           ))}
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex items-center gap-4 text-stone-800">
-              <div className="flex items-center gap-1">
+          <div className="flex lg:justify-between lg:items-center gap-4 lg:gap-0 flex-col mt-4">
+            <div className="flex lg:items-center flex-col lg:flex-row gap-1 lg:gap-4 text-stone-800">
+              <div className="flex items-center gap-1 text-sm">
                 <HiFlag className="text-greeny" />
                 <p>NORMAL</p>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 text-sm">
                 <HiFlag className="text-shark" />
                 <p>IMPORTANTE</p>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 text-sm">
                 <HiFlag className="text-amaranth" />
                 <p>MUITO IMPORTANTE</p>
               </div>
             </div>
             <button
-              className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-3 rounded-full px-4 bg-shark duration-200 hover:text-white hover:bg-shark-700"
+              className="flex items-center self-start gap-1 text-gray-100 font-semibold p-1 px-3 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
               onClick={(e) => {
                 e.stopPropagation();
                 setElement(<NewRemind />);

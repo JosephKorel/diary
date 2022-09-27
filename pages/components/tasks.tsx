@@ -207,20 +207,20 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
 
     return (
       <div
-        className="p-10 py-5 bg-gray-100 rounded-md w-2/3 m-auto scaleup"
+        className="lg:p-10 lg:py-5 p-3 bg-gray-100 rounded-md w-11/12 lg:w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center text-2xl gap-1 mb-4">
+        <div className="flex items-center text-lg lg:text-2xl gap-1 mb-4">
           {content ? (
             <>
-              <div className="w-8">
+              <div className="w-6 lg:w-8">
                 <CgGoogleTasks size="full" className="text-shark" />
               </div>
               <h1 className="text-stone-800">{content}</h1>
             </>
           ) : (
             <>
-              <div className="w-8">
+              <div className="w-6 lg:w-8">
                 <CgGoogleTasks size="full" className="text-shark" />
               </div>
               <h1 className="text-stone-800">Nova tarefa</h1>
@@ -237,12 +237,12 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
             placeholder="Tarefa"
-            className="p-2 px-4 rounded-full w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+            className="lg:p-2 px-4 p-1 rounded-full w-full lg:text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
           />
         </form>
         <div className="flex items-center mt-5 gap-2">
           <button
-            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-xs lg:text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 1
                 ? "bg-greeny text-gray-100 hover:bg-greeny-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -253,7 +253,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             <p>NORMAL</p>
           </button>
           <button
-            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-xs lg:text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 2
                 ? "bg-ronchi text-stone-800 hover:bg-ronchi-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -264,7 +264,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             <p>IMPORTANTE</p>
           </button>
           <button
-            className={`flex items-center text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
+            className={`flex items-center text-xs lg:text-base font-semibold gap-1 p-1 px-2 rounded-full duration-200 ${
               degree === 3
                 ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                 : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -281,7 +281,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               setShowCal(false);
               setDate(new Date());
             }}
-            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
+            className={`p-1 px-3 text-xs lg:text-base font-semibold rounded-full duration-200 ${
               isToday
                 ? "bg-shark text-gray-100"
                 : "hover:bg-gray-300 text-stone-800"
@@ -296,7 +296,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
               const tomorrow = today.setDate(today.getDate() + 1);
               setDate(new Date(tomorrow));
             }}
-            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
+            className={`p-1 px-3 text-xs lg:text-base font-semibold rounded-full duration-200 ${
               isTomorrow
                 ? "bg-shark text-gray-100"
                 : "hover:bg-gray-300 text-stone-800"
@@ -306,7 +306,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           </button>
           <button
             onClick={() => setShowCal(true)}
-            className={`p-1 px-3 text-base font-semibold rounded-full duration-200 ${
+            className={`p-1 px-3 text-xs lg:text-base font-semibold rounded-full duration-200 ${
               !isToday && !isTomorrow
                 ? "bg-shark text-gray-100"
                 : "hover:bg-gray-300 text-stone-800"
@@ -321,14 +321,14 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         <div className="flex items-center gap-4 mt-5">
           <button
             onClick={addTask}
-            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+            className="p-1 px-2 rounded-md duration-200 text-xs lg:text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
           >
             <MdLibraryAdd />
             <p>ADICIONAR</p>
           </button>
           <button
             onClick={() => setShow(false)}
-            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
+            className="p-1 px-2 rounded-md duration-200 text-xs lg:text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
             CANCELAR
           </button>
@@ -482,7 +482,9 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
             </div>
           ) : (
             <div className="prose max-w-none text-center text-base">
-              <h1>Não há nenhuma tarefa para hoje</h1>
+              <h1 className="text-lg lg:text-xl">
+                Não há nenhuma tarefa para hoje
+              </h1>
             </div>
           )}
         </div>

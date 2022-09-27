@@ -311,9 +311,12 @@ export default function DayEvaluation({ dayProps }: DayComponent): JSX.Element {
               </button>
             </div>
           ) : (
-            <div className="flex justify-center text-base items-center gap-2 py-1 px-3 rounded-full bg-amaranth text-gray-100">
-              <p className="uppercase font-semibold">
-                Seu dia foi: {humorSub(currentDayVal[0].value)}
+            <div className="flex justify-center text-sm lg:text-base items-center gap-2 py-1 px-3 rounded-md lg:rounded-full bg-amaranth text-gray-100">
+              <p className="uppercase">
+                Seu dia foi:{" "}
+                <span className="font-semibold">
+                  {humorSub(currentDayVal[0].value)}
+                </span>
               </p>
               <button
                 onClick={() => setEdit(true)}

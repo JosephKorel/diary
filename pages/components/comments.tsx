@@ -82,7 +82,10 @@ export default function CommentComponent({ props }: CommentComp): JSX.Element {
     if (hasChoosed && iconValue === value) {
       setHasChoosed(false);
       setIconValue(0);
-    } else setHasChoosed(true);
+    } else {
+      window.innerWidth < 650 && setIconValue(value);
+      setHasChoosed(true);
+    }
   };
 
   const humorSub = (mood: number): string => {

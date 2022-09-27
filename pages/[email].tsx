@@ -58,6 +58,10 @@ function Today({
   const [text, setText] = useState("");
 
   useEffect(() => {
+    document.body.style.backgroundColor = "#D9DFFC";
+  }, []);
+
+  useEffect(() => {
     setTimeout(() => {
       setMsg("");
       setErrorMsg("");
@@ -208,7 +212,7 @@ function Today({
         />
       </Head>
       {show && <MyModal children={element} setShow={setShow} />}
-      <div className="bg-shark-100 h-full lg:h-screen pt-5 lg:pt-10">
+      <div className="pt-5 lg:pt-10">
         <div className="w-11/12 lg:w-2/3 m-auto flex flex-col lg:flex-row gap-2 lg:gap-0 justify-between items-center font-serrat">
           <div className="p-2 lg:py-1 lg:px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">
             <h1 className="text-base lg:text-xl font-light">{dayView()}</h1>
@@ -216,7 +220,7 @@ function Today({
               dateProps={{ user, value, onChange, reminders }}
             />
           </div>
-          <div className="flex flex-row justify-between items-center lg:flex-col gap-2">
+          <div className="flex flex-row justify-between items-center lg:flex-col lg:items-start gap-2">
             <DayEvaluation
               dayProps={{ user, dayVal, setDayVal, value, setMsg, setErrorMsg }}
             />
@@ -285,12 +289,12 @@ function Today({
                     )}
                   </div>
                 </div>
-                <div className="lg:flex lg:justify-center lg:gap-10 grid grid-rows-2 grid-cols-2 gap-4 place-content-between place-items-center pb-2 text-stone-800 relative z-0 fade mt-5 font-serrat">
+                <div className="lg:flex lg:justify-center lg:gap-10 flex flex-col items-center gap-4 pb-2 text-stone-800 relative z-0 fade mt-5 font-serrat">
                   <div
                     onClick={() => setCard(1)}
-                    className={`w-40 lg:w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
+                    className={`w-full lg:w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${
                       card === 1
-                        ? "flex-1 bg-gray-100"
+                        ? "lg:flex-1 bg-gray-100"
                         : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
                     }`}
                   >
@@ -317,11 +321,11 @@ function Today({
                               <p className="italic text-center text-base p-2 text-stone-900 shadow-sm shadow-gray-600 rounded-md">
                                 {item.comment}
                               </p>
-                              <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-4 rounded-l-sm rounded-br-md mr-2">
-                                <div className="bg-shark p-1 rounded-md w-8">
+                              <div className="self-end flex items-center text-gray-200 gap-10 px-4 p-1 rounded-sm -translate-y-3 lg:-translate-y-4 rounded-l-sm rounded-br-md mr-2">
+                                <div className="bg-shark p-1 rounded-md w-6 lg:w-8">
                                   <HumorIcon mood={item.mood} />
                                 </div>
-                                <p className="font-light text-xs p-2 bg-shark rounded-md">
+                                <p className="font-light text-xs p-1 lg:p-2 bg-shark rounded-md">
                                   {item.time}
                                 </p>
                               </div>
@@ -360,9 +364,9 @@ function Today({
                     )}
                   </div>
                   <div
-                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
+                    className={`w-full lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md  ${
                       card === 2
-                        ? "flex-1 bg-gray-100"
+                        ? "lg:flex-1 bg-gray-100"
                         : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
                     }`}
                   >
@@ -382,10 +386,10 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
+                    className={`w-full lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 rounded-md 
               ${
                 card === 3
-                  ? "flex-1 bg-gray-100"
+                  ? "lg:flex-1 row-span-2 bg-gray-100"
                   : "bg-scampi hover:scale-105 hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 text-white cursor-pointer"
               }`}
                   >
@@ -404,11 +408,11 @@ function Today({
                     />
                   </div>
                   <div
-                    className={`w-40 lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
+                    className={`w-full lg:w-[12%] p-3 shadow-lg shadow-shark-300 duration-200 text-white rounded-md
               ${
                 card === 4
-                  ? "flex-1 bg-gray-100"
-                  : "hover:scale-105 bg-scampi  hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
+                  ? "lg:flex-1 bg-gray-100"
+                  : "hover:scale-105 bg-scampi hover:bg-amaranth hover:shadow-amaranth-400 hover:drop-shadow-2xl h-44 cursor-pointer"
               }`}
                   >
                     <RemindComponent

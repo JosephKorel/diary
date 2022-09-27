@@ -403,7 +403,7 @@ export default function MyNotesComponent({
               <div>
                 {myFolders[0].folders.map((folder, index) => (
                   <div
-                    className="w-fit uppercase font-semibold py-1 px-3 flex items-center gap-2 rounded-full bg-ronchi text-stone-800 duration-200 hover:bg-ronchi-600 cursor-pointer"
+                    className="w-fit uppercase font-semibold text-sm lg:text-base py-1 px-3 flex items-center gap-2 rounded-full bg-ronchi text-stone-800 duration-200 hover:bg-ronchi-600 cursor-pointer"
                     onMouseEnter={() => setOnFolder(index)}
                     onMouseLeave={() => {
                       !showFolder && setOnFolder(-1);
@@ -426,7 +426,7 @@ export default function MyNotesComponent({
           </div>
           {showFolder ? (
             <div>
-              <h2 className="text-xl font-semibold text-center border-b-2 border-gray-600 w-fit m-auto">
+              <h2 className="mt-2 lg:mt-0 lg:text-xl font-semibold text-center border-b-2 border-gray-600 w-fit m-auto">
                 {showFolder}
               </h2>
               {folderNotes().map((item, index) => (
@@ -443,7 +443,7 @@ export default function MyNotesComponent({
                       <div className="w-3 h-3 bg-shark rounded-full"></div>
                       <h3
                         key={index}
-                        className="italic font-medium text-lg text-stone-900"
+                        className="italic font-medium text-sm lg:text-lg text-stone-900"
                       >
                         {item.title}
                       </h3>
@@ -506,7 +506,7 @@ export default function MyNotesComponent({
                   <p>VER TODAS NOTAS</p>
                 </button>
                 <button
-                  className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
+                  className="flex items-center gap-1 text-gray-100 font-semibold text-sm lg:text-base p-1 px-2 lg:px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setElement(<AddNewNote />);
@@ -534,7 +534,7 @@ export default function MyNotesComponent({
                       <div className="w-3 h-3 bg-shark rounded-full"></div>
                       <h3
                         key={index}
-                        className="italic font-medium text-lg text-stone-900"
+                        className="italic font-medium lg:text-lg text-stone-900"
                       >
                         {item.title}
                       </h3>
@@ -588,9 +588,9 @@ export default function MyNotesComponent({
             </>
           )}
           {!showFolder && (
-            <div className="float-right mt-10 flex items-center gap-2">
+            <div className="lg:float-right mt-10 flex items-center justify-between lg:justify-start gap-2">
               <button
-                className="flex items-center gap-1 text-gray-100 font-semibold p-1 px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
+                className="flex items-center gap-1 text-gray-100 font-semibold text-sm p-1 px-2 lg:px-4 rounded-full bg-shark duration-200 hover:text-white hover:bg-shark-700"
                 onClick={(e) => {
                   e.stopPropagation();
                   setElement(<AddNewNote />);
@@ -601,7 +601,7 @@ export default function MyNotesComponent({
                 <MdLibraryAdd />
               </button>
               <button
-                className="flex items-center gap-1 text-stone-800 font-semibold p-1 rounded-full px-4 bg-ronchi duration-200 hover:text-black hover:bg-ronchi-600"
+                className="flex items-center gap-1 text-stone-800 font-semibold text-sm p-1 px-2 lg:px-4 rounded-full bg-ronchi duration-200 hover:text-black hover:bg-ronchi-600"
                 onClick={(e) => {
                   e.stopPropagation();
                   setElement(<AddNewFolder />);
