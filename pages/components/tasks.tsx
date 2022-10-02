@@ -120,7 +120,7 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
 
   const TaskPopup = ({ id }: { id: string }): JSX.Element => {
     return (
-      <div className="w-[35%] m-auto scaleup pt-1 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
+      <div className="w-5/6 lg:w-[35%] m-auto scaleup pt-1 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
         <div className="flex flex-col justify-between">
           <div className="flex justify-between items-center border-b-2 border-gray-500 pb-1">
             <p className="text-2xl font-bold text-stone-800">EXCLUIR TAREFA</p>
@@ -137,13 +137,13 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
           <div className="flex items-center gap-2 px-1 mt-4">
             <button
               onClick={() => deleteTask(id)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
             >
               SIM
             </button>
             <button
               onClick={() => setShow(false)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
             >
               NÃO
             </button>
@@ -321,14 +321,14 @@ export default function MyTasksComp({ taskProps }: TaskComp): JSX.Element {
         <div className="flex items-center gap-4 mt-5">
           <button
             onClick={addTask}
-            className="p-1 px-2 rounded-md duration-200 text-xs lg:text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"
           >
             <MdLibraryAdd />
             <p>ADICIONAR</p>
           </button>
           <button
             onClick={() => setShow(false)}
-            className="p-1 px-2 rounded-md duration-200 text-xs lg:text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
+            className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 border border-amaranth text-amaranth hover:bg-amaranth-600 hover:text-gray-100"
           >
             CANCELAR
           </button>

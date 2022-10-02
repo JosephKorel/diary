@@ -11,7 +11,9 @@ function Alert({
   return (
     <div
       className={
-        msg || errorMsg ? "absolute bottom-[15%] w-full text-center" : "hidden"
+        msg || errorMsg
+          ? "sticky bottom-4 lg:absolute lg:bottom-[15%] w-5/6 lg:w-full m-auto text-center"
+          : "hidden"
       }
     >
       <div

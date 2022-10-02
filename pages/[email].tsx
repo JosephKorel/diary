@@ -289,7 +289,7 @@ function Today({
                     )}
                   </div>
                 </div>
-                <div className="lg:flex lg:justify-center lg:gap-10 flex flex-col items-center gap-4 pb-2 text-stone-800 relative z-0 fade mt-5 font-serrat">
+                <div className="lg:flex-row lg:justify-center lg:gap-10 flex flex-col items-center gap-4 pb-2 text-stone-800 relative z-0 fade mt-5 font-serrat">
                   <div
                     onClick={() => setCard(1)}
                     className={`w-full lg:w-[12%] p-3 duration-200 shadow-lg shadow-shark-300 text-white rounded-md relative  ${

@@ -60,32 +60,34 @@ export default function RemindComponent({
 
   const RemindPopup = ({ rmd }: { rmd: MyReminder }): JSX.Element => {
     return (
-      <div className="w-[35%] m-auto scaleup pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
+      <div className="font-serrat w-5/6 lg:w-[35%] m-auto scaleup pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
         <div className="flex flex-col justify-between">
           <div className="flex justify-between items-center border-b-2 border-stone-800 pb-1">
-            <p className="text-2xl font-bold text-stone-800">
-              EXCLUIR LEMBRETE
+            <p className="text-lg lg:text-2xl font-bold text-stone-800">
+              EXCLUINDO LEMBRETE
             </p>
             <button
-              className="duration-200 text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
+              className="duration-200 text-xl text-gray-800 p-2 hover:bg-amaranth hover:text-gray-100 rounded-md"
               onClick={() => setShow(false)}
             >
-              <AiOutlineClose size={25} />
+              <AiOutlineClose />
             </button>
           </div>
           <div className="py-5 px-1">
-            <p className="text-lg">Deseja mesmo excluir este lembrete?</p>
+            <p className="text-sm lg:text-lg">
+              Deseja mesmo excluir este lembrete?
+            </p>
           </div>
           <div className="flex items-center gap-2 px-1 mt-4">
             <button
               onClick={() => deleteRemind(rmd)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
             >
               SIM
             </button>
             <button
               onClick={() => setShow(false)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
             >
               NÃO
             </button>
@@ -152,39 +154,30 @@ export default function RemindComponent({
     };
     return (
       <div
-        className="w-2/3 m-auto py-5 px-10 rounded-md bg-gray-100 scaleup"
+        className="lg:p-10 lg:py-5 p-3 bg-gray-100 rounded-md w-11/12 lg:w-2/3 m-auto scaleup h-5/6 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 w-fit">
-          {title.length > 0 ? (
-            <>
-              <div className="w-6">
-                <BsFillCalendarEventFill size="full" className="text-shark" />
-              </div>
-              <h1 className="text-stone-800 text-xl">{title}</h1>
-            </>
-          ) : (
-            <>
-              <div className="w-6">
-                <BsFillCalendarEventFill size="full" className="text-shark" />
-              </div>
-              <h1 className="text-stone-800 text-xl">Novo lembrete</h1>
-            </>
-          )}
+          <div className="w-6">
+            <BsFillCalendarEventFill size="full" className="text-shark" />
+          </div>
+          <h1 className="text-stone-800 text-xl">
+            {title ? title : "Novo Lembrete"}
+          </h1>
         </div>
         <input
           placeholder="Título"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
-          className="p-2 rounded-md mt-4 w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+          className="p-2 rounded-md mt-4 w-full text-base :text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
         />
         <textarea
           placeholder="Descrição"
           value={content}
           onChange={(e) => setContent(e.currentTarget.value)}
-          className="p-2 mt-2 rounded-md w-full text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+          className="p-2 mt-2 rounded-md w-full text-base lg:text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
         />
-        <div className="flex justify-center gap-5">
+        <div className="flex flex-col lg:flex-row justify-center gap-5">
           <div className="flex flex-col items-center gap-1">
             <p className="text-lg font-semibold">Escolha o dia</p>
             <Calendar
@@ -206,9 +199,9 @@ export default function RemindComponent({
                 className="p-1 rounded-md w-1/2 text-base block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
               />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-row justify-between items-center lg:flex-col gap-2 mt-4 lg:mt-0">
               <button
-                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                className={`flex items-center text-sm lg:text-base gap-1 p-1 px-2 rounded-full duration-200 ${
                   degree === 1
                     ? "bg-greeny text-gray-100 hover:bg-greeny-600"
                     : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -219,7 +212,7 @@ export default function RemindComponent({
                 <p>Normal</p>
               </button>
               <button
-                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                className={`flex items-center text-sm lg:text-base gap-1 p-1 px-2 rounded-full duration-200 ${
                   degree === 2
                     ? "bg-ronchi text-stone-800 hover:bg-ronchi-600"
                     : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -230,7 +223,7 @@ export default function RemindComponent({
                 <p>Importante</p>
               </button>
               <button
-                className={`flex items-center text-base gap-1 p-1 px-2 rounded-full duration-200 ${
+                className={`flex items-center text-sm lg:text-base gap-1 p-1 px-2 rounded-full duration-200 ${
                   degree === 3
                     ? "bg-amaranth text-gray-100 hover:bg-amaranth-600"
                     : "text-stone-800 bg-gray-100 hover:bg-gray-300"
@@ -243,7 +236,7 @@ export default function RemindComponent({
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mt-4 lg:mt-0">
           <button
             onClick={addReminder}
             className="p-1 px-2 rounded-md duration-200 text-base font-semibold flex items-center gap-2 bg-shark text-gray-100 hover:bg-shark-600"

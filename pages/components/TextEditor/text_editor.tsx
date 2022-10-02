@@ -201,7 +201,7 @@ export default function TextEditor({
         placeholder="Título"
         value={title}
         onChange={(e) => setTitle(e.currentTarget.value)}
-        className="p-2 px-4 w-full rounded-lg text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
+        className="p-2 px-4 w-full rounded-lg text-base lg:text-lg block border outline-hidden border-gray-300 text-stone-800 bg-gray-100 duration-100 focus:outline-none focus:border-shark hover:border-stone-800"
       />
       <div className="mt-4 p-1 rounded-md border border-gray-300">
         <MenuBar

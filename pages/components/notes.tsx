@@ -84,7 +84,7 @@ export default function MyNotesComponent({
 
   const NotePopup = ({ note }: { note: MyNotes }): JSX.Element => {
     return (
-      <div className="w-[35%] m-auto pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
+      <div className="w-5/6 lg:w-[35%] m-auto pt-0 pb-4 px-1 bg-gray-100 border border-gray-400 rounded-md">
         <div className="flex flex-col justify-between">
           <div className="flex justify-between items-center border-b-2 border-stone-800 pb-1">
             <p className="text-2xl font-bold text-stone-800">
@@ -103,13 +103,13 @@ export default function MyNotesComponent({
           <div className="flex items-center gap-2 px-1 mt-4">
             <button
               onClick={() => deleteNote(note)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-shark text-gray-100 duration-200 hover:bg-shark-600"
             >
               SIM
             </button>
             <button
               onClick={() => setShow(false)}
-              className="font-semibold py-2 px-4 text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
+              className="font-semibold py-1 px-3 lg:py-2 lg:px-4 text-base lg:text-lg rounded-md bg-amaranth text-gray-100 duration-200 hover:bg-amaranth-600"
             >
               NÃO
             </button>
@@ -171,25 +171,14 @@ export default function MyNotesComponent({
 
     return (
       <div
-        className="bg-gray-100 p-10 py-5 scaleup rounded-md w-2/3 m-auto"
+        className="lg:p-10 lg:py-5 p-3 bg-gray-100 rounded-md w-11/12 lg:w-2/3 m-auto scaleup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 text-2xl flex items-center gap-2 w-1/3">
-          {title ? (
-            <>
-              <div className="w-8 bg-shark rounded-md">
-                <MdEditNote size="full" className="text-gray-100" />
-              </div>
-              <h1 className="text-stone-800">{title}</h1>
-            </>
-          ) : (
-            <>
-              <div className="w-8 bg-shark rounded-md">
-                <MdEditNote size="full" className="text-gray-100" />
-              </div>
-              <h1 className="text-stone-800">Nova anotação</h1>
-            </>
-          )}
+        <div className="mb-4 text-xl lg:text-2xl flex items-center gap-2 w-full lg:w-1/3">
+          <div className="w-6 lg:w-8 bg-shark rounded-md">
+            <MdEditNote size="full" className="text-gray-100" />
+          </div>
+          <h1 className="text-stone-800">{title ? title : "Nova Anotação"}</h1>
         </div>
         <div className="">
           <TextEditor
