@@ -23,7 +23,7 @@ export default function Home() {
         email: session.user.email,
         avatar: session.user.image,
       });
-      addUser();
+      /*     addUser(); */
       router.push({
         pathname: "[email]",
         query: { email: session.user.email },
@@ -90,20 +90,3 @@ export default function Home() {
     </div>
   );
 }
-/* 
-export async function getServerSideProps(context) {
-  try {
-
-    const data = await axios.get("/api/search");
-    const results = data.data;
-
-    return {
-      props: { categories: results },
-    };
-  } catch (e) {
-    console.error(e);
-    return {
-      props: { isConnected: false },
-    };
-  }
-} */

@@ -450,7 +450,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { email } = context.query as { email: string };
 
   const fetchData = await fetch(
-    `https://diary-seven.vercel.app//api/user/${email}`
+    `https://diary-seven.vercel.app/api/user/${email}`
   );
 
   const fetchResult = await fetchData.json();
