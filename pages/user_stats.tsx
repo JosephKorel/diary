@@ -11,9 +11,7 @@ import {
 } from "../models/interfaces";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import DateViewComponent from "./components/dateView";
 import { BsArrowReturnLeft } from "react-icons/bs";
-import Semicircle from "./components/semicircle";
 import {
   ImCrying2,
   ImSad2,

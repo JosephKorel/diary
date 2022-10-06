@@ -9,13 +9,8 @@ import {
   User,
 } from "../models/interfaces";
 import { GetServerSideProps } from "next";
-import MyTasksComp from "./components/tasks";
-import MyNotesComponent from "./components/notes";
-import CommentComponent from "./components/comments";
-import DayEvaluation from "./components/dayEval";
+import CommentComponent from "../components/comments";
 import "react-calendar/dist/Calendar.css";
-import DateViewComponent from "./components/dateView";
-import RemindComponent from "./components/reminders";
 import Link from "next/link";
 import {
   ImCrying2,
@@ -26,10 +21,15 @@ import {
   ImHappy2,
 } from "react-icons/im";
 import { GiDualityMask } from "react-icons/gi";
-import MyModal from "./components/modal";
 import { AiOutlineClose } from "react-icons/ai";
-import Alert from "./components/alert";
+import Alert from "../components/alert";
 import Head from "next/head";
+import DateViewComponent from "../components/dateView";
+import MyNotesComponent from "../components/notes";
+import RemindComponent from "../components/reminders";
+import MyModal from "../components/modal";
+import DayEvaluation from "../components/dayEval";
+import MyTasksComp from "../components/tasks";
 
 function Today({
   user,
@@ -211,7 +211,11 @@ function Today({
           rel="stylesheet"
         />
       </Head>
-      {show && <MyModal children={element} setShow={setShow} />}
+
+      {show && (
+        // eslint-disable-next-line
+        <MyModal children={element} setShow={setShow} />
+      )}
       <div className="pt-5 lg:pt-10">
         <div className="w-11/12 lg:w-2/3 m-auto flex flex-col lg:flex-row gap-2 lg:gap-0 justify-between items-center font-serrat">
           <div className="p-2 lg:py-1 lg:px-6 text-stone-800 flex items-center gap-3 bg-gray-100 rounded-full shadow-lg self-start">

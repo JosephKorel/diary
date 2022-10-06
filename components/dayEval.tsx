@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { Evaluation, User } from "../../models/interfaces";
+import { Evaluation, User } from "../models/interfaces";
 import { MdEdit, MdCancel, MdCheck } from "react-icons/md";
 import { BsHexagonFill } from "react-icons/bs";
 

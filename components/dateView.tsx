@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import moment from "moment";
 import Calendar, { Detail } from "react-calendar";
-import {
-  BsFillCalendarDateFill,
-  BsFillCalendarEventFill,
-} from "react-icons/bs";
+import { BsFillCalendarDateFill } from "react-icons/bs";
 import "react-calendar/dist/Calendar.css";
-import { MyReminder, TimeSpanInt, User } from "../../models/interfaces";
-import { GiCancel } from "react-icons/gi";
+import { MyReminder, TimeSpanInt, User } from "../models/interfaces";
 import { AiOutlineClose } from "react-icons/ai";
 import { VscDebugBreakpointData } from "react-icons/vsc";
 
@@ -40,10 +36,10 @@ export default function DateViewComponent({
     return (
       <div className="flex flex-col justify-center items-center">
         <div className="">
-          {user.dayEvaluation.map((item) => {
+          {user.dayEvaluation.map((item, index) => {
             if (item.date === moment(date).format("DD/MM/YY")) {
               return (
-                <div className="flex items-center gap-1 text-xs">
+                <div key={index} className="flex items-center gap-1 text-xs">
                   <VscDebugBreakpointData />
                   <p>{item.value}</p>
                 </div>

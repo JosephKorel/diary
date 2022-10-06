@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import axios from "axios";
 import Head from "../node_modules/next/head";
 import { useRouter } from "next/router";
-import useLocalStorage from "./components/useLocalStorage";
 
 interface User {
   name: string;
@@ -11,9 +9,9 @@ interface User {
   avatar?: string;
 }
 
-export default function Home({ categories }) {
+export default function Home() {
   const [search, setSearch] = useState("");
-  const [user, setUser] = useLocalStorage<User | {}>("user", {});
+  const [user, setUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
 
   const router = useRouter();
@@ -92,16 +90,9 @@ export default function Home({ categories }) {
     </div>
   );
 }
-
+/* 
 export async function getServerSideProps(context) {
   try {
-    /* const client = await clientPromise;
-    const db = client.db("bookdb");
-    const coll: Collection = db.collection("my_books");
-    const query = { name: "O fantasma da ópera" };
-    const doc = await coll.find({}).toArray();
-
-    const documents = JSON.parse(JSON.stringify(doc)); */
 
     const data = await axios.get("/api/search");
     const results = data.data;
@@ -115,4 +106,4 @@ export async function getServerSideProps(context) {
       props: { isConnected: false },
     };
   }
-}
+} */

@@ -6,8 +6,8 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { storage } from "../../firebase.config";
-import { FileInt, MyNotes, User } from "../../models/interfaces";
+import { storage } from "../firebase.config";
+import { FileInt, MyNotes, User } from "../models/interfaces";
 import TextEditor from "./TextEditor/text_editor";
 import { MdLibraryAdd, MdEdit, MdEditNote } from "react-icons/md";
 import { BsArrowReturnLeft, BsEraserFill } from "react-icons/bs";
@@ -392,6 +392,7 @@ export default function MyNotesComponent({
               <div>
                 {myFolders[0].folders.map((folder, index) => (
                   <div
+                    key={index}
                     className="w-fit uppercase font-semibold text-sm lg:text-base py-1 px-3 flex items-center gap-2 rounded-full bg-ronchi text-stone-800 duration-200 hover:bg-ronchi-600 cursor-pointer"
                     onMouseEnter={() => setOnFolder(index)}
                     onMouseLeave={() => {
@@ -420,6 +421,7 @@ export default function MyNotesComponent({
               </h2>
               {folderNotes().map((item, index) => (
                 <div
+                  key={index}
                   onClick={() => setShowNote(index)}
                   className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
                     showNote === index
@@ -511,6 +513,7 @@ export default function MyNotesComponent({
             <>
               {userNotes.map((item, index) => (
                 <div
+                  key={index}
                   onClick={() => setShowNote(index)}
                   className={`p-2 mt-2 shadow-sm shadow-gray-600 duration-200 rounded-md  ${
                     showNote === index

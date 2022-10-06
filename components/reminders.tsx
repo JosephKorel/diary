@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { MyReminder, User } from "../../models/interfaces";
+import { MyReminder, User } from "../models/interfaces";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { MdLibraryAdd } from "react-icons/md";
@@ -307,6 +307,7 @@ export default function RemindComponent({
           </div>
           {reminder.map((rmd, index) => (
             <div
+              key={index}
               className={`mt-2 p-2 shadow-sm shadow-stone-700 rounded-md duration-200  ${
                 showRemind !== index && "cursor-pointer hover:bg-gray-300"
               }`}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { MyTasks, User } from "../../models/interfaces";
+import { MyTasks, User } from "../models/interfaces";
 import {
   BsFlagFill,
   BsCheckSquareFill,

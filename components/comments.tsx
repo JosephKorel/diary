@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { MyComments, User } from "../../models/interfaces";
+import { MyComments, User } from "../models/interfaces";
 import { GiDualityMask } from "react-icons/gi";
 import {
   BsHexagonFill,
-  BsFillCheckSquareFill,
   BsFillCheckCircleFill,
   BsArrowReturnLeft,
 } from "react-icons/bs";

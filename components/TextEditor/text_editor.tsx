@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { FaBold, FaItalic, FaStrikethrough, FaHeading } from "react-icons/fa";
 import { BiUpload } from "react-icons/bi";
 import { BsFillImageFill } from "react-icons/bs";
-import { FileInt } from "../../../models/interfaces";
+import { FileInt } from "../../models/interfaces";
 
 const MenuBar = ({
   editor,
